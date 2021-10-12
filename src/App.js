@@ -1,12 +1,20 @@
 import './App.css';
-import map from './images/moscow-tourist-map.jpg';
+import Map from "./Components/Map";
 
-function App() {
+//Небольшой экскурс в Реакт
+
+//Реакт - всего лишь библиотека для js
+//Его особенность - Компоненты
+
+
+//Компонент - это функция, которая принимает props, и возвращает JSX разметку (или своего рода обычный Модуль, как в js)
+//props - это объект {}
+//JSX - простыми словами, обычный HTML (Всё, что после return)
+
+//(Смотри Компонент Map)
+const App = ()  => {
   return (
-    <div className="App">
-        <img src={map} alt=""/>
-        <h1>Our map</h1>
-    </div>
+   <Map title={'Our map'}/>
   );
 }
 

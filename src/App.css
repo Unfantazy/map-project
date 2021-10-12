@@ -10,11 +10,20 @@
 }
 
 h1 {
-  position: absolute;
-  z-index: 10;
-  top: 0;
-  left: 50%;
   color: crimson;
   background-color: #fff;
   padding: 20px;
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.counter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
