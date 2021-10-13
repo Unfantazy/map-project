@@ -39,6 +39,7 @@ body {
   min-height: 100vh;
   color: #21344A;
   line-height: 27px;
+  background-color: #d0d0d0;
 }
 
 ::-webkit-scrollbar {
