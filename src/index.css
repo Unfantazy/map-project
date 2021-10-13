@@ -124,3 +124,18 @@ button {
   border: none;
   cursor: pointer;
 }
+
+.leaflet-container  {
+  height: 100vh;
+  width: 100%;
+}
+
+.leaflet-top {
+  bottom: -900px !important;
+  top: auto !important;
+}
+
+.leaflet-left {
+  right: 80px !important;
+  left: auto !important;
+}

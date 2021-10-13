@@ -1,9 +1,10 @@
 import './App.scss';
 import Map from "./Components/Map";
 import Menu from "./Components/Menu";
-import {useState} from "react";
+import { useEffect, useState } from "react";
 
 const App = ()  => {
+
     const [filter, setFilter] = useState('')
 
   return (
