@@ -1,16 +1,14 @@
 import './App.scss';
 import Map from "./Components/Map";
 import Menu from "./Components/Menu";
-import { useEffect, useState } from "react";
+import LayersFilter from "./Components/LayersFilter";
 
 const App = ()  => {
-
-    const [filter, setFilter] = useState('')
-
   return (
       <div className='App'>
-          <Menu filter={filter} setFilter={setFilter}/>
+          <Menu />
           <Map/>
+          <LayersFilter/>
       </div>
   );
 }

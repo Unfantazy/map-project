@@ -1,4 +1,4 @@
-import {MapContainer, TileLayer, Marker, Popup, WMSTileLayer} from 'react-leaflet'
+import {MapContainer, TileLayer, WMSTileLayer} from 'react-leaflet'
 
 const Map = () => {
     return (

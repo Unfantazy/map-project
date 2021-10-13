@@ -1,11 +1,7 @@
-import loader from '../images/icons/loader.gif'
-
-const LayerButton = ({child})  => {
+const LayerButton = ({child, title})  => {
     return (
         <div className={'LayerButton'}>
-          <button>
-              {child}
-          </button>
+              {child || title}
         </div>
 
     );

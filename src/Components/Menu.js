@@ -4,9 +4,10 @@ import {ReactComponent  as CloseIcon} from '../images/icons/close.svg'
 import Loader from "./Loader";
 
 
-const Menu = ({ filter, setFilter }) => {
+const Menu = () => {
     const [isVisible, setIsVisible] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const [filter, setFilter] = useState('')
 
     const onMenuToggle = () => {
         setIsVisible(!isVisible)
