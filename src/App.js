@@ -1,20 +1,16 @@
-import './App.css';
+import './App.scss';
 import Map from "./Components/Map";
+import Menu from "./Components/Menu";
+import {useState} from "react";
 
-//Небольшой экскурс в Реакт
-
-//Реакт - всего лишь библиотека для js
-//Его особенность - Компоненты
-
-
-//Компонент - это функция, которая принимает props, и возвращает JSX разметку (или своего рода обычный Модуль, как в js)
-//props - это объект {}
-//JSX - простыми словами, обычный HTML (Всё, что после return)
-
-//(Смотри Компонент Map)
 const App = ()  => {
+    const [filter, setFilter] = useState('')
+
   return (
-   <Map title={'Our map'}/>
+      <div className='App'>
+          <Menu filter={filter} setFilter={setFilter}/>
+          <Map/>
+      </div>
   );
 }
 

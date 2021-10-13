@@ -1,13 +1,126 @@
-body {
+body,
+html {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  padding: 0;
+  min-height: 100%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+img {
+  max-width: 100%;
+  object-fit: cover;
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+*,
+*:after,
+*:before {
+  box-sizing: border-box;
+  outline: none;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  position: relative;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+  'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  sans-serif;
+  font-weight: 400;
+  font-size: 18px;
+  overflow-x: hidden;
+  min-width: 320px;
+  min-height: 100vh;
+  color: #21344A;
+  line-height: 27px;
+}
+
+::-webkit-scrollbar {
+  -webkit-appearance: none;
+}
+
+::-webkit-scrollbar:vertical {
+  width: 12px;
+}
+
+::-webkit-scrollbar:horizontal {
+  height: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(32, 65, 180, .85);
+  border-radius: 0;
+  border: 0;
+  transition: all .2s ease-in-out;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+  transition: all .2s ease-in-out;
+}
+
+a,
+label {
+  -webkit-tap-highlight-color: transparent;
+}
+
+.visually-hidden {
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  position: absolute;
+  clip: rect(0 0 0 0);
+}
+
+/*.container {*/
+/*  @extend %container;*/
+/*  max-width: 1320px;*/
+/*}*/
+
+header,
+main,
+footer {
+  flex-shrink: 0;
+}
+
+main {
+}
+
+footer {
+  margin-top: auto;
+}
+
+h1, h2, h3, h4, h5, h6{
+  margin: 0;
+  padding: 0;
+}
+
+p{
+  margin: 0;
+}
+
+ul, li {
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
 }
