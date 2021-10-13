@@ -16,7 +16,7 @@ const Map = () => {
                             transparent: true,
                             tileSize: 512,
                             detectRetina: true,
-                            style: 'leaders:test_style_obs'
+                            styles: 'leaders:test_style_obs'
                         }}
                     />
                 </MapContainer>
