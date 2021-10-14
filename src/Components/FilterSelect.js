@@ -94,7 +94,7 @@ const FilterSelect = ({ title = 'Фильтр', onlyItems = false }) => {
                         onChange={(e) => setFilter(e.currentTarget.value)}
                     />
                     {filter &&
-                    <CrossIcon style={{cursor: 'pointer'}}
+                    <CrossIcon style={{ cursor: 'pointer', right: 10 }}
                     onClick={() => setFilter('')}
                     />
                     }
