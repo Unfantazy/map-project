@@ -1,11 +1,14 @@
 import Tag from "./Tag";
 import {ReactComponent  as SearchIcon} from '../images/icons/search.svg'
 import {ReactComponent  as CrossIcon} from '../images/icons/cross-grey.svg'
+import {ReactComponent  as ArrowIcon} from '../images/icons/arrow.svg'
 import {useCallback, useMemo, useRef, useState} from "react";
 import {includes} from "lodash";
 import {useOnClickOutside} from "../customHooks/useOnClickOutside";
+import FilterItem from "./FilterItem";
 
-const FilterSelect = ({ placeholder= 'Введите название спорт объекта' }) => {
+
+const FilterSelect = ({ title = 'Фильтр', onlyItems = false }) => {
     const [isFocused, setIsFocused] = useState(false)
     const [selectedItems, setSelectedItems] = useState([])
     const [filter, setFilter] = useState('')
@@ -40,15 +43,29 @@ const FilterSelect = ({ placeholder= 'Введите название спорт
         setIsFocused(false)
     })
 
+    if(onlyItems) {
+        return <div className={'Filter-select'}>
+            <h3 className={'Filter-select__title'}>{title}</h3>
+                <div className={'layers'}>
+                    <FilterItem name={'Шаговая (радиус - 500 м)'}/>
+                    <FilterItem name={'Окружная (радиус - 3 км)'}/>
+                    <FilterItem name={'Районная (радиус - 1 км)'}/>
+                    <FilterItem name={'Городская (радиус - 5 км)'}/>
+                </div>
+        </div>
+    }
+
     return (
         <div className={'Filter-select'}
              ref={filterRef}>
+            <h3 className={'Filter-select__title'}>{title}</h3>
             <div className={`select__btn ${isFocused && 'isFocused'}`}
             onClick={(e) => {
                 e.stopPropagation()
                 e.preventDefault()
                 setIsFocused(true)
             }}>
+                <ArrowIcon className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}/>
                 <div className={`tags-container scroller`}>
                     {selectedItems.map(item => {
                         return <Tag
@@ -65,7 +82,7 @@ const FilterSelect = ({ placeholder= 'Введите название спорт
                     <SearchIcon />
                     <input
                         type="text"
-                        placeholder={placeholder}
+                        placeholder={'Введите название'}
                         className={'select-input'}
                         value={filter}
                         onChange={(e) => setFilter(e.currentTarget.value)}
