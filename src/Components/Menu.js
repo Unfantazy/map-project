@@ -2,6 +2,7 @@ import {useState} from "react";
 import {ReactComponent  as SearchIcon} from '../images/icons/search.svg'
 import {ReactComponent  as CloseIcon} from '../images/icons/close.svg'
 import Loader from "./Loader";
+import FilterSelect from "./FilterSelect";
 
 
 const Menu = () => {
@@ -45,10 +46,9 @@ const Menu = () => {
                     </button>
                     }
                 </div>
-                <ul className={'menu-filter'}>
-                    <li className={'menu-filter-item'}>Фильтр 1</li>
-                    <li className={'menu-filter-item'}>Фильтр 2</li>
-                </ul>
+
+                <FilterSelect />
+
             </div>
         </div>
         </>
