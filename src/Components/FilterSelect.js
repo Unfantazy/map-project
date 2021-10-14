@@ -1,5 +1,6 @@
 import Tag from "./Tag";
 import {ReactComponent  as SearchIcon} from '../images/icons/search.svg'
+import {ReactComponent  as CrossIcon} from '../images/icons/cross-grey.svg'
 import {useCallback, useMemo, useRef, useState} from "react";
 import {includes} from "lodash";
 import {useOnClickOutside} from "../customHooks/useOnClickOutside";
@@ -7,6 +8,7 @@ import {useOnClickOutside} from "../customHooks/useOnClickOutside";
 const FilterSelect = ({ placeholder= 'Введите название спорт объекта' }) => {
     const [isFocused, setIsFocused] = useState(false)
     const [selectedItems, setSelectedItems] = useState([])
+    const [filter, setFilter] = useState('')
 
     const filterRef = useRef(null)
 
@@ -61,7 +63,18 @@ const FilterSelect = ({ placeholder= 'Введите название спорт
                 </div>
                 <label className={'select-label'}>
                     <SearchIcon />
-                    <input type="text" placeholder={placeholder} className={'select-input'}/>
+                    <input
+                        type="text"
+                        placeholder={placeholder}
+                        className={'select-input'}
+                        value={filter}
+                        onChange={(e) => setFilter(e.currentTarget.value)}
+                    />
+                    {filter &&
+                    <CrossIcon style={{cursor: 'pointer'}}
+                    onClick={() => setFilter('')}
+                    />
+                    }
                 </label>
             </div>
 

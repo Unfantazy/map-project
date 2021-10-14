@@ -3,6 +3,10 @@
   width: 100%;
 }
 
+.Filter-select+.Filter-select{
+  margin-top: 8px;
+}
+
 .select__btn {
   min-height: 36px;
   background: #FFFDFD;
@@ -80,7 +84,9 @@
   flex-direction: column;
   margin-top: 8px;
   overflow: hidden;
-
+  position: absolute;
+  width: 100%;
+  z-index: 10;
 }
 
 .select-dropdown__list {

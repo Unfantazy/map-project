@@ -31,24 +31,8 @@ const Menu = () => {
                 click
             </div>
             <div className='Menu-wrapper'>
-                <div className={'Menu-search'}>
-                    <input type="text"
-                           value={filter}
-                           onChange={(e) => setFilter(e.currentTarget.value)}/>
-                    <button className={'Menu-search-btn'}
-                    onClick={onSearchBtnClick}>
-                        <SearchIcon/>
-                    </button>
-                    {filter
-                    && <button className={'Menu-search-btn Menu-search-btn--close'}
-                            onClick={() => setFilter('')}>
-                        <CloseIcon/>
-                    </button>
-                    }
-                </div>
-
                 <FilterSelect />
-
+                <FilterSelect />
             </div>
         </div>
         </>
