@@ -132,12 +132,12 @@ button {
 }
 
 .leaflet-top {
-  bottom: -900px !important;
+  bottom: -490px !important;
   top: auto !important;
 }
 
 .leaflet-left {
-  right: 80px !important;
+  right: 30px !important;
   left: auto !important;
 }
 
