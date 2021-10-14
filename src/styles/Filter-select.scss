@@ -42,6 +42,7 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 8;
+  cursor: pointer;
   &.isFocused {
     transform: rotate(-180deg) translateY(50%);
     path {

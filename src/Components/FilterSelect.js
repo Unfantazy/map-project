@@ -65,7 +65,13 @@ const FilterSelect = ({ title = 'Фильтр', onlyItems = false }) => {
                 e.preventDefault()
                 setIsFocused(true)
             }}>
-                <ArrowIcon className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}/>
+                <ArrowIcon
+                    className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        setIsFocused(!isFocused)
+                    } }
+                />
                 <div className={`tags-container scroller`}>
                     {selectedItems.map(item => {
                         return <Tag
