@@ -10,7 +10,6 @@ const App = ()  => {
           <LayersFilters />
           <FiltersMenu />
           <Map/>
-          <LayersFilter/>
       </div>
   );
 }
