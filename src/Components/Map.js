@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import L from 'leaflet';
-import 'leaflet.vectorgrid';
+import {} from 'leaflet.vectorgrid';
+import '../images/icons/map-marker_red.svg'
 
 class Livemap extends React.Component {
 
@@ -16,34 +17,32 @@ class Livemap extends React.Component {
                     'https://tile2.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1.1',
                     {attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
                             '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'}),
-                L?.tileLayer.wms(
-                    'https://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms',
-                    {attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-                            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'})
             ],
             attributionControl: false,
         });
+       
+        var greenIcon = L.icon({
+            iconUrl: './images/icons/map-marker_red.svg',
         
+            iconSize:     [38, 95], // size of the icon
+            iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+            popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+        });
 
         var vectorTileOptions = {
             vectorTileLayerStyles: {
             'objects_centroids': function() {
             return {
-              color: 'red',
-              opacity: 1,
-              fillColor: 'yellow',
-              fill: true,
+                icon: greenIcon
             }
             },
             },
             interactive: true,	// Make sure that this VectorGrid fires mouse/pointer events
         }
+        
         var vectorUrl = 'https://geoserver.bigdatamap.keenetic.pro/geoserver/gwc/service/tms/1.0.0/leaders:objects_centroids@EPSG%3A900913@pbf/{z}/{x}/{-y}.pbf';
         
-        // Из примера это получается (хотя стиль leaflet'а не прогружается, мб его тоже надо добавить к проекту?)
-        this.marker = L.marker([55.740223, 37.595290]).addTo(this.map);
-        // А вот это уже не работает
-        this.objs_vectorgrid = new L?.VectorGrid.Protobuf(vectorUrl, vectorTileOptions).addTo(this.map);
+        this.objs_vectorgrid = L.vectorGrid.protobuf(vectorUrl, vectorTileOptions).addTo(this.map);
 
         map?.on('click', this.onMapClick);
     }
