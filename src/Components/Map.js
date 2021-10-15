@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import L from 'leaflet';
 import {} from 'leaflet.vectorgrid';
-import '../images/icons/map-marker_red.svg'
+import svg from '../images/icons/map-marker_red.svg'
 
 class Livemap extends React.Component {
 
@@ -22,7 +22,7 @@ class Livemap extends React.Component {
         });
        
         var greenIcon = L.icon({
-            iconUrl: './images/icons/map-marker_red.svg',
+            iconUrl: svg,
         
             iconSize:     [38, 95], // size of the icon
             iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
