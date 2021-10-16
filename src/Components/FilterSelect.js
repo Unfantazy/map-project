@@ -2,26 +2,38 @@ import Tag from "./Tag";
 import {ReactComponent  as SearchIcon} from '../images/icons/search.svg'
 import {ReactComponent  as CrossIcon} from '../images/icons/cross-grey.svg'
 import {ReactComponent  as ArrowIcon} from '../images/icons/arrow.svg'
-import {useCallback, useMemo, useRef, useState} from "react";
+import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {includes} from "lodash";
 import {useOnClickOutside} from "../customHooks/useOnClickOutside";
 import FilterItem from "./FilterItem";
+import Loader from "./Loader";
 
 
-const FilterSelect = ({ title = 'Фильтр', onlyItems = false }) => {
+const FilterSelect = ({ title = 'Фильтр', onlyItems = false, fetchItems }) => {
+
+    const [items, setItems] = useState([])
+    const [filter, setFilter] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+
+    useEffect(async () => {
+        if(fetchItems) {
+            setIsLoading(true)
+            await fetchItems(filter)
+                .then(res => {
+                    const data = res.data.features.map(item => ({ id: item.id, title: item.properties.name }))
+                    setItems(data)
+                })
+                .finally(() => {
+                    setIsLoading(false)
+                })
+        }
+    }, [filter])
+
     const [isFocused, setIsFocused] = useState(false)
     const [selectedItems, setSelectedItems] = useState([])
-    const [filter, setFilter] = useState('')
+
 
     const filterRef = useRef(null)
-
-    const mock1 = [
-        {id: 1, title: 'Москва'},
-        {id: 2, title: 'Питер'},
-        {id: 3, title: 'Новомоссковск'},
-        {id: 4, title: 'Просто длинное название'},
-        {id: 5, title: 'Огнище огненное'},
-    ]
 
     const selectedItemsIds = useMemo(() => {
         return selectedItems.map(item => item.id)
@@ -101,10 +113,11 @@ const FilterSelect = ({ title = 'Фильтр', onlyItems = false }) => {
                 </label>
             </div>
 
-            {isFocused &&
-            <div className={`Filter-select__dropdown scroller ${isFocused && 'isFocused'}`}>
+            {isFocused
+            && <div className={`Filter-select__dropdown scroller ${isFocused && 'isFocused'}`}>
                 <ul className={'scroller select-dropdown__list'}>
-                    {mock1.map(listItem => {
+                    {isLoading ? <Loader />
+                        : !!items.length ? items.map(listItem => {
                         return <li
                             className={`filter-select__item ${includes(selectedItemsIds, listItem.id) 
                                 ? 'selected' : ''}`}
@@ -115,7 +128,7 @@ const FilterSelect = ({ title = 'Фильтр', onlyItems = false }) => {
                         >
                             {listItem.title}
                         </li>
-                    })}
+                    }) : 'Ошибка'}
                 </ul>
             </div>
             }

@@ -126,6 +126,7 @@
 .select-dropdown__list {
   max-height: 135px;
   overflow-y: scroll;
+  min-height: 100px;
 }
 
 .filter-select__item {
@@ -191,4 +192,18 @@
   background: #FFFDFD;
   border: 1px solid #CECCCC;
   border-radius: 10px;
+}
+
+.filter-error {
+  font-size: 14px;
+  color: #645C5C;
+  display: inline-block;
+  margin: auto;
+}
+
+.select-dropdown__list--error {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100px;
 }

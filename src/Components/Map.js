@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import L from 'leaflet';
-import 'leaflet.vectorgrid';
+// import 'L.vectorgrid';
 import svg from '../images/icons/map-marker_red.svg'
 
 class Livemap extends React.Component {
