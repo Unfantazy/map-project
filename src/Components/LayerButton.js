@@ -1,7 +1,7 @@
-const LayerButton = ({child, title})  => {
+const LayerButton = ({child, title}) => {
     return (
         <div className={'LayerButton'}>
-              {child || title}
+            {child || title}
         </div>
 
     );

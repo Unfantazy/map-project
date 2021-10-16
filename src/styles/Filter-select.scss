@@ -5,7 +5,7 @@
   width: 100%;
 }
 
-.Filter-select+.Filter-select{
+.Filter-select + .Filter-select {
   margin-top: 8px;
 }
 
@@ -14,7 +14,6 @@
   font-weight: 700;
   margin-bottom: 7px;
   padding-left: 10px;
-  color: #645C5C;
 
   &:before {
     content: url('../images/icons/dot.svg');
@@ -43,8 +42,10 @@
   transform: translateY(-50%);
   z-index: 8;
   cursor: pointer;
+
   &.isFocused {
     transform: rotate(-180deg) translateY(50%);
+
     path {
       stroke: $main;
     }
@@ -99,7 +100,7 @@
   align-items: center;
   height: 100%;
   cursor: pointer;
-  background-color: rgba(236,14,67, 0.7);
+  background-color: rgba(236, 14, 67, 0.7);
   padding-left: 7px;
 }
 
@@ -131,18 +132,20 @@
 
 .filter-select__item {
   cursor: pointer;
-  color: #645C5C;
   font-size: 12px;
   padding: 4px;
   transition: .2s;
   padding-left: 15px;
+
   &:hover {
     background-color: rgba(198, 191, 193, 0.29);
     color: $main;
   }
+
   &.selected {
     background-color: $main;
     color: #ffffff;
+
     &:hover {
       color: #fff;
     }
@@ -156,7 +159,6 @@
 .FilterItem {
   font-weight: 400;
   font-size: 12px;
-  color: #645C5C;
   border: 1px solid #B2AAAA;
   border-radius: 10px;
   padding: 0 7px;

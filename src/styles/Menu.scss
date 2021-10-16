@@ -1,16 +1,23 @@
+@import "helpers/variables";
+
 .Menu {
   max-width: 390px;
   z-index: 10000;
   //transform: translateX(-100%);
   transition: .3s;
   margin-left: 13px;
+  margin-top: 100px;
+  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
 }
 
 .Menu-wrapper {
   padding: 20px 0 20px 20px;
   background: #FFFFFF;
-  border-radius: 25px;
-  filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+  border-bottom-left-radius: 25px;
+  border-bottom-right-radius: 25px;
+  //filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0.25));
+  margin-top: -5px;
+  z-index: 10;
 }
 
 .menu-inner {
@@ -43,7 +50,7 @@
   height: 50px;
   position: relative;
 
-  input{
+  input {
     width: 100%;
     height: 100%;
     padding: 0 30px 0 10px;
@@ -61,4 +68,34 @@
 
 .Menu-search-btn--close {
   right: 25px;
+}
+
+.filter-btns {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  padding-right: 10px;
+}
+
+.filter-btn {
+  height: 25px;
+  border-radius: 10px;
+  max-width: 98px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.filter-apply {
+  background-color: $blue;
+  font-weight: 700;
+  color: #fff;
+  border: 1px solid #000000;
+}
+
+.filter-reset {
+  color: $blue;
+  border: 1px solid $blue;
+  margin-left: 14px;
 }

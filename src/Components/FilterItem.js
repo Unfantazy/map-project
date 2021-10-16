@@ -1,7 +1,7 @@
 import {useState} from "react";
 
 
-const FilterItem = ({name, }) => {
+const FilterItem = ({name,}) => {
     const [isActive, setIsActive] = useState(false)
     const onFilterItemClick = () => {
         setIsActive(!isActive)

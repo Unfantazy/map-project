@@ -1,15 +1,17 @@
-import React, { useCallback } from 'react';
-import { NavLink } from "react-router-dom";
+import React, {useCallback} from 'react';
+import {NavLink} from "react-router-dom";
 
 const Tabs = () => {
+
     const renderTab = useCallback((tab, text) => (
-        <div className="basic__tabs-item events-header__item" >
+        <div className={`tabs-item`}>
             <NavLink
                 exact
-                to={`/mainsite/events/edit/`}
+                to={`/${tab}`}
                 activeClassName='active'
-                className='basic__tabs-item--link events-header__item--link'
-                style= {{ cursor: loading && 'wait' }}
+                className='tabs-item--link'
+                // activeStyle={{ background: '#fff' }}
+                // style= {{ cursor: loading && 'wait' }}
             >
                 <span className={'d-flex align-items-center events-header__item--span'}>
                     {text}
@@ -19,10 +21,10 @@ const Tabs = () => {
     ), []);
 
     return (
-        <header className="basic__tabs-header">
-            {renderTab( 'filter', 'Фильтры')}
+        <header className="tabs-header">
+            {renderTab('filter', 'Фильтры')}
             {renderTab("layers", 'Слои')}
-            {renderTab("services", 'Услуги на выполнение')}
+            {renderTab("services", 'Инструменты')}
         </header>
     );
 };

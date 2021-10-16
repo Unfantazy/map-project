@@ -1,7 +1,7 @@
 import Tag from "./Tag";
-import {ReactComponent  as SearchIcon} from '../images/icons/search.svg'
-import {ReactComponent  as CrossIcon} from '../images/icons/cross-grey.svg'
-import {ReactComponent  as ArrowIcon} from '../images/icons/arrow.svg'
+import {ReactComponent as SearchIcon} from '../images/icons/search.svg'
+import {ReactComponent as CrossIcon} from '../images/icons/cross-grey.svg'
+import {ReactComponent as ArrowIcon} from '../images/icons/arrow.svg'
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {includes} from "lodash";
 import {useOnClickOutside} from "../customHooks/useOnClickOutside";
@@ -9,18 +9,18 @@ import FilterItem from "./FilterItem";
 import Loader from "./Loader";
 
 
-const FilterSelect = ({ title = 'Фильтр', onlyItems = false, fetchItems }) => {
+const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems}) => {
 
     const [items, setItems] = useState([])
     const [filter, setFilter] = useState('')
     const [isLoading, setIsLoading] = useState(false)
 
     useEffect(async () => {
-        if(fetchItems) {
+        if (fetchItems) {
             setIsLoading(true)
             await fetchItems(filter)
                 .then(res => {
-                    const data = res.data.features.map(item => ({ id: item.id, title: item.properties.name }))
+                    const data = res?.data?.features?.map(item => ({id: item.id, title: item.properties.name}))
                     setItems(data)
                 })
                 .finally(() => {
@@ -44,7 +44,7 @@ const FilterSelect = ({ title = 'Фильтр', onlyItems = false, fetchItems })
     }, [selectedItems])
 
     const onSelectItem = (item) => {
-        if(!includes(selectedItems.map(item => item.id), item.id)) {
+        if (!includes(selectedItems.map(item => item.id), item.id)) {
             setSelectedItems([...selectedItems, item])
         } else {
             setSelectedItems(selectedItems.filter(focusedItem => focusedItem.id !== item.id))
@@ -55,15 +55,15 @@ const FilterSelect = ({ title = 'Фильтр', onlyItems = false, fetchItems })
         setIsFocused(false)
     })
 
-    if(onlyItems) {
+    if (onlyItems) {
         return <div className={'Filter-select'}>
             <h3 className={'Filter-select__title'}>{title}</h3>
-                <div className={'layers'}>
-                    <FilterItem name={'Шаговая (радиус - 500 м)'}/>
-                    <FilterItem name={'Окружная (радиус - 3 км)'}/>
-                    <FilterItem name={'Районная (радиус - 1 км)'}/>
-                    <FilterItem name={'Городская (радиус - 5 км)'}/>
-                </div>
+            <div className={'layers'}>
+                <FilterItem name={'Шаговая (радиус - 500 м)'}/>
+                <FilterItem name={'Окружная (радиус - 3 км)'}/>
+                <FilterItem name={'Районная (радиус - 1 км)'}/>
+                <FilterItem name={'Городская (радиус - 5 км)'}/>
+            </div>
         </div>
     }
 
@@ -72,17 +72,17 @@ const FilterSelect = ({ title = 'Фильтр', onlyItems = false, fetchItems })
              ref={filterRef}>
             <h3 className={'Filter-select__title'}>{title}</h3>
             <div className={`select__btn ${isFocused && 'isFocused'}`}
-            onClick={(e) => {
-                e.stopPropagation()
-                e.preventDefault()
-                setIsFocused(true)
-            }}>
+                 onClick={(e) => {
+                     e.stopPropagation()
+                     e.preventDefault()
+                     setIsFocused(true)
+                 }}>
                 <ArrowIcon
                     className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}
                     onClick={(e) => {
                         e.stopPropagation()
                         setIsFocused(!isFocused)
-                    } }
+                    }}
                 />
                 <div className={`tags-container scroller`}>
                     {selectedItems.map(item => {
@@ -97,7 +97,7 @@ const FilterSelect = ({ title = 'Фильтр', onlyItems = false, fetchItems })
 
                 </div>
                 <label className={'select-label'}>
-                    <SearchIcon />
+                    <SearchIcon/>
                     <input
                         type="text"
                         placeholder={'Введите название'}
@@ -106,8 +106,8 @@ const FilterSelect = ({ title = 'Фильтр', onlyItems = false, fetchItems })
                         onChange={(e) => setFilter(e.currentTarget.value)}
                     />
                     {filter &&
-                    <CrossIcon style={{ cursor: 'pointer', right: 10 }}
-                    onClick={() => setFilter('')}
+                    <CrossIcon style={{cursor: 'pointer', right: 10}}
+                               onClick={() => setFilter('')}
                     />
                     }
                 </label>
@@ -116,19 +116,19 @@ const FilterSelect = ({ title = 'Фильтр', onlyItems = false, fetchItems })
             {isFocused
             && <div className={`Filter-select__dropdown scroller ${isFocused && 'isFocused'}`}>
                 <ul className={'scroller select-dropdown__list'}>
-                    {isLoading ? <Loader />
-                        : !!items.length ? items.map(listItem => {
-                        return <li
-                            className={`filter-select__item ${includes(selectedItemsIds, listItem.id) 
-                                ? 'selected' : ''}`}
-                                   key={listItem.id}
-                        onClick={() => {
-                            onSelectItem(listItem)
-                        }}
-                        >
-                            {listItem.title}
-                        </li>
-                    }) : 'Ошибка'}
+                    {isLoading ? <Loader/>
+                        : !!items?.length ? items.map(listItem => {
+                            return <li
+                                className={`filter-select__item ${includes(selectedItemsIds, listItem.id)
+                                    ? 'selected' : ''}`}
+                                key={listItem.id}
+                                onClick={() => {
+                                    onSelectItem(listItem)
+                                }}
+                            >
+                                {listItem.title}
+                            </li>
+                        }) : 'Ошибка'}
                 </ul>
             </div>
             }

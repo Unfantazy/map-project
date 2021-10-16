@@ -5,12 +5,14 @@
 @import "./styles/Loader.scss";
 @import "./styles/LayerButton.scss";
 @import "./styles/Filter-select";
+@import "./styles/Tabs";
+
 .App {
-  color: #000;
   height: 100vh;
   max-width: 100%;
   margin: 0 auto;
   overflow: hidden;
+  color: $blue;
 }
 
 .Map {
@@ -59,10 +61,9 @@
 }
 
 h1 {
-  color: #645C5C;
   font-size: 20px;
   font-weight: 700;
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 
 #map {

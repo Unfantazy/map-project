@@ -19,7 +19,7 @@ const LayersFilters = () => {
                             {layersNames.map(layer => <FilterItem
                                 key={layer.id}
                                 name={layer.name}
-                            /> )}
+                            />)}
 
                         </div>
                     </div>
