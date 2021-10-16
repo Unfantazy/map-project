@@ -128,7 +128,7 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems}) =
                             >
                                 {listItem.title}
                             </li>
-                        }) : 'Ошибка'}
+                        }) : <div className={'nothing-found'}>По вашему запросу ничего не найдено</div>}
                 </ul>
             </div>
             }
