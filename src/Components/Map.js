@@ -23,21 +23,28 @@ class Livemap extends React.Component {
        
         var greenIcon = L.icon({
             iconUrl: svg,
-        
-            iconSize:     [38, 95], // size of the icon
-            iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
-            popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+            iconSize:     [40, 40], // size of the icon
+            // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
         });
 
+        
         var vectorTileOptions = {
-            vectorTileLayerStyles: {
-            'objects_centroids': function() {
-            return {
-                icon: greenIcon
-            }
-            },
-            },
+            rendererFactory: L.canvas.tile,
             interactive: true,	// Make sure that this VectorGrid fires mouse/pointer events
+            vectorTileLayerStyles: {
+                'objects_centroids': function() {
+                    return {
+                        fillColor: '#E31A1C',
+                        fillOpacity: 0.5,
+                        stroke: true,
+                        fill: true,
+                        color: 'blue',
+                        weight: 1,
+                        radius: 5
+                      }
+                },
+            },
+            
         }
         
         var vectorUrl = 'https://geoserver.bigdatamap.keenetic.pro/geoserver/gwc/service/tms/1.0.0/leaders:objects_centroids@EPSG%3A900913@pbf/{z}/{x}/{-y}.pbf';
