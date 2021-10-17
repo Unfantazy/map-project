@@ -8,9 +8,9 @@ const Tabs = () => {
             <NavLink
                 exact
                 to={`/${tab}`}
-                activeClassName='active'
+                activeClassName='tabs-item__link---active'
                 className='tabs-item--link'
-                // activeStyle={{ background: '#fff' }}
+                activeStyle={{  }}
                 // style= {{ cursor: loading && 'wait' }}
             >
                 <span className={'d-flex align-items-center events-header__item--span'}>
