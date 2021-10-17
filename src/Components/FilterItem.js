@@ -7,9 +7,9 @@ const FilterItem = ({name,}) => {
         setIsActive(!isActive)
     }
     return (
-        <div className={`FilterItem ${isActive ? 'isActive' : ''}`} onClick={() => onFilterItemClick()}>
+        <button className={`FilterItem ${isActive ? 'isActive' : ''}`} onClick={() => onFilterItemClick()}>
             <span>{name}</span>
-        </div>
+        </button>
     );
 }
 
