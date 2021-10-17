@@ -7,9 +7,10 @@ import {includes} from "lodash";
 import {useOnClickOutside} from "../customHooks/useOnClickOutside";
 import FilterItem from "./FilterItem";
 import Loader from "./Loader";
+import CheckBox from "./CheckBox";
 
 
-const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems}) => {
+const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, checkbox = true}) => {
 
     const [items, setItems] = useState([])
     const [filter, setFilter] = useState('')
@@ -119,13 +120,14 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems}) =
                     {isLoading ? <Loader/>
                         : !!items?.length ? items.map(listItem => {
                             return <li
-                                className={`filter-select__item ${includes(selectedItemsIds, listItem.id)
+                                className={`filter-select__item ${(includes(selectedItemsIds, listItem.id) && !checkbox)
                                     ? 'selected' : ''}`}
                                 key={listItem.id}
                                 onClick={() => {
                                     onSelectItem(listItem)
                                 }}
                             >
+                                {checkbox && <CheckBox checked={includes(selectedItemsIds, listItem.id)}/>}
                                 {listItem.title}
                             </li>
                         }) : <div className={'nothing-found'}>По вашему запросу ничего не найдено</div>}

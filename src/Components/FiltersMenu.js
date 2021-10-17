@@ -39,11 +39,11 @@ const FiltersMenu = () => {
                 <Tabs/>
                 <div className='Menu-wrapper'>
                     <Switch>
-                        <Route exact path={'/filter'} render={() => (
+                        <Route exact path={'/'} render={() => (
                             <>
                                 <h1>Фильтры</h1>
                                 <div className={'scroller menu-inner'}>
-                                    <FilterSelect fetchItems={fetchNames} title={'Спортивный объект'}/>
+                                    <FilterSelect fetchItems={fetchNames} title={'Спортивный объект'} checkbox={false}/>
                                     <FilterSelect fetchItems={fetchOrganizations} title={'Ведомственная организация'}/>
                                     <FilterSelect fetchItems={fetchSportsZonesNames} title={'Спортивная зона'}/>
                                     <FilterSelect fetchItems={fetchSportsZonesTypes} title={'Тип спортивной зоны'}/>

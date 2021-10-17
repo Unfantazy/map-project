@@ -140,6 +140,9 @@
   &:hover {
     background-color: rgba(198, 191, 193, 0.29);
     color: $main;
+    .form-checkbox-custom .form-label:after {
+      border-color: $main;
+    }
   }
 
   &.selected {

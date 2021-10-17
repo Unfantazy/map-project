@@ -22,7 +22,7 @@ const Tabs = () => {
 
     return (
         <header className="tabs-header">
-            {renderTab('filter', 'Фильтры')}
+            {renderTab('', 'Фильтры')}
             {renderTab("layers", 'Слои')}
             {renderTab("services", 'Инструменты')}
         </header>

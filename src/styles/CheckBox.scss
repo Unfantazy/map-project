@@ -1,0 +1,43 @@
+@import "helpers/variables";
+.form-checkbox-custom {
+  margin-right: 3px;
+}
+
+.form-checkbox-custom input {
+  position: absolute;
+  z-index: -1;
+  margin: 10px 0 0 20px;
+  opacity: 0;
+}
+
+.form-checkbox-custom input:disabled + .form-label {
+  cursor: not-allowed;
+}
+
+.form-checkbox-custom input:disabled:checked + .form-label:after {
+  background: #ccc url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='iso-8859-1'?%3e%3c!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3e%3csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 45.701 45.7' width='10px' fill='%23a0a0a0' xml:space='preserve' %3e%3cpath d='M20.687,38.332c-2.072,2.072-5.434,2.072-7.505,0L1.554,26.704c-2.072-2.071-2.072-5.433,0-7.504 c2.071-2.072,5.433-2.072,7.505,0l6.928,6.927c0.523,0.522,1.372,0.522,1.896,0L36.642,7.368c2.071-2.072,5.433-2.072,7.505,0 c0.995,0.995,1.554,2.345,1.554,3.752c0,1.407-0.559,2.757-1.554,3.752L20.687,38.332z'/%3e%3c/svg%3e ") no-repeat center center;
+  border-color: #ccc;
+}
+
+.form-checkbox-custom input:checked + .form-label:before {
+  display: none;
+}
+
+.form-checkbox-custom input:checked + .form-label:after {
+  background: $main url("data:image/svg+xml;charset=UTF-8,%3c?xml version='1.0' encoding='iso-8859-1'?%3e%3c!DOCTYPE svg PUBLIC '-//W3C//DTD SVG 1.1//EN' 'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'%3e%3csvg version='1.1' id='Capa_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='0 0 45.701 45.7' width='10px' fill='white' xml:space='preserve' %3e%3cpath d='M20.687,38.332c-2.072,2.072-5.434,2.072-7.505,0L1.554,26.704c-2.072-2.071-2.072-5.433,0-7.504 c2.071-2.072,5.433-2.072,7.505,0l6.928,6.927c0.523,0.522,1.372,0.522,1.896,0L36.642,7.368c2.071-2.072,5.433-2.072,7.505,0 c0.995,0.995,1.554,2.345,1.554,3.752c0,1.407-0.559,2.757-1.554,3.752L20.687,38.332z'/%3e%3c/svg%3e ") no-repeat center center;
+  border: 1px solid $main;
+}
+
+.form-checkbox-custom .form-label:after {
+  content: "";
+  position: absolute;
+  top: 1px;
+  left: 0;
+  max-width: 16px;
+  max-height: 16px;
+  width: 1em;
+  height: 1em;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid #645C5C;
+}
