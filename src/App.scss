@@ -7,6 +7,7 @@
 @import "./styles/Filter-select";
 @import "./styles/Tabs";
 @import "./styles/CheckBox";
+@import "./styles/InfoBlock";
 
 .App {
   height: 100vh;
@@ -14,6 +15,8 @@
   margin: 0 auto;
   overflow: hidden;
   color: $blue;
+  display: flex;
+  justify-content: space-between;
 }
 
 .Map {

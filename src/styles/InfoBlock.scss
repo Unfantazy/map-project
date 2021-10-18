@@ -1,0 +1,61 @@
+@import "helpers/variables";
+
+.InfoBlock {
+  z-index: 1000000;
+  margin: 15px;
+  background: #FFFFFF;
+  box-shadow: 4px 4px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 25px;
+  padding: 28px 25px 25px 25px;
+  max-width: 380px;
+  max-height: 640px;
+  padding-right: 0;
+}
+
+.InfoBlock__title{
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.InfoBlockItem {
+  display: flex;
+  padding: 10px 0;
+}
+
+.InfoBlockItem+.InfoBlockItem {
+  border-top: 1px solid #C4C4C4;
+}
+
+.InfoBlockItem__title{
+  max-width: 123px;
+  width: 100%;
+  margin-right: 13px;
+  font-weight: 700;
+  font-size: 14px;
+  position: relative;
+  padding-left: 13px;
+  &:before{
+    content: "";
+    width: 3px;
+    height: 3px;
+    background-color: $blue;
+    border-radius: 50%;
+    position: absolute;
+    left: 0;
+    top: 8px;
+  }
+}
+
+.InfoBlockItem__items{
+  font-size: 13px;
+}
+
+.InfoBlockItem__item+.InfoBlockItem__item {
+  margin-top: 5px;
+}
+
+.InfoBlock__inner {
+  max-height: 510px;
+  overflow-y: scroll;
+  padding-right: 20px;
+}

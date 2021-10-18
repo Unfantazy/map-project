@@ -1,6 +1,7 @@
 import './App.scss';
 import FiltersMenu from "./Components/FiltersMenu";
 import Livemap from "./Components/Map";
+import InfoBlock from "./Components/InfoBlock";
 
 const App = () => {
     return (
@@ -10,6 +11,7 @@ const App = () => {
             <div className={'Map'}>
                 <Livemap/>
             </div>
+            <InfoBlock />
         </div>
     );
 }
