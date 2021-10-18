@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import L from 'leaflet';
-// import 'leaflet.vectorgrid';
+import '../Leaflet.VectorGrid/src/bundle';
 import svg from '../images/icons/map-marker_red.svg'
 
 class Livemap extends React.Component {
@@ -52,7 +52,7 @@ class Livemap extends React.Component {
 
         var vectorUrl = 'https://geoserver.bigdatamap.keenetic.pro/geoserver/gwc/service/tms/1.0.0/leaders:objects_centroids@EPSG%3A900913@pbf/{z}/{x}/{-y}.pbf';
 
-        // this.objs_vectorgrid = L.VectorGrid.Protobuf(vectorUrl, vectorTileOptions).addTo(this.map);
+        this.objs_vectorgrid = new L.VectorGrid.Protobuf(vectorUrl, vectorTileOptions).addTo(this.map);
 
         map?.on('click', this.onMapClick);
     }
