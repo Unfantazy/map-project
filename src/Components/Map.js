@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import L from 'leaflet';
 import '../Leaflet.VectorGrid/src/bundle';
 import '../Leaflet.markercluster/src/index';
-import svg from '../images/icons/map-marker_red.svg'
+import svg_red from '../images/icons/map-marker_red.svg'
+import svg_blue from '../images/icons/map-marker_blue.svg'
+
 import {mapAPI} from "../API/methods";
 
 class Livemap extends React.Component {
@@ -63,12 +65,25 @@ class Livemap extends React.Component {
         }).addTo(this.map);
 
         var objIcon = new L.Icon({
-            iconUrl: svg,
+            iconUrl: svg_red,
             iconSize: [24, 35], // size of the icon
-            // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+            iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
         });
 
-        this.markers = new L.markerClusterGroup({ chunkedLoading: true}).addTo(this.map);
+        var selectedIcon = new L.Icon({
+            iconUrl: svg_blue,
+            iconSize: [24, 35], // size of the icon
+            iconAnchor:   [20, 20], // point of the icon which will correspond to marker's location
+        });
+        
+
+        this.markers = new L.markerClusterGroup({ 
+            chunkedLoading: true, 
+            showCoverageOnHover: false, 
+            disableClusteringAtZoom:14,
+            removeOutsideVisibleBounds: true,
+            spiderfyOnMaxZoom: false,
+        }).addTo(this.map);
 
         function markersCreate (list, mapElement) {
             for (var i = 0; i < objectsPoints.length; i++) {
@@ -130,17 +145,19 @@ class Livemap extends React.Component {
 
         map?.on('click', this.onMapClick);
 
-        // this.objs_vectorgrid.on('click', (e) => {
-        //     mapAPI.getInfoAboutObject(e.layer.properties.id)
-        //         .then(res => {
-        //             this.props.setData(res.data.features.map(item => {
-        //                 return item.properties
-        //             }))
-        //         })
-        //         .catch(err => {
-        //             console.log(err)
-        //         })
-        // })
+        this.markers.on('click', (e) => {
+            e.layer.setIcon(selectedIcon)
+
+            mapAPI.getInfoAboutObject(e.layer.options.id)
+                .then(res => {
+                    this.props.setData(res.data.features.map(item => {
+                        return item.properties
+                    }))
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        })
         window.test_map = this.map;
     }
 
