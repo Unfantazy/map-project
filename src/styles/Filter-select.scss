@@ -67,6 +67,12 @@
   width: 100%;
 }
 
+.select__chosen {
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-right: 8px;
+}
+
 .Tag {
   font-size: 12px;
   font-weight: 700;

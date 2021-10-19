@@ -98,7 +98,8 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
 
                 </div>
                 <label className={'select-label'}>
-                    <SearchIcon/>
+                    {checkbox && <div className={'select__chosen'}>Выбрано ({selectedItems.length})</div>}
+                    <SearchIcon style={{flexShrink: 0}}/>
                     <input
                         type="text"
                         placeholder={'Введите название'}
