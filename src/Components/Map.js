@@ -29,27 +29,30 @@ class Livemap extends React.Component {
             attributionControl: false,
         });
 
-        var greenIcon = L.icon({
+        var greenIcon = new L.Icon({
+            
             iconUrl: svg,
-            iconSize: [40, 40], // size of the icon
+            iconSize: [24, 35], // size of the icon
             // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
         });
 
 
         var vectorTileOptions = {
             rendererFactory: L.canvas.tile,
+            buffer: 500,
             interactive: true,	// Make sure that this VectorGrid fires mouse/pointer events
             vectorTileLayerStyles: {
-                'objects_centroids': function () {
-                    return {
-                        fillColor: '#E31A1C',
-                        fillOpacity: 0.5,
-                        stroke: true,
-                        fill: true,
-                        color: 'blue',
-                        weight: 1,
-                        radius: 5
-                    }
+                'objects_centroids': {
+                    icon: greenIcon
+                    // return {
+                    //     fillColor: '#E31A1C',
+                    //     fillOpacity: 0.5,
+                    //     stroke: true,
+                    //     fill: true,
+                    //     color: 'blue',
+                    //     weight: 1,
+                    //     radius: 5
+                    // }
                 },
             },
 
