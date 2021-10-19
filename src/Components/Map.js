@@ -64,14 +64,15 @@ class Livemap extends React.Component {
 
         map?.on('click', this.onMapClick);
 
-        // console.log(this.objs_vectorgrid)
-
         this.objs_vectorgrid.on('click', (e) => {
             mapAPI.getInfoAboutObject(e.layer.properties.id)
                 .then(res => {
                     this.props.setData(res.data.features.map(item => {
                         return item.properties
                     }))
+                })
+                .catch(err => {
+                    console.log(err)
                 })
         })
     }
@@ -83,7 +84,7 @@ class Livemap extends React.Component {
     }
 
     onMapClick = () => {
-     //
+     // this.props.setData([])
     }
 
     render() {
