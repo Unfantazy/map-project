@@ -15,6 +15,7 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
     const [items, setItems] = useState([])
     const [filter, setFilter] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [onlySelected, setOnlySelected] = useState(false)
 
     useEffect(async () => {
         if (fetchItems) {
@@ -98,7 +99,11 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
 
                 </div>
                 <label className={'select-label'}>
-                    {checkbox && <div className={'select__chosen'}>Выбрано ({selectedItems.length})</div>}
+                    {checkbox && <div className={`select__chosen ${onlySelected ? 'selected' : ''}`}
+                    onClick={() => {
+                        setOnlySelected(!onlySelected)
+                    }}
+                    >Выбрано ({selectedItems.length})</div>}
                     <SearchIcon style={{flexShrink: 0}}/>
                     <input
                         type="text"
@@ -119,7 +124,21 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
             && <div className={`Filter-select__dropdown scroller ${isFocused && 'isFocused'}`}>
                 <ul className={'scroller select-dropdown__list'}>
                     {isLoading ? <Loader/>
-                        : !!items?.length ? items.map(listItem => {
+                        : onlySelected ? items?.map(listItem => {
+                            if((includes(selectedItemsIds, listItem.id))) {
+                                return <li
+                                    className={`filter-select__item ${(includes(selectedItemsIds, listItem.id) && !checkbox)
+                                        ? 'selected' : ''}`}
+                                    key={listItem.id}
+                                    onClick={() => {
+                                        onSelectItem(listItem)
+                                    }}
+                                >
+                                    {checkbox && <CheckBox checked={includes(selectedItemsIds, listItem.id)}/>}
+                                    {listItem.title}
+                                </li>
+                            }
+                        }) : !!items?.length ? items.map(listItem => {
                             return <li
                                 className={`filter-select__item ${(includes(selectedItemsIds, listItem.id) && !checkbox)
                                     ? 'selected' : ''}`}
