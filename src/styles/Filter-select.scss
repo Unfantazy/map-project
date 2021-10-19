@@ -164,16 +164,18 @@
   font-size: 12px;
   //border: 1px solid #B2AAAA;
   border-radius: 10px;
-  padding: 0 7px;
+  padding: 5px 7px;
   cursor: pointer;
   width: fit-content;
   min-width: 167px;
   margin-right: 3px;
   margin-bottom: 6px;
-  height: 20px;
-  line-height: 1;
+  min-height: 20px;
   display: flex;
   align-items: center;
+  justify-content: flex-start;
+  text-align: left;
+  line-height: 1.4;
 
   &.isActive {
     color: #FFFFFF;

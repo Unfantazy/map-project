@@ -12,9 +12,6 @@ class Livemap extends React.Component {
     }
 
     componentDidMount() {
-        console.log(this.props)
-        
-        
         var map = this.map = L?.map(ReactDOM.findDOMNode(this), {
             minZoom: 9,
             maxZoom: 20,
