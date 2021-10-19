@@ -108,7 +108,7 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
                         onChange={(e) => setFilter(e.currentTarget.value)}
                     />
                     {filter &&
-                    <CrossIcon style={{cursor: 'pointer', right: 10}}
+                    <CrossIcon style={{cursor: 'pointer', right: 12, flexShrink: 0}}
                                onClick={() => setFilter('')}
                     />
                     }
