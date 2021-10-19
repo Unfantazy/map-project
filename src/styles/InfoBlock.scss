@@ -8,8 +8,9 @@
   border-radius: 25px;
   padding: 28px 25px 25px 25px;
   max-width: 380px;
-  max-height: 640px;
+  max-height: 650px;
   padding-right: 0;
+  height: fit-content;
 }
 
 .InfoBlock__title{
@@ -55,7 +56,7 @@
 }
 
 .InfoBlock__inner {
-  max-height: 510px;
+  max-height: 530px;
   overflow-y: scroll;
   padding-right: 20px;
 }

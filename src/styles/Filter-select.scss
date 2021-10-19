@@ -162,11 +162,12 @@
 .FilterItem {
   font-weight: 400;
   font-size: 12px;
-  border: 1px solid #B2AAAA;
+  //border: 1px solid #B2AAAA;
   border-radius: 10px;
   padding: 0 7px;
   cursor: pointer;
   width: fit-content;
+  min-width: 167px;
   margin-right: 3px;
   margin-bottom: 6px;
   height: 20px;

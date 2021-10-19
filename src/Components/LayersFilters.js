@@ -1,14 +1,15 @@
 import FilterItem from "./FilterItem";
 
+export const layersNames = [
+    {id: 1, name: 'Спортивные объекты'},
+    {id: 2, name: 'Зоны доступности'},
+    {id: 3, name: 'Базовая карта'},
+    {id: 4, name: 'Тепловая карта спортивных зон'},
+    {id: 5, name: 'Тепловая карта населения'},
+    {id: 6, name: 'Тепловая карта обеспеченности спортивной инфраструктурой'},
+]
 
 const LayersFilters = () => {
-    const layersNames = [
-        {id: 1, name: 'Спортивные объекты'},
-        {id: 2, name: 'Тепловая карта населения'},
-        {id: 3, name: 'Тепловая карта спорт. объектов'},
-        {id: 4, name: 'Тепловая карта населения и спорт объектов'},
-    ]
-
     return (
         <>
             <div className={`Menu LayersFilters`}>

@@ -86,7 +86,7 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
                     }}
                 />
                 <div className={`tags-container scroller`}>
-                    {selectedItems.map(item => {
+                    {!checkbox && selectedItems.map(item => {
                         return <Tag
                             title={item.title}
                             onDelete={(e) => {

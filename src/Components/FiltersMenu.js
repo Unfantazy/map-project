@@ -4,15 +4,9 @@ import {mapAPI} from "../API/methods";
 import Tabs from "./Tabs";
 import {Route, Switch} from "react-router-dom";
 import FilterItem from "./FilterItem";
+import {layersNames} from "./LayersFilters";
 
 const FiltersMenu = () => {
-    const layersNames = [
-        {id: 1, name: 'Спортивные объекты'},
-        {id: 2, name: 'Тепловая карта населения'},
-        {id: 3, name: 'Тепловая карта спорт. объектов'},
-        {id: 4, name: 'Тепловая карта населения и спорт объектов'},
-    ]
-
     const fetchSportsTypes = useCallback((filter) => {
         return mapAPI.getSportsTypes('kind_sport', filter)
     }, [])
@@ -45,10 +39,15 @@ const FiltersMenu = () => {
                                 <div className={'scroller menu-inner'}>
                                     <FilterSelect fetchItems={fetchNames} title={'Спортивный объект'} checkbox={false}/>
                                     <FilterSelect fetchItems={fetchOrganizations} title={'Ведомственная организация'}/>
-                                    <FilterSelect fetchItems={fetchSportsZonesNames} title={'Спортивная зона'}/>
+                                    <FilterSelect fetchItems={fetchSportsZonesNames} title={'Спортивная зона'} checkbox={false}/>
                                     <FilterSelect fetchItems={fetchSportsZonesTypes} title={'Тип спортивной зоны'}/>
                                     <FilterSelect fetchItems={fetchSportsTypes} title={'Вид спорта'}/>
                                     <FilterSelect onlyItems={true} title={'Доступность спортивного объекта'}/>
+                                </div>
+
+                                <div className={'filter-btns'}>
+                                <button className={'filter-apply filter-btn'}>Применить</button>
+                                <button className={'filter-reset filter-btn'}>Сбросить</button>
                                 </div>
                             </>
                         )}/>
@@ -79,11 +78,6 @@ const FiltersMenu = () => {
                         )}/>
 
                     </Switch>
-
-                    <div className={'filter-btns'}>
-                        <button className={'filter-apply filter-btn'}>Применить</button>
-                        <button className={'filter-reset filter-btn'}>Сбросить</button>
-                    </div>
                 </div>
             </div>
         </>
