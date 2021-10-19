@@ -13,21 +13,50 @@ class Livemap extends React.Component {
 
     componentDidMount() {
         console.log(this.props)
+        
+        
         var map = this.map = L?.map(ReactDOM.findDOMNode(this), {
             minZoom: 9,
             maxZoom: 20,
             center: [55.740223, 37.595290],
             zoom: 11,
-            layers: [
-                L?.tileLayer(
-                    'https://tile2.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1.1',
-                    {
-                        attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-                            '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
-                    }),
+            layers: [ 
+                // L?.tileLayer(
+                //     'https://tile2.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1.1',
+                //     {
+                //         attribution: '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+                //             '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+                //     }),
             ],
             attributionControl: false,
         });
+
+        map.getPane('overlayPane').style.zIndex=1000
+
+        map.createPane('basePane');
+        map.getPane('basePane').style.zIndex = 100;
+        
+        map.createPane('heatPane');
+        map.getPane('heatPane').style.zIndex = 200;
+
+        map.createPane('bufferPane');
+        map.getPane('bufferPane').style.zIndex = 300;
+        
+        map.createPane('objectPane');
+        map.getPane('objectPane').style.zIndex = 400;        
+
+        var CartoDB_VoyagerNoLabels =  L?.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20,
+            pane: 'basePane',
+        }).addTo(this.map); 
+        var CartoDB_VoyagerOnlyLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20,
+            pane: 'overlayPane',
+        }).addTo(this.map);
 
         var greenIcon = new L.Icon({
             
@@ -40,6 +69,7 @@ class Livemap extends React.Component {
         var vectorTileOptions = {
             rendererFactory: L.canvas.tile,
             buffer: 500,
+            pane: 'objectPane',
             interactive: true,	// Make sure that this VectorGrid fires mouse/pointer events
             vectorTileLayerStyles: {
                 'objects_centroids': {
