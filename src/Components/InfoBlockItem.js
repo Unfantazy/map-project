@@ -1,6 +1,5 @@
 
 const InfoBlockItem = ({ name, organization, accessibility, kinds, zones, types }) => {
-    console.log(zones)
     return (
         <>
         <div className='InfoBlockItem'>
