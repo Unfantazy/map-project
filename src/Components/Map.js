@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import L from 'leaflet';
 import '../Leaflet.VectorGrid/src/bundle';
+import '../Leaflet.markercluster/src/index';
 import svg from '../images/icons/map-marker_red.svg'
 import {mapAPI} from "../API/methods";
 
@@ -27,6 +28,10 @@ class Livemap extends React.Component {
             ],
             attributionControl: false,
         });
+
+        map.on('zoomend', function(e){
+            console.log (map.getZoom())
+        })
 
         map.getPane('overlayPane').style.zIndex=1000
 
@@ -55,22 +60,44 @@ class Livemap extends React.Component {
             pane: 'overlayPane',
         }).addTo(this.map);
 
-        var greenIcon = new L.Icon({
-            
+        var objIcon = new L.Icon({
             iconUrl: svg,
             iconSize: [24, 35], // size of the icon
             // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
         });
 
+        this.markers = L.markerClusterGroup({ chunkedLoading: true });
+
+        var objectsPoints = mapAPI.getLayerJSON('objects_centroids').then(res => {
+                this.props.setData(res.data.features.map(item => {
+                    return item
+                }))
+            })
+            .catch(err => {
+                console.log(err)
+            })
+        console.log(objectsPoints)
+
+        // for (var i = 0; i < objectsPoints.length; i++) {
+        //     var a = addressPoints[i];
+        //     var title = a[2];
+        //     var marker = L.marker(L.latLng(a[0], a[1]), { title: title });
+        //     marker.bindPopup(title);
+        //     markers.addLayer(marker);
+        // }
+
+        // this.markers = L.markerClusterGroup();
+        // this.markers.addLayer(this.objs_vectorgrid);
 
         var vectorTileOptions = {
-            rendererFactory: L.canvas.tile,
-            buffer: 500,
+            rendererFactory: L.svg.tile,
+            // buffer: 500,
             pane: 'objectPane',
+            // minZoom: 14,
             interactive: true,	// Make sure that this VectorGrid fires mouse/pointer events
             vectorTileLayerStyles: {
                 'objects_centroids': {
-                    icon: greenIcon
+                    icon: objIcon
                     // return {
                     //     fillColor: '#E31A1C',
                     //     fillOpacity: 0.5,
@@ -88,6 +115,8 @@ class Livemap extends React.Component {
         var vectorUrl = 'https://geoserver.bigdatamap.keenetic.pro/geoserver/gwc/service/tms/1.0.0/leaders:objects_centroids@EPSG%3A900913@pbf/{z}/{x}/{-y}.pbf';
 
         this.objs_vectorgrid = new L.VectorGrid.Protobuf(vectorUrl, vectorTileOptions).addTo(this.map);
+
+ 
 
         map?.on('click', this.onMapClick);
 

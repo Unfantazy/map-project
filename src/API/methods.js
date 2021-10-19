@@ -25,6 +25,9 @@ export const mapAPI = {
     },
     getInfoAboutObject(id) {
         return instance.get(`http://geoserver.bigdatamap.keenetic.pro/geoserver/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Ainfo_objects&VIEWPARAMS=id:${id}&OUTPUTFORMAT=application%2Fjson`)
+    },
+    getLayerJSON(layer) {
+        return instance.get(`http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=leaders:${layer}&outputFormat=json&format_options=callback:getJson`)
     }
 }
 
