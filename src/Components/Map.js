@@ -45,7 +45,9 @@ class Livemap extends React.Component {
         map.getPane('bufferPane').style.zIndex = 300;
         
         map.createPane('objectPane');
-        map.getPane('objectPane').style.zIndex = 400;        
+        map.getPane('objectPane').style.zIndex = 400;       
+        
+        map.getPane('markerPane').style.zIndex = 400; 
 
         var CartoDB_VoyagerNoLabels =  L?.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -66,17 +68,26 @@ class Livemap extends React.Component {
             // iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
         });
 
-        this.markers = L.markerClusterGroup({ chunkedLoading: true });
+        this.markers = new L.markerClusterGroup({ chunkedLoading: true}).addTo(this.map);
+
+        function markersCreate (list, mapElement) {
+            for (var i = 0; i < objectsPoints.length; i++) {
+                var a = list[i];
+                var id = a.properties.id;
+                var marker = new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), { id: id, icon: objIcon}).addTo(mapElement.markers);
+            }
+            window.test_markers = mapElement.markers;
+            console.log('1')
+        }
 
         var objectsPoints = mapAPI.getLayerJSON('objects_centroids').then(res => {
-                this.props.setData(res.data.features.map(item => {
-                    return item
-                }))
+                objectsPoints = res.data.features
+                markersCreate (objectsPoints, this)
             })
             .catch(err => {
                 console.log(err)
             })
-        console.log(objectsPoints)
+        // console.log(objectsPoints)
 
         // for (var i = 0; i < objectsPoints.length; i++) {
         //     var a = addressPoints[i];
@@ -86,8 +97,7 @@ class Livemap extends React.Component {
         //     markers.addLayer(marker);
         // }
 
-        // this.markers = L.markerClusterGroup();
-        // this.markers.addLayer(this.objs_vectorgrid);
+        
 
         var vectorTileOptions = {
             rendererFactory: L.svg.tile,
@@ -114,23 +124,24 @@ class Livemap extends React.Component {
 
         var vectorUrl = 'https://geoserver.bigdatamap.keenetic.pro/geoserver/gwc/service/tms/1.0.0/leaders:objects_centroids@EPSG%3A900913@pbf/{z}/{x}/{-y}.pbf';
 
-        this.objs_vectorgrid = new L.VectorGrid.Protobuf(vectorUrl, vectorTileOptions).addTo(this.map);
+        // this.objs_vectorgrid = new L.VectorGrid.Protobuf(vectorUrl, vectorTileOptions).addTo(this.map);
 
  
 
         map?.on('click', this.onMapClick);
 
-        this.objs_vectorgrid.on('click', (e) => {
-            mapAPI.getInfoAboutObject(e.layer.properties.id)
-                .then(res => {
-                    this.props.setData(res.data.features.map(item => {
-                        return item.properties
-                    }))
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-        })
+        // this.objs_vectorgrid.on('click', (e) => {
+        //     mapAPI.getInfoAboutObject(e.layer.properties.id)
+        //         .then(res => {
+        //             this.props.setData(res.data.features.map(item => {
+        //                 return item.properties
+        //             }))
+        //         })
+        //         .catch(err => {
+        //             console.log(err)
+        //         })
+        // })
+        window.test_map = this.map;
     }
 
 
