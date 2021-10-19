@@ -3,11 +3,16 @@ import ReactDOM from 'react-dom';
 import L from 'leaflet';
 import '../Leaflet.VectorGrid/src/bundle';
 import svg from '../images/icons/map-marker_red.svg'
+import {mapAPI} from "../API/methods";
 
 class Livemap extends React.Component {
 
+    constructor(props) {
+        super(props);
+    }
+
     componentDidMount() {
-        console.log(L)
+        console.log(this.props)
         var map = this.map = L?.map(ReactDOM.findDOMNode(this), {
             minZoom: 9,
             maxZoom: 20,
@@ -55,6 +60,17 @@ class Livemap extends React.Component {
         this.objs_vectorgrid = new L.VectorGrid.Protobuf(vectorUrl, vectorTileOptions).addTo(this.map);
 
         map?.on('click', this.onMapClick);
+
+        // console.log(this.objs_vectorgrid)
+
+        this.objs_vectorgrid.on('click', (e) => {
+            mapAPI.getInfoAboutObject(e.layer.properties.id)
+                .then(res => {
+                    this.props.setData(res.data.features.map(item => {
+                        return item.properties
+                    }))
+                })
+        })
     }
 
 
@@ -64,7 +80,7 @@ class Livemap extends React.Component {
     }
 
     onMapClick = () => {
-        // Do some wonderful map things...
+     //
     }
 
     render() {

@@ -1,6 +1,6 @@
 import InfoBlockItem from "./InfoBlockItem";
 
-const InfoBlock = () => {
+const InfoBlock = ({ data }) => {
     const items = [
         { id: 1, title: 'Наименование:', items: ['Спортивный комплекс высшего учебного заведения'] },
         { id: 2, title: 'Ведомство:', items: ['Минобрнауки России'] },
@@ -14,11 +14,15 @@ const InfoBlock = () => {
            <div className={'InfoBlock__wrapper'}>
                <h1 className={'InfoBlock__title'}>Информация по спортивному объекту</h1>
                <div className="InfoBlock__inner scroller">
-                   {items.map(item => {
+                   {data.map(item => {
                        return <InfoBlockItem
-                           key={item.id}
                            title={item.title}
-                           items={item.items}
+                           name={item.obj_name}
+                           accessibility={item.accessibility}
+                           kinds={JSON.parse(item.s_kinds)}
+                           types={JSON.parse(item.z_types)}
+                           zones={JSON.parse(item.s_zones)}
+                           organization={item.organization}
                        />
                    })}
                </div>

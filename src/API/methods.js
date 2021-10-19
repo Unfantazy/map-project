@@ -22,6 +22,10 @@ export const mapAPI = {
     },
     getNames(type, value) {
         return instance.get(`http://geoserver.bigdatamap.keenetic.pro/geoserver/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Afilter_${type}&VIEWPARAMS=${value ? `name:${value}` : ''}&OUTPUTFORMAT=application%2Fjson`)
+    },
+    getInfoAboutObject(id) {
+        return instance.get(`http://geoserver.bigdatamap.keenetic.pro/geoserver/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Ainfo_objects&VIEWPARAMS=id:${id}&OUTPUTFORMAT=application%2Fjson`)
     }
-
 }
+
+
