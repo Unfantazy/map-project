@@ -147,7 +147,13 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
                                     onSelectItem(listItem)
                                 }}
                             >
-                                {checkbox && <CheckBox checked={includes(selectedItemsIds, listItem.id)}/>}
+                                {checkbox
+                                && <CheckBox
+                                    checked={includes(selectedItemsIds, listItem.id)}
+                                    onChange={() => {
+                                        onSelectItem(listItem)
+                                    }}
+                                />}
                                 {listItem.title}
                             </li>
                         }) : <div className={'nothing-found'}>По вашему запросу ничего не найдено</div>}
