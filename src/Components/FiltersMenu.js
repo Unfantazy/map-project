@@ -46,8 +46,8 @@ const FiltersMenu = () => {
                                 </div>
 
                                 <div className={'filter-btns'}>
-                                <button className={'filter-apply filter-btn'}>Применить</button>
-                                <button className={'filter-reset filter-btn'}>Сбросить</button>
+                                    <button className={'filter-apply filter-btn'}>Применить</button>
+                                    <button className={'filter-reset filter-btn'}>Сбросить</button>
                                 </div>
                             </>
                         )}/>
@@ -78,6 +78,9 @@ const FiltersMenu = () => {
                             <>
                                 <h1>Инструменты</h1>
                                 <div className={'scroller menu-inner'}>
+                                </div>
+                                <div className={'filter-btns'}>
+                                    <button className={'filter-apply filter-btn'} id="layerBtn">Применить</button>
                                 </div>
                             </>
                         )}/>

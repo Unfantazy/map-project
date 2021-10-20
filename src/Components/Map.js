@@ -3,17 +3,13 @@ import ReactDOM from 'react-dom';
 import L from 'leaflet';
 import '../Leaflet.VectorGrid/src/bundle';
 import '../Leaflet.markercluster/src/index';
+import '@geoman-io/leaflet-geoman-free'
 import svg_red from '../images/icons/map-marker_red.svg'
 import svg_blue from '../images/icons/map-marker_blue.svg'
 
 import {mapAPI} from "../API/methods";
 
 class Livemap extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     componentDidMount() {
         var map = this.map = L?.map(ReactDOM.findDOMNode(this), {
             minZoom: 9,
@@ -51,13 +47,13 @@ class Livemap extends React.Component {
         
         map.getPane('markerPane').style.zIndex = 400; 
 
-        var CartoDB_VoyagerNoLabels =  L?.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
+        L?.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
             maxZoom: 20,
             pane: 'basePane',
         }).addTo(this.map); 
-        var CartoDB_VoyagerOnlyLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png', {
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
             maxZoom: 20,
@@ -89,7 +85,7 @@ class Livemap extends React.Component {
             for (var i = 0; i < objectsPoints.length; i++) {
                 var a = list[i];
                 var id = a.properties.id;
-                var marker = new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), { id: id, icon: objIcon}).addTo(mapElement.markers);
+                new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), { id: id, icon: objIcon}).addTo(mapElement.markers);
             }
             window.test_markers = mapElement.markers;
             console.log('1')
@@ -111,8 +107,6 @@ class Livemap extends React.Component {
         //     marker.bindPopup(title);
         //     markers.addLayer(marker);
         // }
-
-        
 
         var vectorTileOptions = {
             rendererFactory: L.svg.tile,
@@ -141,8 +135,6 @@ class Livemap extends React.Component {
 
         // this.objs_vectorgrid = new L.VectorGrid.Protobuf(vectorUrl, vectorTileOptions).addTo(this.map);
 
- 
-
         map?.on('click', this.onMapClick);
 
         this.markers.on('click', (e) => {
@@ -158,9 +150,27 @@ class Livemap extends React.Component {
                     console.log(err)
                 })
         })
-        window.test_map = this.map;
-    }
 
+        window.test_map = this.map;
+
+        map?.pm.setLang('ru');
+        map?.pm.addControls({  
+            position: 'topleft',  
+            drawCircleMarker: false,  
+            drawMarker: false,  
+            drawPolyline: false
+          }); 
+
+        document.getElementById('layerBtn')?.addEventListener('click', () =>{
+            var drawingLayers = map.pm.getGeomanDrawLayers(true).getLayers();
+            var group = L.featureGroup();
+            drawingLayers.forEach((layer) => {
+                group.addLayer(layer.pm.getShape() === 'Circle' ? L.PM.Utils.circleToPolygon(layer, 20) : layer);
+            })
+            var shapes = group.toGeoJSON();
+            console.log(shapes);
+        })
+    }
 
     componentWillUnmount() {
         this.map?.off('click', this.onMapClick);
@@ -176,7 +186,6 @@ class Livemap extends React.Component {
             <div className='map' id={'map'}></div>
         );
     }
-
 }
 
 export default Livemap
