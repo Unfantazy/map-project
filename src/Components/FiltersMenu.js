@@ -4,7 +4,7 @@ import {mapAPI} from "../API/methods";
 import Tabs from "./Tabs";
 import {Route, Switch} from "react-router-dom";
 import FilterItem from "./FilterItem";
-import {layersNames} from "./LayersFilters";
+import {objectLayersNames, heatLayersNames} from "./LayersFilters";
 
 const FiltersMenu = () => {
     const fetchSportsTypes = useCallback((filter) => {
@@ -58,11 +58,16 @@ const FiltersMenu = () => {
                                 <div className={'scroller menu-inner'}>
                                     <div className={'menu-inner'}>
                                         <div className={'layers'}>
-                                            {layersNames.map(layer => <FilterItem
+                                            {objectLayersNames.map(layer => <FilterItem
                                                 key={layer.id}
                                                 name={layer.name}
                                             />)}
-
+                                            <div className={"line"}>
+                                                {heatLayersNames.map(layer => <FilterItem
+                                                    key={layer.id}
+                                                    name={layer.name}
+                                                />)}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
