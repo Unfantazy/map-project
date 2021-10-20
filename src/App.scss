@@ -107,6 +107,21 @@ h1 {
   color: white;
 }
 
+.hint-icon {
+  width: 46px;
+  height: 46px;
+  background: rgba(17, 9, 50, 0.71);
+  border: 3.408px solid #EEEEEE;
+  border-radius: 5px;
+  z-index: 100000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
 .line {
   border-top: 1px solid rgba(196, 196, 196, 0.85);
   margin-top: 4px;
