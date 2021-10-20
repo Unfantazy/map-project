@@ -15,7 +15,7 @@ const App = () => {
                 <Map setData={setData} data={data}/>
             </div>
             {!!data.length
-            && <InfoBlock data={data}/>
+            && <InfoBlock data={data} setData={setData}/>
             }
         </div>
     );

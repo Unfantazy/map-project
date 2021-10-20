@@ -1,10 +1,21 @@
 import InfoBlockItem from "./InfoBlockItem";
+import {ReactComponent as CrossIcon} from '../images/icons/cross-dark.svg'
 
-const InfoBlock = ({ data }) => {
+const InfoBlock = ({ data, setData }) => {
     return (
         <div className='InfoBlock'>
            <div className={'InfoBlock__wrapper'}>
-               <h1 className={'InfoBlock__title'}>Информация по спортивному объекту</h1>
+               <div className={'InfoBlock__top'}>
+                   <button className={'InfoBlock__close'}
+                   onClick={() => {
+                       setData([])
+                   }}
+                   >
+                       <CrossIcon />
+                   </button>
+                   <h1 className={'InfoBlock__title'}>Информация по спортивному объекту</h1>
+               </div>
+
                <div className="InfoBlock__inner scroller">
                    {data.map(item => {
                        return <InfoBlockItem
