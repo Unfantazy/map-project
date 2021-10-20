@@ -7,7 +7,8 @@ const InfoBlock = ({ data, setData }) => {
            <div className={'InfoBlock__wrapper'}>
                <div className={'InfoBlock__top'}>
                    <button className={'InfoBlock__close'}
-                   onClick={() => {
+                           id={'close-info'}
+                   onClick={(e) => {
                        setData([])
                    }}
                    >
