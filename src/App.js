@@ -3,7 +3,8 @@ import FiltersMenu from "./Components/FiltersMenu";
 import Map from "./Components/Map";
 import InfoBlock from "./Components/InfoBlock";
 import {useState} from "react";
-import {ReactComponent as IIcon} from './images/icons/i.svg'
+import Hint from "./Components/Hint";
+
 
 const App = () => {
     const [data, setData] = useState([])
@@ -17,7 +18,7 @@ const App = () => {
             {!!data.length
             && <InfoBlock data={data} setData={setData}/>
             }
-            <div className='hint-icon'><IIcon /></div>
+            <Hint/>
         </div>
     );
 }

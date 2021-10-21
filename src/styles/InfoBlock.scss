@@ -13,6 +13,22 @@
   height: fit-content;
 }
 
+.HintBlock {
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
+  font-size: 13px;
+  line-height: 16px;
+}
+
+.HintBlock__item+.HintBlock__item {
+  margin-top: 9px;
+}
+
+.HintBlock__text {
+  margin-bottom: 9px;
+}
+
 .InfoBlock__top {
   display: flex;
   align-items: center;
