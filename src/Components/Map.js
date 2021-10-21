@@ -60,6 +60,21 @@ class Livemap extends React.Component {
             pane: 'overlayPane',
         }).addTo(this.map);
 
+        var heatParams = 'obj_name:Спортивный комплекс образовательного учреждения\;Дворовая территория;org_id:219814\;237454;sz_name:зал спортивный №1;s_kind:46\;100;buf:500\;1000'
+        var envParams = 'class_empty:0.9;class_1:242;class_2:392;class_3:560.83;class_4:800;class_5:1488'
+        var heat_square =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
+			layers:'leaders:'+'heatmap_square',
+			styles:'leaders:heatmap_square_style',
+			format: 'image/png',
+			transparent: 'true',
+			tileSize: 512,
+			pane: 'heatPane',
+			detectRetina: true,
+			opacity: 0.5,
+			viewparams: heatParams,
+			env: envParams
+		}).addTo(this.map); 
+
         var objIcon = new L.Icon({
             iconUrl: svg_red,
             iconSize: [24, 35], // size of the icon
@@ -76,7 +91,7 @@ class Livemap extends React.Component {
         this.markers = new L.markerClusterGroup({ 
             chunkedLoading: true, 
             showCoverageOnHover: false, 
-            disableClusteringAtZoom:14,
+            disableClusteringAtZoom:15,
             removeOutsideVisibleBounds: true,
             spiderfyOnMaxZoom: false,
         }).addTo(this.map);
@@ -88,7 +103,6 @@ class Livemap extends React.Component {
                 new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), { id: id, icon: objIcon}).addTo(mapElement.markers);
             }
             window.test_markers = mapElement.markers;
-            console.log('1')
         }
 
         var objectsPoints = mapAPI.getLayerJSON('objects_centroids').then(res => {
@@ -98,15 +112,20 @@ class Livemap extends React.Component {
             .catch(err => {
                 console.log(err)
             })
-        // console.log(objectsPoints)
 
-        // for (var i = 0; i < objectsPoints.length; i++) {
-        //     var a = addressPoints[i];
-        //     var title = a[2];
-        //     var marker = L.marker(L.latLng(a[0], a[1]), { title: title });
-        //     marker.bindPopup(title);
-        //     markers.addLayer(marker);
-        // }
+        var emptyLayer = L.tileLayer('');
+        
+        var baseMaps = {
+            'Базовая карта':emptyLayer,
+            "Тепловая карта спортивных зон": heat_square
+        };
+        
+        var overlayMaps = {
+            "Спортивные объекты": this.markers
+        };
+        
+        L.control.layers(baseMaps, overlayMaps, {position:'topright',collapsed:false}).addTo(map);
+
 
         var vectorTileOptions = {
             rendererFactory: L.svg.tile,
