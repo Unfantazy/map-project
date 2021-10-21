@@ -15,10 +15,11 @@
 
 .HintBlock {
   position: absolute;
-  bottom: 15px;
-  right: 15px;
+  bottom: 0;
+  right: 0;
   font-size: 13px;
   line-height: 16px;
+  max-width: 380px;
 }
 
 .HintBlock__item+.HintBlock__item {
