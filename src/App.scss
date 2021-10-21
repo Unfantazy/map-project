@@ -121,6 +121,10 @@ h1 {
   position: absolute;
   bottom: 20px;
   right: 20px;
+  transition: background .2s;
+  &:hover {
+    background: rgba(17, 9, 50, 1);
+  }
 }
 .line {
   border-top: 1px solid rgba(196, 196, 196, 0.85);
