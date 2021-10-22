@@ -27,9 +27,6 @@ class Livemap extends React.Component {
             attributionControl: false,
         });
 
-        map.on('zoomend', function(e){
-            console.log (map.getZoom())
-        })
 
         map.getPane('overlayPane').style.zIndex=1000
 
@@ -60,10 +57,11 @@ class Livemap extends React.Component {
             pane: 'overlayPane',
         }).addTo(this.map);
 
-        var heatParams = 'obj_name:Спортивный комплекс образовательного учреждения\;Дворовая территория;org_id:219814\;237454;sz_name:зал спортивный №1;s_kind:46\;100;buf:500\;1000'
-        var envParams = 'class_empty:0.9;class_1:242;class_2:392;class_3:560.83;class_4:800;class_5:1488'
+        // heatmap square init
+        var heatSqParams = 'obj_name:Спортивный комплекс образовательного учреждения\;Дворовая территория;org_id:219814\;237454;sz_name:зал спортивный №1;s_kind:46\;100;buf:500\;1000'
+        var envSqParams = 'class_empty:0.9;class_1:242;class_2:392;class_3:560.83;class_4:800;class_5:1488'
         var heat_square =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
-			layers:'leaders:'+'heatmap_square',
+			layers:'leaders:heatmap_square',
 			styles:'leaders:heatmap_square_style',
 			format: 'image/png',
 			transparent: 'true',
@@ -71,9 +69,37 @@ class Livemap extends React.Component {
 			pane: 'heatPane',
 			detectRetina: true,
 			opacity: 0.5,
-			viewparams: heatParams,
-			env: envParams
-		}).addTo(this.map); 
+			viewparams: heatSqParams,
+			env: envSqParams
+		}); 
+
+        
+        var heat_population =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
+			layers:'leaders:grid_hex_wgs_population',
+			styles:'leaders:heat_population',
+			format: 'image/png',
+			transparent: 'true',
+			tileSize: 512,
+			pane: 'heatPane',
+			detectRetina: true,
+			opacity: 0.5
+		}); 
+
+        // heatmap square init
+        var heatProvParams = ''
+        var envProvParams = 'class_empty:0.9;class_1:8670206.3;class_2:18565976.733333334;class_3:30695172;class_4:49502611.55000001;class_5:1452003333'
+        var heat_provision =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
+			layers:'leaders:heatmap_provision',
+			styles:'leaders:heatmap_provision_style',
+			format: 'image/png',
+			transparent: 'true',
+			tileSize: 512,
+			pane: 'heatPane',
+			detectRetina: true,
+			opacity: 0.5,
+			viewparams: heatProvParams,
+			env: envProvParams
+		}); 
 
         var objIcon = new L.Icon({
             iconUrl: svg_red,
@@ -113,11 +139,13 @@ class Livemap extends React.Component {
                 console.log(err)
             })
 
-        var emptyLayer = L.tileLayer('');
+        var emptyLayer = L.tileLayer('').addTo(this.map);
         
         var baseMaps = {
             'Базовая карта':emptyLayer,
-            "Тепловая карта спортивных зон": heat_square
+            'Тепловая карта спортивных зон': heat_square,
+            'Тепловая карта населения':heat_population,
+            'Тепловая карта обеспеченности спортивными зонами':heat_provision
         };
         
         var overlayMaps = {
@@ -125,7 +153,6 @@ class Livemap extends React.Component {
         };
         
         L.control.layers(baseMaps, overlayMaps, {position:'topright',collapsed:false}).addTo(map);
-
 
         var vectorTileOptions = {
             rendererFactory: L.svg.tile,
