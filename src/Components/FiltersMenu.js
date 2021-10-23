@@ -57,7 +57,7 @@ const FiltersMenu = ({setModel, model}) => {
         }
         
         LoadMarkers(window.Markers, params);
-        Promise.resolve(AddLayersWithControl(this.map, this.markers, params));
+        Promise.resolve(AddLayersWithControl(window.LeafletMap, window.Markers, params));
     }
 
     return (
