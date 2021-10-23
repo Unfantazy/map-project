@@ -184,11 +184,26 @@ const AddGeomanControl = (mapElement) => {
 
         document.getElementById('layerBtn')?.addEventListener('click', () => {
             var drawingLayers = mapElement.pm.getGeomanDrawLayers(true).getLayers()[0];
-            var shape = drawingLayers.pm.getShape() === 'Circle' ? L.PM.Utils.circleToPolygon(drawingLayers, 20) : drawingLayers;
-            var shapeJson = shape.toGeoJSON()['geometry'];
-            var shapeJsonFormatted = JSON.stringify(shapeJson).replaceAll(",", "\\,")
-            console.log(mapAPI.getShapeProvision('geojson:' + shapeJsonFormatted));
-        })
+            var shape = drawingLayers.pm.getShape() === 'Circle' 
+                ? L.PM.Utils.circleToPolygon(drawingLayers, 20) 
+                : drawingLayers;
+            var type = Object.values(mapElement._layers).filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0
+            ? 'info_sports'
+            : Object.values(mapElement._layers).filter(x => x.options.styles === 'leaders:heatmap_provision_style').length > 0
+                ? 'info_provision'
+                : '';
+            mapAPI.getShape(type, 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,"))
+                .then(res => {
+                    var a = res.data.features.map(item => {
+                        return item.properties
+                    });
+                    console.log(a)
+                    this.props.setAreaData(a)
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+        });
     }
 }
 

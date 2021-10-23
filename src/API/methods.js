@@ -37,14 +37,14 @@ export const mapAPI = {
     getObjectsBuffersByFilters(params) {
         return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%filter_apply_buffers&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`)
     },
-    getShapeProvision(params) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Ainfo_provision_territory&VIEWPARAMS=${params ? params : ''}&OUTPUTFORMAT=application%2Fjson`)
-    },
     getParamsForHeatmapSquare(params) {
         return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Athresholds_heatmap_square&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`);
     },
     getParamsForHeatmapProvision(params) {
         return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Athresholds_heatmap_provision&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`);
+    },
+    getShape(type, params) {
+        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3A${type}&VIEWPARAMS=${params ? params : ''}&OUTPUTFORMAT=application%2Fjson`)
     }
 }
 

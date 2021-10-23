@@ -4,10 +4,12 @@ import Map from "./Components/Map";
 import InfoBlock from "./Components/InfoBlock";
 import {useState} from "react";
 import Hint from "./Components/Hint";
+import InfoAreaBlock from './Components/InfoAreaBlock';
 
 
 const App = () => {
     const [data, setData] = useState([])
+    const [areaData, setAreaData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
     const initialStateModel = {
@@ -21,16 +23,17 @@ const App = () => {
 
     const [model, setModel] = useState(initialStateModel)
 
-    console.log(model)
-
     return (
         <div className='App'>
             <FiltersMenu model={model} setModel={setModel}/>
             <div className={'Map'}>
-                <Map setData={setData} data={data}/>
+                <Map setData={setData} data={data} setAreaData={setAreaData} areaData={areaData}/>
             </div>
             {!!data.length
             && <InfoBlock data={data} setData={setData}/>
+            }
+            {!!areaData.length
+            && <InfoAreaBlock areaData={areaData} setAreaData={setAreaData}/>
             }
             <Hint/>
         </div>

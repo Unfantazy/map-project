@@ -130,6 +130,9 @@ const FiltersMenu = ({setModel, model}) => {
                                 <div className={'services-control'}>
                                 </div>
                             </div>
+                            <div className={'filter-btns'}>
+                                <button className={'filter-apply filter-btn'} id='layerBtn'>Рассчитать</button>
+                            </div>
                         </TabPanel>
                     </div>
                 </Tabs>
