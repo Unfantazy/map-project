@@ -9,9 +9,21 @@ import svg_blue from '../images/icons/map-marker_blue.svg'
 
 import {mapAPI} from "../API/methods";
 
+const objIcon = new L.Icon({
+    iconUrl: svg_red,
+    iconSize: [24, 35],
+    iconAnchor: [20, 20],
+});
+
+const selectedIcon = new L.Icon({
+    iconUrl: svg_blue,
+    iconSize: [24, 35],
+    iconAnchor: [20, 20],
+});   
+
 class Livemap extends React.Component {
     componentDidMount() {
-        var map = this.map = L?.map(ReactDOM.findDOMNode(this), {
+        window.LeafletMap = this.map = L?.map(ReactDOM.findDOMNode(this), {
             minZoom: 9,
             maxZoom: 20,
             center: [55.740223, 37.595290],
@@ -20,21 +32,21 @@ class Livemap extends React.Component {
             attributionControl: false,
         });
 
-        map.getPane('overlayPane').style.zIndex=1000
+        this.map.getPane('overlayPane').style.zIndex=1000
 
-        map.createPane('basePane');
-        map.getPane('basePane').style.zIndex = 100;
+        this.map.createPane('basePane');
+        this.map.getPane('basePane').style.zIndex = 100;
         
-        map.createPane('heatPane');
-        map.getPane('heatPane').style.zIndex = 200;
+        this.map.createPane('heatPane');
+        this.map.getPane('heatPane').style.zIndex = 200;
 
-        map.createPane('bufferPane');
-        map.getPane('bufferPane').style.zIndex = 300;
+        this.map.createPane('bufferPane');
+        this.map.getPane('bufferPane').style.zIndex = 300;
         
-        map.createPane('objectPane');
-        map.getPane('objectPane').style.zIndex = 400;       
+        this.map.createPane('objectPane');
+        this.map.getPane('objectPane').style.zIndex = 400;       
         
-        map.getPane('markerPane').style.zIndex = 400; 
+        this.map.getPane('markerPane').style.zIndex = 400; 
 
         L?.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
@@ -47,21 +59,9 @@ class Livemap extends React.Component {
             subdomains: 'abcd',
             maxZoom: 20,
             pane: 'overlayPane',
-        }).addTo(this.map);
+        }).addTo(this.map);     
 
-        var objIcon = new L.Icon({
-            iconUrl: svg_red,
-            iconSize: [24, 35], // size of the icon
-            iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
-        });
-
-        var selectedIcon = new L.Icon({
-            iconUrl: svg_blue,
-            iconSize: [24, 35], // size of the icon
-            iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
-        });        
-
-        this.markers = new L.markerClusterGroup({ 
+        window.Markers = this.markers = new L.markerClusterGroup({ 
             chunkedLoading: true, 
             showCoverageOnHover: false, 
             disableClusteringAtZoom:15,
@@ -69,52 +69,23 @@ class Livemap extends React.Component {
             spiderfyOnMaxZoom: false,
         }).addTo(this.map);
 
-        function markersCreate (list, mapElement) {
-            for (var i = 0; i < objectsPoints.length; i++) {
-                var a = list[i];
+        mapAPI.getLayerJSON('objects_centroids').then(res => {
+            this.markers.clearLayers();
+            for (var i = 0; i < res.data.features.length; i++) {
+                var a = res.data.features[i];
                 var id = a.properties.id;
-                new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), { id: id, icon: objIcon}).addTo(mapElement.markers);
+                new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), { id: id, icon: objIcon})
+                    .addTo(this.markers);
             }
-            window.test_markers = mapElement.markers;
-        }
-
-        var objectsPoints = mapAPI.getLayerJSON('objects_centroids').then(res => {
-                objectsPoints = res.data.features
-                markersCreate (objectsPoints, this)
-            })
-            .catch(err => {
-                console.log(err)
-            })      
-
-        // добавление контрола переключения слоев
-        AddLayersControl(this);
-
-        // добавление контрола geoman
-        AddGeomanControl(this.map);
-        
-        var vectorTileOptions = {
-            rendererFactory: L.svg.tile,
-            // buffer: 500,
-            pane: 'objectPane',
-            // minZoom: 14,
-            interactive: true,
-            vectorTileLayerStyles: {
-                'objects_centroids': {
-                    icon: objIcon
-                },
-            }
-        }
-
-        var vectorUrl = 'https://geoserver.bigdatamap.keenetic.pro/geoserver/gwc/service/tms/1.0.0/leaders:objects_centroids@EPSG%3A900913@pbf/{z}/{x}/{-y}.pbf';
-
-        // this.objs_vectorgrid = new L.VectorGrid.Protobuf(vectorUrl, vectorTileOptions).addTo(this.map);
-
-        map?.on('click', this.onMapClick);
+        })
+        .catch(err => {
+            console.log(err)
+        })  
 
         this.markers.on('click', (e) => {
             e.layer.setIcon(selectedIcon)
 
-            var obj_buffer =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
+            L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
                 layers:'leaders:object_buffer',
                 styles:'leaders:buffer_selected',
                 format: 'image/png',
@@ -136,7 +107,14 @@ class Livemap extends React.Component {
                 })
         })
 
-        window.test_map = this.map;
+        this.map.on('click', this.onMapClick);
+
+        // добавление контрола переключения слоев
+        const filterParams = 'obj_name:Спортивный комплекс образовательного учреждения\;Дворовая территория;org_id:219814\;237454;sz_name:зал спортивный №1;s_kind:46\;100;buf:500\;1000';
+        Promise.resolve(AddLayersWithControl(this.map, this.markers, filterParams));
+
+        // добавление контрола geoman
+        AddGeomanControl(this.map);
     }
 
     componentWillUnmount() {
@@ -210,11 +188,18 @@ const AddGeomanControl = (mapElement) => {
     }
 }
 
-const AddLayersControl = (thisElement) => { 
-    // heatmap square init
-    var heatSqParams = 'obj_name:Спортивный комплекс образовательного учреждения\;Дворовая территория;org_id:219814\;237454;sz_name:зал спортивный №1;s_kind:46\;100;buf:500\;1000'
-    var envSqParams = 'class_empty:0.9;class_1:242;class_2:392;class_3:560.83;class_4:800;class_5:1488'
-    var heat_square =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
+export const AddLayersWithControl = async (mapElement, markersElement, filterParams) => {
+    const apiUrl = 'http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms';
+    
+    // heatmap square 
+    let params = (await mapAPI.getParamsForHeatmapSquare(filterParams)).data.features[0].properties;
+
+    let envSqParams = "";
+    for (let i in params) {
+        envSqParams += i + ":" + params[i] + ";";
+    }
+    envSqParams = envSqParams.substring(0, envSqParams.length -2);
+    var heat_square = L?.tileLayer.wms(apiUrl, {
         layers:'leaders:heatmap_square',
         styles:'leaders:heatmap_square_style',
         format: 'image/png',
@@ -223,11 +208,11 @@ const AddLayersControl = (thisElement) => {
         pane: 'heatPane',
         detectRetina: true,
         opacity: 0.5,
-        viewparams: heatSqParams,
+        viewparams: filterParams,
         env: envSqParams
     }); 
     
-    var heat_population =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
+    var heat_population =  L?.tileLayer.wms(apiUrl, {
         layers:'leaders:grid_hex_wgs_population',
         styles:'leaders:heat_population',
         format: 'image/png',
@@ -239,9 +224,14 @@ const AddLayersControl = (thisElement) => {
     }); 
 
     // heatmap square init
-    var heatProvParams = ''
-    var envProvParams = 'class_empty:0.9;class_1:8670206.3;class_2:18565976.733333334;class_3:30695172;class_4:49502611.55000001;class_5:1452003333'
-    var heat_provision =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
+    var provParams = (await mapAPI.getParamsForHeatmapProvision(filterParams)).data.features[0].properties;
+
+    let envProvParams = "";
+    for (let i in provParams) {
+        envProvParams += i + ":" + provParams[i] + ";";
+    }
+    envProvParams = envProvParams.substring(0, envProvParams.length -2);
+    var heat_provision =  L?.tileLayer.wms(apiUrl, {
         layers:'leaders:heatmap_provision',
         styles:'leaders:heatmap_provision_style',
         format: 'image/png',
@@ -250,12 +240,11 @@ const AddLayersControl = (thisElement) => {
         pane: 'heatPane',
         detectRetina: true,
         opacity: 0.5,
-        viewparams: heatProvParams,
+        viewparams: filterParams,
         env: envProvParams
-    }); 
-    
+    });     
         
-    var buffers =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
+    var buffers =  L?.tileLayer.wms(apiUrl, {
         layers:'leaders:objects_buffer_iso',
         styles:'leaders:buffers',
         format: 'image/png',
@@ -265,7 +254,7 @@ const AddLayersControl = (thisElement) => {
         detectRetina: true
     });
 
-    var emptyLayer = L.tileLayer('', {pane:'heatPane'}).addTo(thisElement.map);
+    var emptyLayer = L.tileLayer('', {pane:'heatPane'}).addTo(mapElement);
         
     var baseMaps = {
         'Базовая карта': emptyLayer,
@@ -275,11 +264,11 @@ const AddLayersControl = (thisElement) => {
     };
     
     var overlayMaps = {
-        "Спортивные объекты": thisElement.markers,
+        "Спортивные объекты": markersElement,
         "Зоны доступности":buffers
     };
-    
-    var stylesControl = L.control.layers(baseMaps, overlayMaps, {position:'topright',collapsed:false});
+
+    var stylesControl =  L.control.layers(baseMaps, overlayMaps, {position:'topright',collapsed:false});
     
     var layers_legends = [
         {
@@ -323,11 +312,16 @@ const AddLayersControl = (thisElement) => {
         div.innerHTML += content
         return div;
     };
-    legend.addTo(thisElement.map);
+    if (window.Legend)
+    {
+        window.Legend.remove(mapElement);
+    }
+    window.Legend = legend;
+    legend.addTo(mapElement);
 
     // переопределение функции клика по input выбора слоя
     stylesControl._onInputClick = function () {
-		var inputs = this._layerControlInputs,
+		let inputs = this._layerControlInputs,
 		    input, layer;
 		var addedLayers = [],
 		    removedLayers = [];
@@ -345,9 +339,9 @@ const AddLayersControl = (thisElement) => {
                     document.querySelector('.info-legend').style='display: none'
                 } else if (layer.options.pane==='heatPane' && layer._url !== '') {
                     document.querySelector('.info-legend').style='display: block'
-                    var layer_name = layer.options.layers.split(':')[1]
-                    var style = layer.options.styles.split(':')[1]
-                    var legend_params = layers_legends.find(item => item.name == layer_name)
+                    const layer_name = layer.options.layers.split(':')[1]
+                    const style = layer.options.styles.split(':')[1]
+                    const legend_params = layers_legends.find(item => item.name === layer_name)
                     document.querySelector('.info-legend > div > b').innerHTML=legend_params.legend_name;
                     // $('.info-legend').children('div').children('i').text(legend_params.);
                     
@@ -375,9 +369,13 @@ const AddLayersControl = (thisElement) => {
 		this._handlingClick = false;
 
 		this._refocusOnMap();
-	}
-
-    stylesControl.addTo(thisElement.map);
+	};
+    if (window.StylesControl)
+    {
+        window.StylesControl.remove(mapElement);
+    }
+    window.StylesControl = stylesControl;
+    stylesControl.addTo(mapElement);
 
     var layerControl = document.querySelector('.leaflet-control-layers.leaflet-control-layers-expanded.leaflet-control');
     var layerTab = document.querySelector('div.layers-control');
@@ -399,5 +397,20 @@ const AddLayersControl = (thisElement) => {
         }
     };
 };
+
+export const LoadMarkers = (markersGroup, params) => {
+    mapAPI.getObjectsByFilters(params).then(res => {
+        markersGroup.clearLayers();
+        for (var i = 0; i < res.data.features.length; i++) {
+            var a = res.data.features[i];
+            var id = a.properties.id;
+            new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), { id: id, icon: objIcon})
+                .addTo(markersGroup);
+        }
+    })
+    .catch(err => {
+        console.log(err)
+    })   
+}
 
 export default Livemap

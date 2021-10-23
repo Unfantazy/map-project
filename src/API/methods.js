@@ -28,12 +28,21 @@ export const mapAPI = {
     getInfoAboutObject(id) {
         return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Ainfo_objects&VIEWPARAMS=id:${id}&OUTPUTFORMAT=application%2Fjson`)
     },
-    getLayerJSON(layer) {
-        return instance.get(`${apiUrl}/leaders/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=leaders:${layer}&outputFormat=json&format_options=callback:getJson`)
+    getLayerJSON(layer, params) {
+        return instance.get(`${apiUrl}/leaders/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=leaders:${layer}&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`)
+    },
+    getObjectsByFilters(params) {
+        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Afilter_apply_objects&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`)
     },
     getShapeProvision(params) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Ainfo_provision_territory&VIEWPARAMS=${params}&OUTPUTFORMAT=application%2Fjson`)
+        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Ainfo_provision_territory&VIEWPARAMS=${params ? params : ''}&OUTPUTFORMAT=application%2Fjson`)
     },
+    getParamsForHeatmapSquare(params) {
+        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Athresholds_heatmap_square&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`);
+    },
+    getParamsForHeatmapProvision(params) {
+        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Athresholds_heatmap_provision&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`);
+    }
 }
 
 
