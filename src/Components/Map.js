@@ -385,6 +385,12 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         var baseLayers = layerControl.querySelector('.leaflet-control-layers-base');
         var overlaysLayers = layerControl.querySelector('.leaflet-control-layers-overlays');
 
+        const radioLabel = layerControl.querySelectorAll('.leaflet-control-layers-base label');
+        const radioSpan = layerControl.querySelectorAll('.leaflet-control-layers-base span');
+
+        radioLabel.forEach(el => el.classList.add('form-radio-custom'))
+        radioSpan.forEach(el => el.classList.add('checkmark'))
+
         const label = layerControl.querySelectorAll('.leaflet-control-layers-overlays label');
         const span = layerControl.querySelectorAll('.leaflet-control-layers-overlays span');
 
