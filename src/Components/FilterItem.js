@@ -1,9 +1,16 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {includes} from "lodash";
 
 
 const FilterItem = ({title, selectedBuf, setSelectedBuf, type}) => {
     const [isActive, setIsActive] = useState(false)
+
+    useEffect(() => {
+        if (!selectedBuf.length) {
+            setIsActive(false)
+        }
+    }, [selectedBuf])
+
     const onFilterItemClick = () => {
         setIsActive(!isActive)
         if (!includes(selectedBuf, type)) {

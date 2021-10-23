@@ -27,6 +27,10 @@ const FiltersMenu = ({setModel, model}) => {
         return mapAPI.getNames('name_object', filter)
     }, [])
 
+    const onResetFilters = () => {
+        setModel(null)
+    }
+
     return (
         <>
             <div className={`Menu`}>
@@ -76,7 +80,10 @@ const FiltersMenu = ({setModel, model}) => {
                             </div>
                             <div className={'filter-btns'}>
                                 <button className={'filter-apply filter-btn'}>Применить</button>
-                                <button className={'filter-reset filter-btn'}>Сбросить</button>
+                                <button className={'filter-reset filter-btn'}
+                                        onClick={() => onResetFilters()}
+                                >Сбросить
+                                </button>
                             </div>
                         </TabPanel>
                         <TabPanel>

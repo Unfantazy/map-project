@@ -32,8 +32,14 @@ const FilterSelect = (
 
     const [selectedBuf, setSelectedBuf] = useState([])
 
+    useEffect(() => {
+        if(model === null) {
+            setSelectedItems([])
+            setSelectedBuf([])
+        }
+    }, [model])
+
     const getModelFunc = () => {
-        debugger
         switch (type) {
             case 'obj_name':
                 setModel({
@@ -109,7 +115,6 @@ const FilterSelect = (
     }, [selectedItems])
 
     const onSelectItem = (item) => {
-        debugger
         if (!includes(selectedItems.map(item => item.idString), item.idString)) {
             setSelectedItems([...selectedItems, item])
         } else {

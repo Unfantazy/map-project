@@ -21,6 +21,8 @@ const App = () => {
 
     const [model, setModel] = useState(initialStateModel)
 
+    console.log(model)
+
     return (
         <div className='App'>
             <FiltersMenu model={model} setModel={setModel}/>
