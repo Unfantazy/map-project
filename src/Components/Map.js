@@ -265,7 +265,7 @@ const AddLayersControl = (thisElement) => {
         detectRetina: true
     });
 
-    var emptyLayer = L.tileLayer('').addTo(thisElement.map);
+    var emptyLayer = L.tileLayer('', {pane:'heatPane'}).addTo(thisElement.map);
         
     var baseMaps = {
         'Базовая карта': emptyLayer,
@@ -279,8 +279,106 @@ const AddLayersControl = (thisElement) => {
         "Зоны доступности":buffers
     };
     
-    L.control.layers(baseMaps, overlayMaps, {position:'topright',collapsed:false}).addTo(thisElement.map);
+    var stylesControl = L.control.layers(baseMaps, overlayMaps, {position:'topright',collapsed:false});
     
+    var layers_legends = [
+        {
+            name:'heatmap_square',
+            style:'heat_square_style',
+            legend_name:'Суммарная площадь спортивных зон',
+        },
+        {
+            name: 'grid_hex_wgs_population',
+            style:'heat_population',
+            legend_name:'Средняя численность населения',
+        },
+        {
+            name: 'heatmap_provision',
+            style:'heatmap_provision_style',
+            legend_name:'Обеспеченность населения <br>спортивной инфраструктурой',
+        }
+    ] 
+
+    // legend
+    var legend = L.control({style:'background:white', position: 'topright'});
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info-legend')
+        div.style='display: none'
+        div.innerHTML +=
+        '<strong style="margin-bottom: -20px; display: block;"> Условные обозначения </strong><br>'
+        var layer = layers_legends[1]
+        var layer_name = layer.name;
+        var layer_style = layer.style;
+        var layer_legend_name = layer.legend_name;
+        var layer_legend_descr = layer.legend_descr;
+        var content = `<div class="${layer_name} legend">`;
+        if (layer_legend_name) {
+            content += `<b>${layer_legend_name}</b><br>`;
+        }
+        if (layer_legend_descr) {
+            content += `<i>${layer_legend_descr}</i><br>`
+            }
+            
+        content += `<img class="img-legend" src="http://geoserver.bigdatamap.keenetic.pro/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${layer_style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c;"></div>`;	
+        div.innerHTML += content
+        return div;
+    };
+    legend.addTo(thisElement.map);
+
+    // переопределение функции клика по input выбора слоя
+    stylesControl._onInputClick = function () {
+		var inputs = this._layerControlInputs,
+		    input, layer;
+		var addedLayers = [],
+		    removedLayers = [];
+
+		this._handlingClick = true;
+
+		for (var i = inputs.length - 1; i >= 0; i--) {
+			input = inputs[i];
+		    layer = this._getLayer(input.layerId).layer;
+
+			if (input.checked) {
+				addedLayers.push(layer);
+                // ПОДПИСЬ к легенде
+                if (layer.options.pane==='heatPane' && layer._url === '') {
+                    document.querySelector('.info-legend').style='display: none'
+                } else if (layer.options.pane==='heatPane' && layer._url !== '') {
+                    document.querySelector('.info-legend').style='display: block'
+                    var layer_name = layer.options.layers.split(':')[1]
+                    var style = layer.options.styles.split(':')[1]
+                    var legend_params = layers_legends.find(item => item.name == layer_name)
+                    document.querySelector('.info-legend > div > b').innerHTML=legend_params.legend_name;
+                    // $('.info-legend').children('div').children('i').text(legend_params.);
+                    
+                    var src = `http://geoserver.bigdatamap.keenetic.pro/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c; `
+                    document.querySelector('.info-legend > div > img').setAttribute("src",src);
+                }
+                
+			} else if (!input.checked) {
+				removedLayers.push(layer);
+			}
+		}
+
+		// Bugfix issue 2318: Should remove all old layers before readding new ones
+		for (i = 0; i < removedLayers.length; i++) {
+			if (this._map.hasLayer(removedLayers[i])) {
+				this._map.removeLayer(removedLayers[i]);
+			}
+		}
+		for (i = 0; i < addedLayers.length; i++) {
+			if (!this._map.hasLayer(addedLayers[i])) {
+				this._map.addLayer(addedLayers[i]);
+			}
+		}
+
+		this._handlingClick = false;
+
+		this._refocusOnMap();
+	}
+
+    stylesControl.addTo(thisElement.map);
+
     var layerControl = document.querySelector('.leaflet-control-layers.leaflet-control-layers-expanded.leaflet-control');
     var layerTab = document.querySelector('div.layers-control');
     if (layerControl && layerTab){

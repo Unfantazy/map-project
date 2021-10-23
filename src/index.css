@@ -140,3 +140,26 @@ button {
     left: auto !important;
 }
 
+.info-legend {
+	background: white;
+  text-align: center;
+  font-size: 15px;
+	padding: 9px;
+	font-family: Roboto;
+  margin: 15px;
+  box-shadow: 4px 4px 4px 4px rgb(0 0 0 / 25%);
+  border-radius: 25px;
+}
+.legend {
+	font-size: 13px;
+	padding-top: 5px;
+}
+.leaflet-container {
+	font-family: Roboto;
+	font-size: 13px;
+}
+.img-legend {
+	vertical-align: middle;
+  width: 50%;
+  display: inline-block;
+}
