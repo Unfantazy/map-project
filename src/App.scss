@@ -138,8 +138,12 @@ h1 {
    box-shadow: none;
  }
 
+ .leaflet-control-container {
+   height: 100%;
+ }
+
  .info-legend {
-   bottom: -470px;
+   bottom: -365px;
    right: 70px;
    position: absolute;
    z-index: 100000;

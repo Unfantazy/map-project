@@ -131,8 +131,8 @@ button {
 }
 
 .leaflet-top {
-    bottom: -490px !important;
-    top: auto !important;
+    bottom: 375px !important;
+    /*top: auto !important;*/
 }
 
 .leaflet-left {
@@ -149,6 +149,7 @@ button {
   margin: 15px;
   box-shadow: 4px 4px 4px 4px rgb(0 0 0 / 25%);
   border-radius: 25px;
+    bottom: -365px;
 }
 .legend {
 	font-size: 13px;
