@@ -136,3 +136,16 @@ h1 {
  .leaflet-bar {
    box-shadow: none;
  }
+
+ .info-legend {
+   bottom: -470px;
+   right: 70px;
+   position: absolute;
+   z-index: 100000;
+   width: 270px;
+   //height: 220px;
+
+   img {
+     width: 170px;
+   }
+ }

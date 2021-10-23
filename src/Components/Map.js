@@ -19,7 +19,7 @@ const selectedIcon = new L.Icon({
     iconUrl: svg_blue,
     iconSize: [24, 35],
     iconAnchor: [20, 20],
-});   
+});
 
 class Livemap extends React.Component {
     componentDidMount() {
@@ -32,39 +32,39 @@ class Livemap extends React.Component {
             attributionControl: false,
         });
 
-        this.map.getPane('overlayPane').style.zIndex=1000
+        this.map.getPane('overlayPane').style.zIndex = 1000
 
         this.map.createPane('basePane');
         this.map.getPane('basePane').style.zIndex = 100;
-        
+
         this.map.createPane('heatPane');
         this.map.getPane('heatPane').style.zIndex = 200;
 
         this.map.createPane('bufferPane');
         this.map.getPane('bufferPane').style.zIndex = 300;
-        
+
         this.map.createPane('objectPane');
-        this.map.getPane('objectPane').style.zIndex = 400;       
-        
-        this.map.getPane('markerPane').style.zIndex = 400; 
+        this.map.getPane('objectPane').style.zIndex = 400;
+
+        this.map.getPane('markerPane').style.zIndex = 400;
 
         L?.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
             maxZoom: 20,
             pane: 'basePane',
-        }).addTo(this.map); 
+        }).addTo(this.map);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png', {
             attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
             subdomains: 'abcd',
             maxZoom: 20,
             pane: 'overlayPane',
-        }).addTo(this.map);     
+        }).addTo(this.map);
 
-        window.Markers = this.markers = new L.markerClusterGroup({ 
-            chunkedLoading: true, 
-            showCoverageOnHover: false, 
-            disableClusteringAtZoom:15,
+        window.Markers = this.markers = new L.markerClusterGroup({
+            chunkedLoading: true,
+            showCoverageOnHover: false,
+            disableClusteringAtZoom: 15,
             removeOutsideVisibleBounds: true,
             spiderfyOnMaxZoom: false,
         }).addTo(this.map);
@@ -74,26 +74,26 @@ class Livemap extends React.Component {
             for (var i = 0; i < res.data.features.length; i++) {
                 var a = res.data.features[i];
                 var id = a.properties.id;
-                new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), { id: id, icon: objIcon})
+                new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), {id: id, icon: objIcon})
                     .addTo(this.markers);
             }
         })
-        .catch(err => {
-            console.log(err)
-        })  
+            .catch(err => {
+                console.log(err)
+            })
 
         this.markers.on('click', (e) => {
             e.layer.setIcon(selectedIcon)
 
             L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
-                layers:'leaders:object_buffer',
-                styles:'leaders:buffer_selected',
+                layers: 'leaders:object_buffer',
+                styles: 'leaders:buffer_selected',
                 format: 'image/png',
                 transparent: 'true',
                 tileSize: 512,
                 pane: 'bufferPane',
                 detectRetina: true,
-                viewparams: 'object_id:'+e.layer.options.id,
+                viewparams: 'object_id:' + e.layer.options.id,
             }).addTo(this.map);
 
             mapAPI.getInfoAboutObject(e.layer.options.id)
@@ -123,7 +123,7 @@ class Livemap extends React.Component {
     }
 
     onMapClick = () => {
-     // this.props.setData([])
+        // this.props.setData([])
     }
 
     render() {
@@ -134,18 +134,18 @@ class Livemap extends React.Component {
 }
 
 const AddGeomanControl = (mapElement) => {
-    if (mapElement){
+    if (mapElement) {
         mapElement.pm.setLang('ru');
-        mapElement.pm.addControls({  
-            position: 'topright',  
-            drawCircleMarker: false,  
-            drawMarker: false,  
+        mapElement.pm.addControls({
+            position: 'topright',
+            drawCircleMarker: false,
+            drawMarker: false,
             drawPolyline: false,
             optionsControls: false,
-            rotateMode:false,
-            cutPolygon:false
-        }); 
-        
+            rotateMode: false,
+            cutPolygon: false
+        });
+
         mapElement.pm.Toolbar.changeActionsOfControl('Rectangle', []);
         mapElement.pm.Toolbar.changeActionsOfControl('Polygon', []);
         mapElement.pm.Toolbar.changeActionsOfControl('Circle', []);
@@ -156,10 +156,11 @@ const AddGeomanControl = (mapElement) => {
         var drawControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-draw');
         var editControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-edit');
         var serviceTab = document.querySelector('div.services-control');
-        if (drawControl && editControl && serviceTab){
+        if (drawControl && editControl && serviceTab) {
             serviceTab.appendChild(drawControl);
             serviceTab.appendChild(editControl);
-        };
+        }
+        ;
 
         mapElement.on("pm:create", () => {
             console.log('element is created');
@@ -170,27 +171,28 @@ const AddGeomanControl = (mapElement) => {
 
         mapElement.on("pm:remove", () => {
             console.log('element is deleted');
-            if (mapElement.pm.getGeomanDrawLayers(true).getLayers().length === 0){
+            if (mapElement.pm.getGeomanDrawLayers(true).getLayers().length === 0) {
                 //enable buttons
                 document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'auto';
                 document.querySelectorAll('.leaflet-pm-draw a')
                     .forEach(a => a.classList.remove('leaflet-disabled'));
-            };
+            }
+            ;
         });
 
-        document.getElementById('layerBtn')?.addEventListener('click', () =>{
+        document.getElementById('layerBtn')?.addEventListener('click', () => {
             var drawingLayers = mapElement.pm.getGeomanDrawLayers(true).getLayers()[0];
             var shape = drawingLayers.pm.getShape() === 'Circle' ? L.PM.Utils.circleToPolygon(drawingLayers, 20) : drawingLayers;
             var shapeJson = shape.toGeoJSON()['geometry'];
             var shapeJsonFormatted = JSON.stringify(shapeJson).replaceAll(",", "\\,")
-            console.log(mapAPI.getShapeProvision('geojson:'+shapeJsonFormatted));
+            console.log(mapAPI.getShapeProvision('geojson:' + shapeJsonFormatted));
         })
     }
 }
 
 export const AddLayersWithControl = async (mapElement, markersElement, filterParams) => {
     const apiUrl = 'http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms';
-    
+
     // heatmap square 
     let params = (await mapAPI.getParamsForHeatmapSquare(filterParams)).data.features[0].properties;
 
@@ -198,10 +200,10 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
     for (let i in params) {
         envSqParams += i + ":" + params[i] + ";";
     }
-    envSqParams = envSqParams.substring(0, envSqParams.length -2);
+    envSqParams = envSqParams.substring(0, envSqParams.length - 2);
     var heat_square = L?.tileLayer.wms(apiUrl, {
-        layers:'leaders:heatmap_square',
-        styles:'leaders:heatmap_square_style',
+        layers: 'leaders:heatmap_square',
+        styles: 'leaders:heatmap_square_style',
         format: 'image/png',
         transparent: 'true',
         tileSize: 512,
@@ -210,18 +212,18 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         opacity: 0.5,
         viewparams: filterParams,
         env: envSqParams
-    }); 
-    
-    var heat_population =  L?.tileLayer.wms(apiUrl, {
-        layers:'leaders:grid_hex_wgs_population',
-        styles:'leaders:heat_population',
+    });
+
+    var heat_population = L?.tileLayer.wms(apiUrl, {
+        layers: 'leaders:grid_hex_wgs_population',
+        styles: 'leaders:heat_population',
         format: 'image/png',
         transparent: 'true',
         tileSize: 512,
         pane: 'heatPane',
         detectRetina: true,
         opacity: 0.5
-    }); 
+    });
 
     // heatmap square init
     var provParams = (await mapAPI.getParamsForHeatmapProvision(filterParams)).data.features[0].properties;
@@ -230,10 +232,10 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
     for (let i in provParams) {
         envProvParams += i + ":" + provParams[i] + ";";
     }
-    envProvParams = envProvParams.substring(0, envProvParams.length -2);
-    var heat_provision =  L?.tileLayer.wms(apiUrl, {
-        layers:'leaders:heatmap_provision',
-        styles:'leaders:heatmap_provision_style',
+    envProvParams = envProvParams.substring(0, envProvParams.length - 2);
+    var heat_provision = L?.tileLayer.wms(apiUrl, {
+        layers: 'leaders:heatmap_provision',
+        styles: 'leaders:heatmap_provision_style',
         format: 'image/png',
         transparent: 'true',
         tileSize: 512,
@@ -242,11 +244,11 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         opacity: 0.5,
         viewparams: filterParams,
         env: envProvParams
-    });     
-        
-    var buffers =  L?.tileLayer.wms(apiUrl, {
-        layers:'leaders:objects_buffer_iso',
-        styles:'leaders:buffers',
+    });
+
+    var buffers = L?.tileLayer.wms(apiUrl, {
+        layers: 'leaders:objects_buffer_iso',
+        styles: 'leaders:buffers',
         format: 'image/png',
         transparent: 'true',
         tileSize: 512,
@@ -254,47 +256,47 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         detectRetina: true
     });
 
-    var emptyLayer = L.tileLayer('', {pane:'heatPane'}).addTo(mapElement);
-        
+    var emptyLayer = L.tileLayer('', {pane: 'heatPane'}).addTo(mapElement);
+
     var baseMaps = {
         'Базовая карта': emptyLayer,
         'Тепловая карта спортивных зон': heat_square,
         'Тепловая карта населения': heat_population,
         'Тепловая карта обеспеченности спортивными зонами': heat_provision
     };
-    
+
     var overlayMaps = {
         "Спортивные объекты": markersElement,
-        "Зоны доступности":buffers
+        "Зоны доступности": buffers
     };
 
-    var stylesControl =  L.control.layers(baseMaps, overlayMaps, {position:'topright',collapsed:false});
-    
+    var stylesControl = L.control.layers(baseMaps, overlayMaps, {position: 'topright', collapsed: false});
+
     var layers_legends = [
         {
-            name:'heatmap_square',
-            style:'heat_square_style',
-            legend_name:'Суммарная площадь спортивных зон',
+            name: 'heatmap_square',
+            style: 'heat_square_style',
+            legend_name: 'Суммарная площадь спортивных зон',
         },
         {
             name: 'grid_hex_wgs_population',
-            style:'heat_population',
-            legend_name:'Средняя численность населения',
+            style: 'heat_population',
+            legend_name: 'Средняя численность населения',
         },
         {
             name: 'heatmap_provision',
-            style:'heatmap_provision_style',
-            legend_name:'Обеспеченность населения <br>спортивной инфраструктурой',
+            style: 'heatmap_provision_style',
+            legend_name: 'Обеспеченность населения <br>спортивной инфраструктурой',
         }
-    ] 
+    ]
 
     // legend
-    var legend = L.control({style:'background:white', position: 'topright'});
+    var legend = L.control({style: 'background:white'});
     legend.onAdd = function (map) {
         var div = L.DomUtil.create('div', 'info-legend')
-        div.style='display: none'
+        div.style = 'display: none'
         div.innerHTML +=
-        '<strong style="margin-bottom: -20px; display: block;"> Условные обозначения </strong><br>'
+            '<strong style="margin-bottom: -20px; display: block;"> Условные обозначения </strong><br>'
         var layer = layers_legends[1]
         var layer_name = layer.name;
         var layer_style = layer.style;
@@ -306,14 +308,13 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         }
         if (layer_legend_descr) {
             content += `<i>${layer_legend_descr}</i><br>`
-            }
-            
-        content += `<img class="img-legend" src="http://geoserver.bigdatamap.keenetic.pro/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${layer_style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c;"></div>`;	
+        }
+
+        content += `<img class="img-legend" src="http://geoserver.bigdatamap.keenetic.pro/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${layer_style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c;"></div>`;
         div.innerHTML += content
         return div;
     };
-    if (window.Legend)
-    {
+    if (window.Legend) {
         window.Legend.remove(mapElement);
     }
     window.Legend = legend;
@@ -321,57 +322,56 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
 
     // переопределение функции клика по input выбора слоя
     stylesControl._onInputClick = function () {
-		let inputs = this._layerControlInputs,
-		    input, layer;
-		var addedLayers = [],
-		    removedLayers = [];
+        let inputs = this._layerControlInputs,
+            input, layer;
+        var addedLayers = [],
+            removedLayers = [];
 
-		this._handlingClick = true;
+        this._handlingClick = true;
 
-		for (var i = inputs.length - 1; i >= 0; i--) {
-			input = inputs[i];
-		    layer = this._getLayer(input.layerId).layer;
+        for (var i = inputs.length - 1; i >= 0; i--) {
+            input = inputs[i];
+            layer = this._getLayer(input.layerId).layer;
 
-			if (input.checked) {
-				addedLayers.push(layer);
+            if (input.checked) {
+                addedLayers.push(layer);
                 // ПОДПИСЬ к легенде
-                if (layer.options.pane==='heatPane' && layer._url === '') {
-                    document.querySelector('.info-legend').style='display: none'
-                } else if (layer.options.pane==='heatPane' && layer._url !== '') {
-                    document.querySelector('.info-legend').style='display: block'
+                if (layer.options.pane === 'heatPane' && layer._url === '') {
+                    document.querySelector('.info-legend').style = 'display: none'
+                } else if (layer.options.pane === 'heatPane' && layer._url !== '') {
+                    document.querySelector('.info-legend').style = 'display: block'
                     const layer_name = layer.options.layers.split(':')[1]
                     const style = layer.options.styles.split(':')[1]
                     const legend_params = layers_legends.find(item => item.name === layer_name)
-                    document.querySelector('.info-legend > div > b').innerHTML=legend_params.legend_name;
+                    document.querySelector('.info-legend > div > b').innerHTML = legend_params.legend_name;
                     // $('.info-legend').children('div').children('i').text(legend_params.);
-                    
+
                     var src = `http://geoserver.bigdatamap.keenetic.pro/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c; `
-                    document.querySelector('.info-legend > div > img').setAttribute("src",src);
+                    document.querySelector('.info-legend > div > img').setAttribute("src", src);
                 }
-                
-			} else if (!input.checked) {
-				removedLayers.push(layer);
-			}
-		}
 
-		// Bugfix issue 2318: Should remove all old layers before readding new ones
-		for (i = 0; i < removedLayers.length; i++) {
-			if (this._map.hasLayer(removedLayers[i])) {
-				this._map.removeLayer(removedLayers[i]);
-			}
-		}
-		for (i = 0; i < addedLayers.length; i++) {
-			if (!this._map.hasLayer(addedLayers[i])) {
-				this._map.addLayer(addedLayers[i]);
-			}
-		}
+            } else if (!input.checked) {
+                removedLayers.push(layer);
+            }
+        }
 
-		this._handlingClick = false;
+        // Bugfix issue 2318: Should remove all old layers before readding new ones
+        for (i = 0; i < removedLayers.length; i++) {
+            if (this._map.hasLayer(removedLayers[i])) {
+                this._map.removeLayer(removedLayers[i]);
+            }
+        }
+        for (i = 0; i < addedLayers.length; i++) {
+            if (!this._map.hasLayer(addedLayers[i])) {
+                this._map.addLayer(addedLayers[i]);
+            }
+        }
 
-		this._refocusOnMap();
-	};
-    if (window.StylesControl)
-    {
+        this._handlingClick = false;
+
+        this._refocusOnMap();
+    };
+    if (window.StylesControl) {
         window.StylesControl.remove(mapElement);
     }
     window.StylesControl = stylesControl;
@@ -379,9 +379,9 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
 
     var layerControl = document.querySelector('.leaflet-control-layers.leaflet-control-layers-expanded.leaflet-control');
     var layerTab = document.querySelector('div.layers-control');
-    if (layerControl && layerTab){
+    if (layerControl && layerTab) {
         layerTab.appendChild(layerControl);
-        
+
         var baseLayers = layerControl.querySelector('.leaflet-control-layers-base');
         var overlaysLayers = layerControl.querySelector('.leaflet-control-layers-overlays');
 
@@ -395,7 +395,8 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
             layerControl.insertBefore(overlaysLayers, layerControl.firstChild);
             layerControl.appendChild(baseLayers);
         }
-    };
+    }
+    ;
 };
 
 export const LoadMarkers = (markersGroup, params) => {
@@ -404,13 +405,13 @@ export const LoadMarkers = (markersGroup, params) => {
         for (var i = 0; i < res.data.features.length; i++) {
             var a = res.data.features[i];
             var id = a.properties.id;
-            new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), { id: id, icon: objIcon})
+            new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), {id: id, icon: objIcon})
                 .addTo(markersGroup);
         }
     })
-    .catch(err => {
-        console.log(err)
-    })   
+        .catch(err => {
+            console.log(err)
+        })
 }
 
 export default Livemap
