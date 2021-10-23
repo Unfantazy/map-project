@@ -9,9 +9,21 @@ import Hint from "./Components/Hint";
 const App = () => {
     const [data, setData] = useState([])
     const [isLoading, setIsLoading] = useState(false)
+
+    const initialStateModel = {
+        obj_name: [],
+        org_id: [],
+        sz_name: [],
+        sz_type: [],
+        s_kind: [],
+        buf: [],
+    }
+
+    const [model, setModel] = useState(initialStateModel)
+
     return (
         <div className='App'>
-            <FiltersMenu/>
+            <FiltersMenu model={model} setModel={setModel}/>
             <div className={'Map'}>
                 <Map setData={setData} data={data}/>
             </div>

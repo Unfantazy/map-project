@@ -10,19 +10,86 @@ import Loader from "./Loader";
 import CheckBox from "./CheckBox";
 
 
-const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, checkbox = true}) => {
-
+const FilterSelect = (
+    {
+        title = 'Фильтр',
+        onlyItems = false,
+        fetchItems,
+        checkbox = true,
+        type,
+        setModel,
+        model
+    }
+) => {
     const [items, setItems] = useState([])
     const [filter, setFilter] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [onlySelected, setOnlySelected] = useState(false)
+
+    const [isFocused, setIsFocused] = useState(false)
+    const [selectedItems, setSelectedItems] = useState([])
+
+
+    const [selectedBuf, setSelectedBuf] = useState([])
+
+    const getModelFunc = () => {
+        debugger
+        switch (type) {
+            case 'obj_name':
+                setModel({
+                    ...model,
+                    obj_name: selectedItems.map(item => item.title)
+                })
+                return
+            case 'sz_name':
+                setModel({
+                    ...model,
+                    sz_name: selectedItems.map(item => item.title)
+                })
+                return
+            case 'org_id':
+                setModel({
+                    ...model,
+                    org_id: selectedItems.map(item => item.id)
+                })
+                return
+            case 'sz_type':
+                setModel({
+                    ...model,
+                    sz_type: selectedItems.map(item => item.id)
+                })
+                return
+            case 's_kind':
+                setModel({
+                    ...model,
+                    s_kind: selectedItems.map(item => item.id)
+                })
+                return
+            case 'buf':
+                setModel({
+                    ...model,
+                    buf: selectedBuf
+                })
+                return
+            default:
+                return model
+        }
+    }
+
+    useEffect(() => {
+        getModelFunc()
+    }, [selectedItems, selectedBuf])
 
     useEffect(async () => {
         if (fetchItems) {
             setIsLoading(true)
             await fetchItems(filter)
                 .then(res => {
-                    const data = res?.data?.features?.map(item => ({id: item.id, title: item.properties.name}))
+                    const data = res?.data?.features?.map(item => ({
+                        idString: item.id,
+                        title: item.properties.name,
+                        id: item.properties.id
+                    }))
                     setItems(data)
                 })
                 .finally(() => {
@@ -31,25 +98,22 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
         }
     }, [filter])
 
-    const [isFocused, setIsFocused] = useState(false)
-    const [selectedItems, setSelectedItems] = useState([])
-
-
     const filterRef = useRef(null)
 
     const selectedItemsIds = useMemo(() => {
-        return selectedItems.map(item => item.id)
+        return selectedItems.map(item => item.idString)
     }, [selectedItems])
 
     const onDeleteItem = useCallback((id) => {
-        setSelectedItems(selectedItems.filter(item => item.id !== id))
+        setSelectedItems(selectedItems.filter(item => item.idString !== id))
     }, [selectedItems])
 
     const onSelectItem = (item) => {
-        if (!includes(selectedItems.map(item => item.id), item.id)) {
+        debugger
+        if (!includes(selectedItems.map(item => item.idString), item.idString)) {
             setSelectedItems([...selectedItems, item])
         } else {
-            setSelectedItems(selectedItems.filter(focusedItem => focusedItem.id !== item.id))
+            setSelectedItems(selectedItems.filter(focusedItem => focusedItem.idString !== item.idString))
         }
     }
 
@@ -57,14 +121,15 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
         setIsFocused(false)
     })
 
+
     if (onlyItems) {
         return <div className={'Filter-select'}>
             <h3 className={'Filter-select__title'}>{title}</h3>
             <div className={'layers'}>
-                <FilterItem name={'Шаговая (радиус - 500 м)'}/>
-                <FilterItem name={'Окружная (радиус - 3 км)'}/>
-                <FilterItem name={'Районная (радиус - 1 км)'}/>
-                <FilterItem name={'Городская (радиус - 5 км)'}/>
+                <FilterItem title={'Шаговая (радиус - 500 м)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf} type={500}/>
+                <FilterItem title={'Окружная (радиус - 3 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf} type={3000}/>
+                <FilterItem title={'Районная (радиус - 1 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf} type={1000}/>
+                <FilterItem title={'Городская (радиус - 5 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf} type={5000}/>
             </div>
         </div>
     }
@@ -92,7 +157,7 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
                             title={item.title}
                             onDelete={(e) => {
                                 e.stopPropagation()
-                                onDeleteItem(item.id)
+                                onDeleteItem(item.idString)
                             }}
                         />
                     })}
@@ -100,9 +165,9 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
                 </div>
                 <label className={'select-label'}>
                     {checkbox && <div className={`select__chosen ${onlySelected ? 'selected' : ''}`}
-                    onClick={() => {
-                        setOnlySelected(!onlySelected)
-                    }}
+                                      onClick={() => {
+                                          setOnlySelected(!onlySelected)
+                                      }}
                     >Выбрано ({selectedItems.length})</div>}
                     <SearchIcon style={{flexShrink: 0}}/>
                     <input
@@ -125,31 +190,31 @@ const FilterSelect = ({title = 'Фильтр', onlyItems = false, fetchItems, ch
                 <ul className={'scroller select-dropdown__list'}>
                     {isLoading ? <Loader/>
                         : onlySelected ? items?.map(listItem => {
-                            if((includes(selectedItemsIds, listItem.id))) {
+                            if ((includes(selectedItemsIds, listItem.idString))) {
                                 return <li
-                                    className={`filter-select__item ${(includes(selectedItemsIds, listItem.id) && !checkbox)
+                                    className={`filter-select__item ${(includes(selectedItemsIds, listItem.idString) && !checkbox)
                                         ? 'selected' : ''}`}
-                                    key={listItem.id}
+                                    key={listItem.idString}
                                     onClick={() => {
                                         onSelectItem(listItem)
                                     }}
                                 >
-                                    {checkbox && <CheckBox checked={includes(selectedItemsIds, listItem.id)}/>}
+                                    {checkbox && <CheckBox checked={includes(selectedItemsIds, listItem.idString)}/>}
                                     {listItem.title}
                                 </li>
                             }
                         }) : !!items?.length ? items.map(listItem => {
                             return <li
-                                className={`filter-select__item ${(includes(selectedItemsIds, listItem.id) && !checkbox)
+                                className={`filter-select__item ${(includes(selectedItemsIds, listItem.idString) && !checkbox)
                                     ? 'selected' : ''}`}
-                                key={listItem.id}
+                                key={listItem.idString}
                                 onClick={() => {
                                     onSelectItem(listItem)
                                 }}
                             >
                                 {checkbox
                                 && <CheckBox
-                                    checked={includes(selectedItemsIds, listItem.id)}
+                                    checked={includes(selectedItemsIds, listItem.idString)}
                                     onChange={() => {
                                         onSelectItem(listItem)
                                     }}
