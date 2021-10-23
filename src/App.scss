@@ -11,6 +11,7 @@
 @import "./styles/Tabs";
 @import "./styles/CheckBox";
 @import "./styles/InfoBlock";
+@import '~react-tabs/style/react-tabs.css';
 
 .App {
   height: 100vh;
@@ -130,4 +131,8 @@ h1 {
   border-top: 1px solid rgba(196, 196, 196, 0.85);
   margin-top: 4px;
   padding-top: 9px;
+ }
+
+ .leaflet-bar {
+   box-shadow: none;
  }

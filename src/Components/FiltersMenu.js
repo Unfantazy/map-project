@@ -1,10 +1,10 @@
 import FilterSelect from "./FilterSelect";
 import {useCallback} from "react";
 import {mapAPI} from "../API/methods";
-import Tabs from "./Tabs";
-import {Route, Switch} from "react-router-dom";
-import FilterItem from "./FilterItem";
-import {objectLayersNames, heatLayersNames} from "./LayersFilters";
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import {ReactComponent as LayersIcon} from '../images/icons/layers.svg'
+import {ReactComponent as ServicesIcon} from '../images/icons/services.svg'
+import {ReactComponent as FiltersIcon} from '../images/icons/filters.svg'
 
 const FiltersMenu = () => {
     const fetchSportsTypes = useCallback((filter) => {
@@ -30,63 +30,66 @@ const FiltersMenu = () => {
     return (
         <>
             <div className={`Menu`}>
-                <Tabs/>
-                <div className='Menu-wrapper'>
-                    <Switch>
-                        <Route exact path={'/'} render={() => (
-                            <>
-                                <h1>Фильтры</h1>
-                                <div className={'scroller menu-inner'}>
-                                    <FilterSelect fetchItems={fetchNames} title={'Спортивный объект'} checkbox={false}/>
-                                    <FilterSelect fetchItems={fetchOrganizations} title={'Ведомственная организация'}/>
-                                    <FilterSelect fetchItems={fetchSportsZonesNames} title={'Спортивная зона'} checkbox={false}/>
-                                    <FilterSelect fetchItems={fetchSportsZonesTypes} title={'Тип спортивной зоны'}/>
-                                    <FilterSelect fetchItems={fetchSportsTypes} title={'Вид спорта'}/>
-                                    <FilterSelect onlyItems={true} title={'Доступность спортивного объекта'}/>
-                                </div>
+                <Tabs defaultIndex={0} onSelect={index => console.log(index)} forceRenderTabPanel>                    
+                    <TabList>
+                    <Tab>
+                        <span className={'tabs-img'}>
+                            <FiltersIcon />
+                        </span>
+                        <span className={'d-flex align-items-center events-header__item--span'}>
+                            Фильтры
+                        </span>
+                    </Tab>
+                    <Tab>
+                        <span className={'tabs-img'}>
+                            <LayersIcon style={{width: 14, height: 14}}/>
+                        </span>
+                        <span className={'d-flex align-items-center events-header__item--span'}>
+                            Слои
+                        </span>
+                    </Tab>
+                    <Tab>
+                        <span className={'tabs-img'}>
+                            <ServicesIcon  style={{width: 12, height: 12}}/>
+                        </span>
+                        <span className={'d-flex align-items-center events-header__item--span'}>
+                            Инструменты
+                        </span>
+                    </Tab>
+                    </TabList>
+                    <div className='Menu-wrapper'>
+                        <TabPanel>
+                            <h1>Фильтры</h1>
+                            <div className={'scroller menu-inner'}>
+                                <FilterSelect fetchItems={fetchNames} title={'Спортивный объект'} checkbox={false}/>
+                                <FilterSelect fetchItems={fetchOrganizations} title={'Ведомственная организация'}/>
+                                <FilterSelect fetchItems={fetchSportsZonesNames} title={'Спортивная зона'} checkbox={false}/>
+                                <FilterSelect fetchItems={fetchSportsZonesTypes} title={'Тип спортивной зоны'}/>
+                                <FilterSelect fetchItems={fetchSportsTypes} title={'Вид спорта'}/>
+                                <FilterSelect onlyItems={true} title={'Доступность спортивного объекта'}/>
+                            </div>
 
-                                <div className={'filter-btns'}>
-                                    <button className={'filter-apply filter-btn'}>Применить</button>
-                                    <button className={'filter-reset filter-btn'}>Сбросить</button>
+                            <div className={'filter-btns'}>
+                                <button className={'filter-apply filter-btn'}>Применить</button>
+                                <button className={'filter-reset filter-btn'}>Сбросить</button>
+                            </div>
+                        </TabPanel>
+                        <TabPanel>
+                            <h1>Слои</h1>
+                            <div className={'scroller menu-inner'}>
+                                <div className={'layers-control'}>
                                 </div>
-                            </>
-                        )}/>
-
-                        <Route exact path={'/layers'} render={() => (
-                            <>
-                                <h1>Слои</h1>
-                                <div className={'scroller menu-inner'}>
-                                    <div className={'menu-inner'}>
-                                        <div className={'layers'}>
-                                            {objectLayersNames.map(layer => <FilterItem
-                                                key={layer.id}
-                                                name={layer.name}
-                                            />)}
-                                            <div className={"line"}>
-                                                {heatLayersNames.map(layer => <FilterItem
-                                                    key={layer.id}
-                                                    name={layer.name}
-                                                />)}
-                                            </div>
-                                        </div>
-                                    </div>
+                            </div>
+                        </TabPanel>
+                        <TabPanel>
+                            <h1>Инструменты</h1>
+                            <div className={'scroller menu-inner'}>
+                                <div className={'services-control'}>
                                 </div>
-                            </>
-                        )}/>
-
-                        <Route exact path={'/services'} render={() => (
-                            <>
-                                <h1>Инструменты</h1>
-                                <div className={'scroller menu-inner'}>
-                                </div>
-                                <div className={'filter-btns'}>
-                                    <button className={'filter-apply filter-btn'} id="layerBtn">Применить</button>
-                                </div>
-                            </>
-                        )}/>
-
-                    </Switch>
-                </div>
+                            </div>
+                        </TabPanel>
+                    </div>
+                </Tabs>
             </div>
         </>
     );
