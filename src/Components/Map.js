@@ -138,6 +138,18 @@ class Livemap extends React.Component {
             .catch(err => {
                 console.log(err)
             })
+        
+        
+            
+        var buffers =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
+            layers:'leaders:objects_buffer_iso',
+            styles:'leaders:buffers',
+            format: 'image/png',
+            transparent: 'true',
+            tileSize: 512,
+            pane: 'bufferPane',
+            detectRetina: true
+        }); 
 
         var emptyLayer = L.tileLayer('').addTo(this.map);
         
@@ -149,7 +161,8 @@ class Livemap extends React.Component {
         };
         
         var overlayMaps = {
-            "Спортивные объекты": this.markers
+            "Спортивные объекты": this.markers,
+            "Зоны доступности":buffers
         };
         
         L.control.layers(baseMaps, overlayMaps, {position:'topright',collapsed:false}).addTo(map);
@@ -186,6 +199,17 @@ class Livemap extends React.Component {
         this.markers.on('click', (e) => {
             e.layer.setIcon(selectedIcon)
 
+            var obj_buffer =  L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
+                layers:'leaders:object_buffer',
+                styles:'leaders:buffer_selected',
+                format: 'image/png',
+                transparent: 'true',
+                tileSize: 512,
+                pane: 'bufferPane',
+                detectRetina: true,
+                viewparams: 'object_id:'+e.layer.options.id,
+            }).addTo(this.map);
+
             mapAPI.getInfoAboutObject(e.layer.options.id)
                 .then(res => {
                     this.props.setData(res.data.features.map(item => {
@@ -208,13 +232,11 @@ class Livemap extends React.Component {
           }); 
 
         document.getElementById('layerBtn')?.addEventListener('click', () =>{
-            var drawingLayers = map.pm.getGeomanDrawLayers(true).getLayers();
-            var group = L.featureGroup();
-            drawingLayers.forEach((layer) => {
-                group.addLayer(layer.pm.getShape() === 'Circle' ? L.PM.Utils.circleToPolygon(layer, 20) : layer);
-            })
-            var shapes = group.toGeoJSON();
-            console.log(shapes);
+            var drawingLayers = map.pm.getGeomanDrawLayers(true).getLayers()[0];
+            var shape = drawingLayers.pm.getShape() === 'Circle' ? L.PM.Utils.circleToPolygon(drawingLayers, 20) : drawingLayers;
+            var shapeJson = shape.toGeoJSON()['geometry'];
+            var shapeJsonFormatted = JSON.stringify(shapeJson).replaceAll(",", "\\,")
+            console.log(mapAPI.getShapeProvision('geojson:'+shapeJsonFormatted));
         })
     }
 

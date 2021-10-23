@@ -30,7 +30,10 @@ export const mapAPI = {
     },
     getLayerJSON(layer) {
         return instance.get(`${apiUrl}/leaders/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=leaders:${layer}&outputFormat=json&format_options=callback:getJson`)
-    }
+    },
+    getShapeProvision(params) {
+        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Ainfo_provision_territory&VIEWPARAMS=${params}&OUTPUTFORMAT=application%2Fjson`)
+    },
 }
 
 
