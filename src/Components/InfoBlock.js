@@ -1,5 +1,6 @@
 import InfoBlockItem from "./InfoBlockItem";
 import {ReactComponent as CrossIcon} from '../images/icons/cross-dark.svg'
+import {RemoveSelected} from './Map'
 
 const InfoBlock = ({ data, setData }) => {
     return (
@@ -9,7 +10,8 @@ const InfoBlock = ({ data, setData }) => {
                    <button className={'InfoBlock__close'}
                            id={'close-info'}
                    onClick={(e) => {
-                       setData([])
+                       setData([]);
+                       RemoveSelected(window.LeafletMap);
                    }}
                    >
                        <CrossIcon />

@@ -34,6 +34,9 @@ export const mapAPI = {
     getObjectsByFilters(params) {
         return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Afilter_apply_objects&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`)
     },
+    getObjectsBuffersByFilters(params) {
+        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%filter_apply_buffers&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`)
+    },
     getShapeProvision(params) {
         return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Ainfo_provision_territory&VIEWPARAMS=${params ? params : ''}&OUTPUTFORMAT=application%2Fjson`)
     },

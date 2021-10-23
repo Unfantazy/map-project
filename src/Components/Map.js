@@ -83,7 +83,9 @@ class Livemap extends React.Component {
             })
 
         this.markers.on('click', (e) => {
-            e.layer.setIcon(selectedIcon)
+            RemoveSelected(this.map);
+
+            e.layer.setIcon(selectedIcon);
 
             L?.tileLayer.wms('http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms', {
                 layers: 'leaders:object_buffer',
@@ -247,12 +249,13 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
     });
 
     var buffers = L?.tileLayer.wms(apiUrl, {
-        layers: 'leaders:objects_buffer_iso',
+        layers: 'leaders:filter_apply_buffers',
         styles: 'leaders:buffers',
         format: 'image/png',
         transparent: 'true',
         tileSize: 512,
         pane: 'bufferPane',
+        viewparams: filterParams,
         detectRetina: true
     });
 
@@ -372,6 +375,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         this._refocusOnMap();
     };
     if (window.StylesControl) {
+        RemoveOldLayers(mapElement)
         window.StylesControl.remove(mapElement);
     }
     window.StylesControl = stylesControl;
@@ -418,6 +422,34 @@ export const LoadMarkers = (markersGroup, params) => {
         .catch(err => {
             console.log(err)
         })
+}
+
+export const RemoveSelected = (mapElement) => {    
+    Object.values(mapElement._layers)
+        .filter(x => x._icon?.src?.includes('map-marker_blue'))
+        .forEach(y => y.setIcon(objIcon))
+
+    Object.values(mapElement._layers)
+        .filter(x => x.options.styles === 'leaders:buffer_selected')
+        .forEach(y => y.remove(mapElement))
+}
+
+export const RemoveOldLayers = (mapElement) => {    
+    Object.values(mapElement._layers)
+        .filter(x => x.options.styles === 'leaders:heatmap_square_style')
+        .forEach(y => y.remove(mapElement)) 
+
+    Object.values(mapElement._layers)
+        .filter(x => x.options.styles === 'leaders:heat_population')
+        .forEach(y => y.remove(mapElement))  
+
+    Object.values(mapElement._layers)
+        .filter(x => x.options.styles === 'leaders:heatmap_provision_style')
+        .forEach(y => y.remove(mapElement))
+
+    Object.values(mapElement._layers)
+        .filter(x => x.options.styles === 'leaders:buffers')
+        .forEach(y => y.remove(mapElement))
 }
 
 export default Livemap
