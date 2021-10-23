@@ -41,3 +41,15 @@
   background: transparent;
   border: 1px solid #645C5C;
 }
+
+.form-label--lib {
+  left: 15px;
+}
+.form-checkbox-custom {
+  cursor: pointer;
+  width: fit-content;
+}
+
+.form-checkbox-custom .form-label--lib:after {
+  left: -20px;
+}

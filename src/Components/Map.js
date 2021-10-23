@@ -288,6 +288,13 @@ const AddLayersControl = (thisElement) => {
         
         var baseLayers = layerControl.querySelector('.leaflet-control-layers-base');
         var overlaysLayers = layerControl.querySelector('.leaflet-control-layers-overlays');
+
+        const label = layerControl.querySelectorAll('.leaflet-control-layers-overlays label');
+        const span = layerControl.querySelectorAll('.leaflet-control-layers-overlays span');
+
+        label.forEach(el => el.classList.add('form-checkbox-custom'))
+        span.forEach(el => el.classList.add('form-label', 'form-label--lib'))
+
         if (baseLayers && overlaysLayers) {
             layerControl.insertBefore(overlaysLayers, layerControl.firstChild);
             layerControl.appendChild(baseLayers);
