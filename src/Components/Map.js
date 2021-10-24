@@ -180,11 +180,12 @@ class Livemap extends React.Component {
                         type: infoTypes.provision,
                         items: res.data.features.map(item => item.properties)
                     });
-                    this.props.setIsLoading(false);
+
                 })
                 .catch(err => {
                     console.log(err)
                 })
+                .finally(() =>  this.props.setIsLoading(false))
         });
     }
 
