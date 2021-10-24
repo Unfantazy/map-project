@@ -26,7 +26,7 @@ const App = () => {
 
     return (
         <div className='App'>
-            {isLoading && <Loader/>}
+            {isLoading && <Loader color={'shadow'}/>}
             <FiltersMenu model={model} setModel={setModel} isLoading={isLoading} setIsLoading={setIsLoading}/>
             <div className={'Map'}>
                 <Map setData={setData} data={data} isLoading={isLoading} setIsLoading={setIsLoading}/>
