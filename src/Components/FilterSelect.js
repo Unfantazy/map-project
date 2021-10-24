@@ -30,7 +30,7 @@ const FilterSelect = (
     const [selectedItems, setSelectedItems] = useState([])
 
 
-    const [selectedBuf, setSelectedBuf] = useState([])
+    const [selectedBuf, setSelectedBuf] = useState([500, 1000, 3000, 5000])
 
     useEffect(() => {
         if(model === null) {
@@ -86,10 +86,10 @@ const FilterSelect = (
         getModelFunc()
     }, [selectedItems, selectedBuf])
 
-    useEffect(async () => {
+    useEffect(() => {
         if (fetchItems) {
             setIsLoading(true)
-            await fetchItems(filter)
+            fetchItems(filter)
                 .then(res => {
                     const data = res?.data?.features?.map(item => ({
                         idString: item.id,

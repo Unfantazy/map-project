@@ -47,6 +47,10 @@ const FiltersMenu = ({setModel, model}) => {
         {
             params += 'sz_name:' + filterModel.sz_name.join('\\;') + ';';
         }
+        if (filterModel.sz_type?.length > 0)
+        {
+            params += 'sz_type:' + filterModel.sz_type.join('\\;') + ';';
+        }
         if (filterModel.s_kind?.length > 0)
         {
             params += 's_kind:' + filterModel.s_kind.join('\\;') + ';';

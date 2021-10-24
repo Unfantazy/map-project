@@ -3,7 +3,7 @@ import {includes} from "lodash";
 
 
 const FilterItem = ({title, selectedBuf, setSelectedBuf, type}) => {
-    const [isActive, setIsActive] = useState(false)
+    const [isActive, setIsActive] = useState(true)
 
     useEffect(() => {
         if (!selectedBuf.length) {

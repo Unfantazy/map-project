@@ -27,7 +27,8 @@ const App = () => {
         <div className='App'>
             <FiltersMenu model={model} setModel={setModel}/>
             <div className={'Map'}>
-                <Map setData={setData} data={data} setAreaData={setAreaData} areaData={areaData}/>
+                <Map setData={setData} data={data} 
+                    setAreaData={setAreaData} areaData={areaData}/>
             </div>
             {!!data.length
             && <InfoBlock data={data} setData={setData}/>

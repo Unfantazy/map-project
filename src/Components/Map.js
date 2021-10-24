@@ -70,7 +70,6 @@ class Livemap extends React.Component {
         }).addTo(this.map);
 
         mapAPI.getLayerJSON('objects_centroids').then(res => {
-            this.markers.clearLayers();
             for (var i = 0; i < res.data.features.length; i++) {
                 var a = res.data.features[i];
                 var id = a.properties.id;
@@ -112,8 +111,7 @@ class Livemap extends React.Component {
         this.map.on('click', this.onMapClick);
 
         // добавление контрола переключения слоев
-        const filterParams = 'obj_name:Спортивный комплекс образовательного учреждения\;Дворовая территория;org_id:219814\;237454;sz_name:зал спортивный №1;s_kind:46\;100;buf:500\;1000';
-        Promise.resolve(AddLayersWithControl(this.map, this.markers, filterParams));
+        Promise.resolve(AddLayersWithControl(this.map, this.markers));
 
         // добавление контрола geoman
         AddGeomanControl(this.map);
@@ -148,12 +146,16 @@ const AddGeomanControl = (mapElement) => {
             cutPolygon: false
         });
 
-        mapElement.pm.Toolbar.changeActionsOfControl('Rectangle', []);
-        mapElement.pm.Toolbar.changeActionsOfControl('Polygon', []);
-        mapElement.pm.Toolbar.changeActionsOfControl('Circle', []);
-        mapElement.pm.Toolbar.changeActionsOfControl('Edit', []);
-        mapElement.pm.Toolbar.changeActionsOfControl('Removal', []);
-        mapElement.pm.Toolbar.changeActionsOfControl('Drag', []);
+        const controlItems = [
+            'Rectangle',
+            'Polygon',
+            'Circle',
+            'Edit',
+            'Removal',
+            'Drag',
+        ]
+
+        controlItems.forEach((item) => mapElement.pm.Toolbar.changeActionsOfControl(item, []));
 
         var drawControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-draw');
         var editControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-edit');
@@ -161,18 +163,15 @@ const AddGeomanControl = (mapElement) => {
         if (drawControl && editControl && serviceTab) {
             serviceTab.appendChild(drawControl);
             serviceTab.appendChild(editControl);
-        }
-        ;
+        };
 
         mapElement.on("pm:create", () => {
-            console.log('element is created');
             // disable buttons
             document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'none';
             document.querySelectorAll('.leaflet-pm-draw a').forEach(a => a.classList.add('leaflet-disabled'));
         });
 
         mapElement.on("pm:remove", () => {
-            console.log('element is deleted');
             if (mapElement.pm.getGeomanDrawLayers(true).getLayers().length === 0) {
                 //enable buttons
                 document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'auto';
@@ -194,11 +193,9 @@ const AddGeomanControl = (mapElement) => {
                 : '';
             mapAPI.getShape(type, 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,"))
                 .then(res => {
-                    var a = res.data.features.map(item => {
+                    this.props.setAreaData(res.data.features.map(item => {
                         return item.properties
-                    });
-                    console.log(a)
-                    this.props.setAreaData(a)
+                    }))
                 })
                 .catch(err => {
                     console.log(err)
@@ -209,15 +206,16 @@ const AddGeomanControl = (mapElement) => {
 
 export const AddLayersWithControl = async (mapElement, markersElement, filterParams) => {
     const apiUrl = 'http://geoserver.bigdatamap.keenetic.pro/geoserver/leaders/wms';
+    const getParamsAsString = (params) => {
+        let paramsString = '';
+        for (let i in params) {
+            paramsString += i + ":" + params[i] + ";";
+        }
+        return paramsString.substring(0, paramsString.length - 2);
+    };
 
     // heatmap square 
     let params = (await mapAPI.getParamsForHeatmapSquare(filterParams)).data.features[0].properties;
-
-    let envSqParams = "";
-    for (let i in params) {
-        envSqParams += i + ":" + params[i] + ";";
-    }
-    envSqParams = envSqParams.substring(0, envSqParams.length - 2);
     var heat_square = L?.tileLayer.wms(apiUrl, {
         layers: 'leaders:heatmap_square',
         styles: 'leaders:heatmap_square_style',
@@ -228,7 +226,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         detectRetina: true,
         opacity: 0.5,
         viewparams: filterParams,
-        env: envSqParams
+        env: getParamsAsString(params)
     });
 
     var heat_population = L?.tileLayer.wms(apiUrl, {
@@ -244,12 +242,6 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
 
     // heatmap square init
     var provParams = (await mapAPI.getParamsForHeatmapProvision(filterParams)).data.features[0].properties;
-
-    let envProvParams = "";
-    for (let i in provParams) {
-        envProvParams += i + ":" + provParams[i] + ";";
-    }
-    envProvParams = envProvParams.substring(0, envProvParams.length - 2);
     var heat_provision = L?.tileLayer.wms(apiUrl, {
         layers: 'leaders:heatmap_provision',
         styles: 'leaders:heatmap_provision_style',
@@ -260,7 +252,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         detectRetina: true,
         opacity: 0.5,
         viewparams: filterParams,
-        env: envProvParams
+        env: getParamsAsString(provParams)
     });
 
     var buffers = L?.tileLayer.wms(apiUrl, {
@@ -434,9 +426,9 @@ export const LoadMarkers = (markersGroup, params) => {
                 .addTo(markersGroup);
         }
     })
-        .catch(err => {
-            console.log(err)
-        })
+    .catch(err => {
+        console.log(err)
+    })
 }
 
 export const RemoveSelected = (mapElement) => {    
@@ -450,21 +442,17 @@ export const RemoveSelected = (mapElement) => {
 }
 
 export const RemoveOldLayers = (mapElement) => {    
-    Object.values(mapElement._layers)
-        .filter(x => x.options.styles === 'leaders:heatmap_square_style')
-        .forEach(y => y.remove(mapElement)) 
+    const layers = [
+        'leaders:heatmap_square_style', 
+        'leaders:heat_population', 
+        'leaders:heatmap_provision_style', 
+        'leaders:buffers'];
 
-    Object.values(mapElement._layers)
-        .filter(x => x.options.styles === 'leaders:heat_population')
-        .forEach(y => y.remove(mapElement))  
-
-    Object.values(mapElement._layers)
-        .filter(x => x.options.styles === 'leaders:heatmap_provision_style')
+    layers.forEach((layer) => {
+        Object.values(mapElement._layers)
+        .filter(x => x.options.styles === layer)
         .forEach(y => y.remove(mapElement))
-
-    Object.values(mapElement._layers)
-        .filter(x => x.options.styles === 'leaders:buffers')
-        .forEach(y => y.remove(mapElement))
+    })
 }
 
 export default Livemap
