@@ -9,23 +9,23 @@ import {LoadMarkers, AddLayersWithControl} from './Map'
 
 const FiltersMenu = ({setModel, model}) => {
     const fetchSportsTypes = useCallback((filter) => {
-        return mapAPI.getSportsTypes('kind_sport', filter)
+        return mapAPI.getFilterValues('kind_sport', filter)
     }, [])
 
     const fetchSportsZonesTypes = useCallback((filter) => {
-        return mapAPI.getSportsZonesTypes('type_zone', filter)
+        return mapAPI.getFilterValues('type_zone', filter)
     }, [])
 
     const fetchSportsZonesNames = useCallback((filter) => {
-        return mapAPI.getSportsZonesNames('name_zone', filter)
+        return mapAPI.getFilterValues('name_zone', filter)
     }, [])
 
     const fetchOrganizations = useCallback((filter) => {
-        return mapAPI.getOrganizations('name_organization', filter)
+        return mapAPI.getFilterValues('name_organization', filter)
     }, [])
 
     const fetchNames = useCallback((filter) => {
-        return mapAPI.getNames('name_object', filter)
+        return mapAPI.getFilterValues('name_object', filter)
     }, [])
 
     const onResetFilters = () => {

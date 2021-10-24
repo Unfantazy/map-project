@@ -205,6 +205,7 @@ const AddGeomanControl = (mapElement) => {
 }
 
 export const AddLayersWithControl = async (mapElement, markersElement, filterParams) => {
+    RemoveOldLayers(mapElement);
     const apiUrl = 'http://geoserver.sports.keenetic.pro/geoserver/leaders/wms';
     const getParamsAsString = (params) => {
         let paramsString = '';
@@ -215,7 +216,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
     };
 
     // heatmap square 
-    let params = (await mapAPI.getParamsForHeatmapSquare(filterParams)).data.features[0].properties;
+    let params = (await mapAPI.getMapObjects('thresholds_heatmap_square', filterParams)).data.features[0].properties;
     var heat_square = L?.tileLayer.wms(apiUrl, {
         layers: 'leaders:heatmap_square',
         styles: 'leaders:heatmap_square_style',
@@ -241,7 +242,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
     });
 
     // heatmap square init
-    var provParams = (await mapAPI.getParamsForHeatmapProvision(filterParams)).data.features[0].properties;
+    var provParams = (await mapAPI.getMapObjects('thresholds_heatmap_provision', filterParams)).data.features[0].properties;
     var heat_provision = L?.tileLayer.wms(apiUrl, {
         layers: 'leaders:heatmap_provision',
         styles: 'leaders:heatmap_provision_style',
@@ -382,7 +383,6 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         this._refocusOnMap();
     };
     if (window.StylesControl) {
-        RemoveOldLayers(mapElement)
         window.StylesControl.remove(mapElement);
     }
     window.StylesControl = stylesControl;
@@ -417,7 +417,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
 };
 
 export const LoadMarkers = (markersGroup, params) => {
-    mapAPI.getObjectsByFilters(params).then(res => {
+    mapAPI.getMapObjects('filter_apply_objects', params).then(res => {
         markersGroup.clearLayers();
         for (var i = 0; i < res.data.features.length; i++) {
             var a = res.data.features[i];

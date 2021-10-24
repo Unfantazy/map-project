@@ -8,43 +8,31 @@ const instance = axios.create({
 })
 
 const apiUrl = 'http://geoserver.sports.keenetic.pro/geoserver';
+const wfsApiUrl = apiUrl + '/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3A';
+const owsApiUrl = apiUrl + '/leaders/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=';
+const outputFormatApplJson = '&OUTPUTFORMAT=application%2Fjson';
+const outputFormatJson = '&outputFormat=json';
+const formatOptions = '&format_options=callback:getJson';
+
+const getWfsRequestUrl = (type, params, outputFormat = '', formatOptions = '') => {
+    return `${wfsApiUrl}${type}&VIEWPARAMS=${params ? params : ''}${outputFormat}${formatOptions}`;
+}
 
 export const mapAPI = {
-    getSportsTypes(type, value) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Afilter_${type}&VIEWPARAMS=${value ? `name:${value}` : ''}&OUTPUTFORMAT=application%2Fjson`)
-    },
-    getSportsZonesTypes(type, value) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Afilter_${type}&VIEWPARAMS=${value ? `name:${value}` : ''}&OUTPUTFORMAT=application%2Fjson`)
-    },
-    getSportsZonesNames(type, value) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Afilter_${type}&VIEWPARAMS=${value ? `name:${value}` : ''}&OUTPUTFORMAT=application%2Fjson`)
-    },
-    getOrganizations(type, value) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Afilter_${type}&VIEWPARAMS=${value ? `name:${value}` : ''}&OUTPUTFORMAT=application%2Fjson`)
-    },
-    getNames(type, value) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Afilter_${type}&VIEWPARAMS=${value ? `name:${value}` : ''}&OUTPUTFORMAT=application%2Fjson`)
+    getFilterValues(type, value) {
+        return instance.get(getWfsRequestUrl(`filter_${type}`, value ? `name:${value}` : '', outputFormatApplJson))
     },
     getInfoAboutObject(id) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Ainfo_objects&VIEWPARAMS=id:${id}&OUTPUTFORMAT=application%2Fjson`)
-    },
-    getLayerJSON(layer, params) {
-        return instance.get(`${apiUrl}/leaders/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=leaders:${layer}&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`)
-    },
-    getObjectsByFilters(params) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Afilter_apply_objects&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`)
-    },
-    getObjectsBuffersByFilters(params) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%filter_apply_buffers&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`)
-    },
-    getParamsForHeatmapSquare(params) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Athresholds_heatmap_square&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`);
-    },
-    getParamsForHeatmapProvision(params) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3Athresholds_heatmap_provision&VIEWPARAMS=${params ? params : ''}&outputFormat=json&format_options=callback:getJson`);
+        return instance.get(getWfsRequestUrl('info_objects', `id:${id}`, outputFormatApplJson))
     },
     getShape(type, params) {
-        return instance.get(`${apiUrl}/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3A${type}&VIEWPARAMS=${params ? params : ''}&OUTPUTFORMAT=application%2Fjson`)
+        return instance.get(getWfsRequestUrl(type, params, outputFormatApplJson))
+    },
+    getLayerJSON(layer, params) {
+        return instance.get(`${owsApiUrl}leaders:${layer}&VIEWPARAMS=${params ? params : ''}${outputFormatJson}${formatOptions}`)
+    },
+    getMapObjects(type, params) {
+        return instance.get(getWfsRequestUrl(type, params, outputFormatJson, formatOptions))
     }
 }
 
