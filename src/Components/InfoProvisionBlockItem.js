@@ -11,14 +11,6 @@ const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare 
             </div>
         </div>
             <div className='InfoBlockItem'>
-                <div className={'InfoBlockItem__title'}>Типы спортивных зон:</div>
-                <div className={'InfoBlockItem__items'}>
-                    <ul>
-                        {types.map(type => <li className={'InfoBlockItem__item'}>{type}</li>) }
-                    </ul>
-                </div>
-            </div>
-            <div className='InfoBlockItem'>
                 <div className={'InfoBlockItem__title'}>Площадь спортивных зон:</div>
                 <div className={'InfoBlockItem__items'}>
                     <ul>
@@ -47,6 +39,14 @@ const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare 
                 <div className={'InfoBlockItem__items'}>
                     <ul>
                         <li className={'InfoBlockItem__item'}>{sumSquare}  кв. м</li>
+                    </ul>
+                </div>
+            </div>
+            <div className='InfoBlockItem'>
+                <div className={'InfoBlockItem__title'}>Типы спортивных зон:</div>
+                <div className={'InfoBlockItem__items'}>
+                    <ul>
+                        {types.map(type => <li className={'InfoBlockItem__item'}>{type}</li>) }
                     </ul>
                 </div>
             </div>

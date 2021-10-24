@@ -1,4 +1,4 @@
-import InfoAreaBlockItem from "./InfoAreaBlockItem";
+import InfoAreaBlockItem from "./InfoProvisionBlockItem";
 import {ReactComponent as CrossIcon} from '../images/icons/cross-dark.svg'
 
 const InfoAreaBlock = ({ areaData, setAreaData }) => {

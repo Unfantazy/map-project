@@ -6,6 +6,7 @@ import '../Leaflet.markercluster/src/index';
 import '@geoman-io/leaflet-geoman-free'
 import svg_red from '../images/icons/map-marker_red.svg'
 import svg_blue from '../images/icons/map-marker_blue.svg'
+import {infoTypes} from './InfoBlock'
 
 import {mapAPI} from "../API/methods";
 
@@ -99,9 +100,10 @@ class Livemap extends React.Component {
 
             mapAPI.getInfoAboutObject(e.layer.options.id)
                 .then(res => {
-                    this.props.setData(res.data.features.map(item => {
-                        return item.properties
-                    }))
+                    this.props.setData({
+                        type: infoTypes.object,
+                        items: res.data.features.map(item => item.properties)
+                    })
                 })
                 .catch(err => {
                     console.log(err)
@@ -114,29 +116,8 @@ class Livemap extends React.Component {
         Promise.resolve(AddLayersWithControl(this.map, this.markers));
 
         // добавление контрола geoman
-        AddGeomanControl(this.map);
-    }
-
-    componentWillUnmount() {
-        this.map?.off('click', this.onMapClick);
-        this.map = null;
-    }
-
-    onMapClick = () => {
-        // this.props.setData([])
-    }
-
-    render() {
-        return (
-            <div className='map' id={'map'}></div>
-        );
-    }
-}
-
-const AddGeomanControl = (mapElement) => {
-    if (mapElement) {
-        mapElement.pm.setLang('ru');
-        mapElement.pm.addControls({
+        this.map.pm.setLang('ru');
+        this.map.pm.addControls({
             position: 'topright',
             drawCircleMarker: false,
             drawMarker: false,
@@ -155,7 +136,7 @@ const AddGeomanControl = (mapElement) => {
             'Drag',
         ]
 
-        controlItems.forEach((item) => mapElement.pm.Toolbar.changeActionsOfControl(item, []));
+        controlItems.forEach((item) => this.map.pm.Toolbar.changeActionsOfControl(item, []));
 
         var drawControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-draw');
         var editControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-edit');
@@ -165,14 +146,14 @@ const AddGeomanControl = (mapElement) => {
             serviceTab.appendChild(editControl);
         };
 
-        mapElement.on("pm:create", () => {
+        this.map.on("pm:create", () => {
             // disable buttons
             document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'none';
             document.querySelectorAll('.leaflet-pm-draw a').forEach(a => a.classList.add('leaflet-disabled'));
         });
 
-        mapElement.on("pm:remove", () => {
-            if (mapElement.pm.getGeomanDrawLayers(true).getLayers().length === 0) {
+        this.map.on("pm:remove", () => {
+            if (this.map.pm.getGeomanDrawLayers(true).getLayers().length === 0) {
                 //enable buttons
                 document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'auto';
                 document.querySelectorAll('.leaflet-pm-draw a')
@@ -182,25 +163,41 @@ const AddGeomanControl = (mapElement) => {
         });
 
         document.getElementById('layerBtn')?.addEventListener('click', () => {
-            var drawingLayers = mapElement.pm.getGeomanDrawLayers(true).getLayers()[0];
+            var drawingLayers = this.map.pm.getGeomanDrawLayers(true).getLayers()[0];
             var shape = drawingLayers.pm.getShape() === 'Circle' 
                 ? L.PM.Utils.circleToPolygon(drawingLayers, 20) 
                 : drawingLayers;
-            var type = Object.values(mapElement._layers).filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0
+            var type = Object.values(this.map._layers).filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0
             ? 'info_sports'
-            : Object.values(mapElement._layers).filter(x => x.options.styles === 'leaders:heatmap_provision_style').length > 0
+            : Object.values(this.map._layers).filter(x => x.options.styles === 'leaders:heatmap_provision_style').length > 0
                 ? 'info_provision'
                 : '';
             mapAPI.getShape(type, 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,"))
                 .then(res => {
-                    this.props.setAreaData(res.data.features.map(item => {
-                        return item.properties
-                    }))
+                    this.props.setData({
+                        type: infoTypes.provision,
+                        items: res.data.features.map(item => item.properties)
+                    })
                 })
                 .catch(err => {
                     console.log(err)
                 })
         });
+    }
+
+    componentWillUnmount() {
+        this.map?.off('click', this.onMapClick);
+        this.map = null;
+    }
+
+    onMapClick = () => {
+        // this.props.setData([])
+    }
+
+    render() {
+        return (
+            <div className='map' id={'map'}></div>
+        );
     }
 }
 

@@ -1,15 +1,13 @@
 import './App.scss';
 import FiltersMenu from "./Components/FiltersMenu";
 import Map from "./Components/Map";
-import InfoBlock from "./Components/InfoBlock";
+import InfoBlock, {infoTypes} from "./Components/InfoBlock";
 import {useState} from "react";
 import Hint from "./Components/Hint";
-import InfoAreaBlock from './Components/InfoAreaBlock';
 
 
 const App = () => {
-    const [data, setData] = useState([])
-    const [areaData, setAreaData] = useState([])
+    const [data, setData] = useState({type: infoTypes.default, items: []})
     const [isLoading, setIsLoading] = useState(false)
 
     const initialStateModel = {
@@ -27,14 +25,10 @@ const App = () => {
         <div className='App'>
             <FiltersMenu model={model} setModel={setModel}/>
             <div className={'Map'}>
-                <Map setData={setData} data={data} 
-                    setAreaData={setAreaData} areaData={areaData}/>
+                <Map setData={setData} data={data} />
             </div>
-            {!!data.length
-            && <InfoBlock data={data} setData={setData}/>
-            }
-            {!!areaData.length
-            && <InfoAreaBlock areaData={areaData} setAreaData={setAreaData}/>
+            {data?.items?.length > 0
+                && <InfoBlock data={data} setData={setData}/>
             }
             <Hint/>
         </div>
