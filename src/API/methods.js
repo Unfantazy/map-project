@@ -7,7 +7,7 @@ const instance = axios.create({
     ...settings
 })
 
-const apiUrl = 'http://geoserver.bigdatamap.keenetic.pro/geoserver';
+const apiUrl = 'http://geoserver.sports.keenetic.pro/geoserver';
 
 export const mapAPI = {
     getSportsTypes(type, value) {
