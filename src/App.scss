@@ -154,3 +154,22 @@ h1 {
      width: 210px;
    }
  }
+
+
+.leaflet-bar .leaflet-buttons-control-button, .leaflet-bar .leaflet-buttons-control-button:hover{
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-bottom: 1px solid #110932;
+
+  .control-icon {
+    width: 20px;
+  }
+}
+
+.leaflet-pm-toolbar .button-container:last-child a.leaflet-buttons-control-button {
+  border-bottom: 1px solid #110932;
+  border-radius: 0;
+}

@@ -32,38 +32,31 @@ const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
         setModel(null)
     }
 
-    const updateMapLayers = (filterModel) =>
-    {
+    const updateMapLayers = async (filterModel) => {
         var params = '';
-        if (filterModel.obj_name?.length > 0)
-        {
+        if (filterModel.obj_name?.length > 0) {
             params += 'obj_name:' + filterModel.obj_name.join('\\;') + ';';
         }
-        if (filterModel.org_id?.length > 0)
-        {
+        if (filterModel.org_id?.length > 0) {
             params += 'org_id:' + filterModel.org_id.join('\\;') + ';';
         }
-        if (filterModel.sz_name?.length > 0)
-        {
+        if (filterModel.sz_name?.length > 0) {
             params += 'sz_name:' + filterModel.sz_name.join('\\;') + ';';
         }
-        if (filterModel.sz_type?.length > 0)
-        {
+        if (filterModel.sz_type?.length > 0) {
             params += 'sz_type:' + filterModel.sz_type.join('\\;') + ';';
         }
-        if (filterModel.s_kind?.length > 0)
-        {
+        if (filterModel.s_kind?.length > 0) {
             params += 's_kind:' + filterModel.s_kind.join('\\;') + ';';
         }
-        if (filterModel.buf?.length > 0)
-        {
+        if (filterModel.buf?.length > 0) {
             params += 'buf:' + filterModel.buf.join('\\;') + ';';
         }
 
         setIsLoading(true);
 
-        LoadMarkers(window.Markers, params);
-        Promise.resolve(AddLayersWithControl(window.LeafletMap, window.Markers, params));
+        await LoadMarkers(window.Markers, params);
+        await Promise.resolve(AddLayersWithControl(window.LeafletMap, window.Markers, params));
 
         setIsLoading(false);
     }
@@ -118,10 +111,11 @@ const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
                             <div className={'filter-btns'}>
                                 <button className={'filter-apply filter-btn'}
                                         onClick={() => updateMapLayers(model)}
-                                    >Применить</button>
+                                >Применить
+                                </button>
                                 <button className={'filter-reset filter-btn'}
                                         onClick={() => onResetFilters()}
-                                    >Сбросить
+                                >Сбросить
                                 </button>
                             </div>
                         </TabPanel>

@@ -21,19 +21,18 @@ const App = () => {
     }
 
     const [model, setModel] = useState(initialStateModel)
-    if (isLoading)
-    {
-        return <Loader />;
-    }
+
+    console.log(isLoading)
 
     return (
         <div className='App'>
+            {isLoading && <Loader/>}
             <FiltersMenu model={model} setModel={setModel} isLoading={isLoading} setIsLoading={setIsLoading}/>
             <div className={'Map'}>
                 <Map setData={setData} data={data} isLoading={isLoading} setIsLoading={setIsLoading}/>
             </div>
             {data?.items?.length > 0
-                && <InfoBlock data={data} setData={setData}/>
+            && <InfoBlock data={data} setData={setData}/>
             }
             <Hint/>
         </div>
