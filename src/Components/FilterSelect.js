@@ -2,6 +2,7 @@ import Tag from "./Tag";
 import {ReactComponent as SearchIcon} from '../images/icons/search.svg'
 import {ReactComponent as CrossIcon} from '../images/icons/cross-grey.svg'
 import {ReactComponent as ArrowIcon} from '../images/icons/arrow.svg'
+import {ReactComponent as ResetIcon} from '../images/icons/reset.svg'
 import {useCallback, useEffect, useMemo, useRef, useState} from "react";
 import {includes} from "lodash";
 import {useOnClickOutside} from "../customHooks/useOnClickOutside";
@@ -31,8 +32,14 @@ const FilterSelect = (
     const [selectedBuf, setSelectedBuf] = useState([500, 1000, 3000, 5000])
     const MAX_SELECTED_COUNT = 5;
 
+    const resetFilters = () => {
+        if (!!selectedItems.length) {
+            setSelectedItems([])
+        }
+    }
+
     useEffect(() => {
-        if(model === null) {
+        if (model === null) {
             setSelectedItems([])
             setSelectedBuf([])
         }
@@ -130,10 +137,14 @@ const FilterSelect = (
         return <div className={'Filter-select'}>
             <h3 className={'Filter-select__title'}>{title}</h3>
             <div className={'layers'}>
-                <FilterItem title={'Шаговая (радиус - 500 м)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf} type={500}/>
-                <FilterItem title={'Окружная (радиус - 3 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf} type={3000}/>
-                <FilterItem title={'Районная (радиус - 1 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf} type={1000}/>
-                <FilterItem title={'Городская (радиус - 5 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf} type={5000}/>
+                <FilterItem title={'Шаговая (радиус - 500 м)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf}
+                            type={500}/>
+                <FilterItem title={'Окружная (радиус - 3 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf}
+                            type={3000}/>
+                <FilterItem title={'Районная (радиус - 1 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf}
+                            type={1000}/>
+                <FilterItem title={'Городская (радиус - 5 км)'} setSelectedBuf={setSelectedBuf}
+                            selectedBuf={selectedBuf} type={5000}/>
             </div>
         </div>
     }
@@ -142,51 +153,55 @@ const FilterSelect = (
         <div className={'Filter-select'}
              ref={filterRef}>
             <h3 className={'Filter-select__title'}>{title}</h3>
-            <div className={`select__btn ${isFocused && 'isFocused'}`}
-                 onClick={(e) => {
-                     e.stopPropagation()
-                     e.preventDefault()
-                     setIsFocused(true)
-                 }}>
-                <ArrowIcon
-                    className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}
-                    onClick={(e) => {
-                        e.stopPropagation()
-                        setIsFocused(!isFocused)
-                    }}
-                />
-                <div className={`tags-container scroller`}>
-                    {!checkbox && selectedItems.map(item => {
-                        return <Tag
-                            title={item.title}
-                            onDelete={(e) => {
-                                e.stopPropagation()
-                                onDeleteItem(item.idString)
-                            }}
-                        />
-                    })}
+            <div className={'Filter-select__wrapper'}>
+                <div className={`select__btn ${isFocused && 'isFocused'}`}
+                     onClick={(e) => {
+                         e.stopPropagation()
+                         e.preventDefault()
+                         setIsFocused(true)
+                     }}>
+                    <ArrowIcon
+                        className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}
+                        onClick={(e) => {
+                            e.stopPropagation()
+                            setIsFocused(!isFocused)
+                        }}
+                    />
+                    <div className={`tags-container scroller`}>
+                        {!checkbox && selectedItems.map(item => {
+                            return <Tag
+                                title={item.title}
+                                onDelete={(e) => {
+                                    e.stopPropagation()
+                                    onDeleteItem(item.idString)
+                                }}
+                            />
+                        })}
 
+                    </div>
+                    <label className={'select-label'}>
+                        {checkbox && <div className={`select__chosen ${onlySelected ? 'selected' : ''}`}
+                                          onClick={() => {
+                                              setOnlySelected(!onlySelected)
+                                          }}
+                        >Выбрано ({selectedItems.length})</div>}
+                        <SearchIcon style={{flexShrink: 0}}/>
+                        <input
+                            type="text"
+                            placeholder={'Введите название'}
+                            className={'select-input'}
+                            value={filter}
+                            onChange={(e) => setFilter(e.currentTarget.value)}
+                        />
+                        {filter &&
+                        <CrossIcon style={{cursor: 'pointer', right: 12, flexShrink: 0}}
+                                   onClick={() => setFilter('')}
+                        />
+                        }
+                    </label>
                 </div>
-                <label className={'select-label'}>
-                    {checkbox && <div className={`select__chosen ${onlySelected ? 'selected' : ''}`}
-                                      onClick={() => {
-                                          setOnlySelected(!onlySelected)
-                                      }}
-                    >Выбрано ({selectedItems.length})</div>}
-                    <SearchIcon style={{flexShrink: 0}}/>
-                    <input
-                        type="text"
-                        placeholder={'Введите название'}
-                        className={'select-input'}
-                        value={filter}
-                        onChange={(e) => setFilter(e.currentTarget.value)}
-                    />
-                    {filter &&
-                    <CrossIcon style={{cursor: 'pointer', right: 12, flexShrink: 0}}
-                               onClick={() => setFilter('')}
-                    />
-                    }
-                </label>
+                <ResetIcon className={`filter-reset-btn ${!!selectedItems.length && 'active'}`}
+                           onClick={() => resetFilters()}/>
             </div>
 
             {isFocused
