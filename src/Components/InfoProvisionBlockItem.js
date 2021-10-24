@@ -6,7 +6,7 @@ const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare 
             <div className={'InfoBlockItem__title'}>Количество спортивных зон:</div>
             <div className={'InfoBlockItem__items'}>
                 <ul>
-                    <li className={'InfoBlockItem__item'}>{count} зон на 100 000 человек</li>
+                    <li className={'InfoBlockItem__item'}>{count.toLocaleString()} зон на 100 000 человек</li>
                 </ul>
             </div>
         </div>
@@ -14,7 +14,7 @@ const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare 
                 <div className={'InfoBlockItem__title'}>Площадь спортивных зон:</div>
                 <div className={'InfoBlockItem__items'}>
                     <ul>
-                        <li className={'InfoBlockItem__item'}>{square} кв. м на 100 000 человек</li>
+                        <li className={'InfoBlockItem__item'}>{square.toLocaleString()} кв. м на 100 000 человек</li>
                     </ul>
                 </div>
             </div>
@@ -22,7 +22,7 @@ const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare 
                 <div className={'InfoBlockItem__title'}>Видов спортивных услуг:</div>
                 <div className={'InfoBlockItem__items'}>
                     <ul>
-                        <li className={'InfoBlockItem__item'}>{kinds} услуг на 100 000 человек</li>
+                        <li className={'InfoBlockItem__item'}>{kinds.toLocaleString()} услуг на 100 000 человек</li>
                     </ul>
                 </div>
             </div>
@@ -30,7 +30,7 @@ const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare 
                 <div className={'InfoBlockItem__title'}>Население:</div>
                 <div className={'InfoBlockItem__items'}>
                     <ul>
-                        <li className={'InfoBlockItem__item'}>{population} человек</li>
+                        <li className={'InfoBlockItem__item'}>{population.toLocaleString()} человек</li>
                     </ul>
                 </div>
             </div>
@@ -38,7 +38,7 @@ const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare 
                 <div className={'InfoBlockItem__title'}>Суммарная площадь спортивных зон:</div>
                 <div className={'InfoBlockItem__items'}>
                     <ul>
-                        <li className={'InfoBlockItem__item'}>{sumSquare}  кв. м</li>
+                        <li className={'InfoBlockItem__item'}>{sumSquare.toLocaleString()}  кв. м</li>
                     </ul>
                 </div>
             </div>

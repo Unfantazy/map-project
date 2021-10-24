@@ -7,7 +7,7 @@ import {ReactComponent as ServicesIcon} from '../images/icons/services.svg'
 import {ReactComponent as FiltersIcon} from '../images/icons/filters.svg'
 import {LoadMarkers, AddLayersWithControl} from './Map'
 
-const FiltersMenu = ({setModel, model}) => {
+const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
     const fetchSportsTypes = useCallback((filter) => {
         return mapAPI.getFilterValues('kind_sport', filter)
     }, [])
@@ -59,9 +59,13 @@ const FiltersMenu = ({setModel, model}) => {
         {
             params += 'buf:' + filterModel.buf.join('\\;') + ';';
         }
-        
+
+        setIsLoading(true);
+
         LoadMarkers(window.Markers, params);
         Promise.resolve(AddLayersWithControl(window.LeafletMap, window.Markers, params));
+
+        setIsLoading(false);
     }
 
     return (

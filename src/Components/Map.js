@@ -78,9 +78,9 @@ class Livemap extends React.Component {
                     .addTo(this.markers);
             }
         })
-            .catch(err => {
-                console.log(err)
-            })
+        .catch(err => {
+            console.log(err)
+        })
 
         this.markers.on('click', (e) => {
             RemoveSelected(this.map);
@@ -163,6 +163,8 @@ class Livemap extends React.Component {
         });
 
         document.getElementById('layerBtn')?.addEventListener('click', () => {
+            this.props.setIsLoading(true);
+
             var drawingLayers = this.map.pm.getGeomanDrawLayers(true).getLayers()[0];
             var shape = drawingLayers.pm.getShape() === 'Circle' 
                 ? L.PM.Utils.circleToPolygon(drawingLayers, 20) 
@@ -177,7 +179,8 @@ class Livemap extends React.Component {
                     this.props.setData({
                         type: infoTypes.provision,
                         items: res.data.features.map(item => item.properties)
-                    })
+                    });
+                    this.props.setIsLoading(false);
                 })
                 .catch(err => {
                     console.log(err)

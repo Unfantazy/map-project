@@ -28,9 +28,8 @@ const FilterSelect = (
 
     const [isFocused, setIsFocused] = useState(false)
     const [selectedItems, setSelectedItems] = useState([])
-
-
     const [selectedBuf, setSelectedBuf] = useState([500, 1000, 3000, 5000])
+    const MAX_SELECTED_COUNT = 5;
 
     useEffect(() => {
         if(model === null) {
@@ -115,7 +114,7 @@ const FilterSelect = (
     }, [selectedItems])
 
     const onSelectItem = (item) => {
-        if (!includes(selectedItems.map(item => item.idString), item.idString)) {
+        if (!includes(selectedItems.map(item => item.idString), item.idString) && selectedItems.length < MAX_SELECTED_COUNT) {
             setSelectedItems([...selectedItems, item])
         } else {
             setSelectedItems(selectedItems.filter(focusedItem => focusedItem.idString !== item.idString))

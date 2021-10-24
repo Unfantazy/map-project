@@ -4,6 +4,7 @@ import Map from "./Components/Map";
 import InfoBlock, {infoTypes} from "./Components/InfoBlock";
 import {useState} from "react";
 import Hint from "./Components/Hint";
+import Loader from './Components/Loader';
 
 
 const App = () => {
@@ -20,12 +21,16 @@ const App = () => {
     }
 
     const [model, setModel] = useState(initialStateModel)
+    if (isLoading)
+    {
+        return <Loader />;
+    }
 
     return (
         <div className='App'>
-            <FiltersMenu model={model} setModel={setModel}/>
+            <FiltersMenu model={model} setModel={setModel} isLoading={isLoading} setIsLoading={setIsLoading}/>
             <div className={'Map'}>
-                <Map setData={setData} data={data} />
+                <Map setData={setData} data={data} isLoading={isLoading} setIsLoading={setIsLoading}/>
             </div>
             {data?.items?.length > 0
                 && <InfoBlock data={data} setData={setData}/>
