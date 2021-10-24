@@ -145,6 +145,12 @@ class Livemap extends React.Component {
         if (drawControl && editControl && serviceTab) {
             serviceTab.appendChild(drawControl);
             serviceTab.appendChild(editControl);
+            document.querySelectorAll('.button-container').forEach((btn) => {
+                let p = document.createElement("p");
+                let innerAnchor = btn.querySelector('a.leaflet-buttons-control-button');
+                p.innerText = innerAnchor.querySelector('div').title;
+                innerAnchor.after(p);
+            })
         };
 
         this.map.on("pm:create", () => {

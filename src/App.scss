@@ -173,3 +173,23 @@ h1 {
   border-bottom: 1px solid #110932;
   border-radius: 0;
 }
+
+.button-container {  
+  display: flex;
+  align-items: center;
+  min-width: 231px;
+
+  p {
+    margin-left: 10px;
+    margin-right: 10px;
+  }
+}
+
+.leaflet-pm-toolbar.leaflet-pm-draw .button-container:first-child a.leaflet-buttons-control-button{
+  border-top: 1px solid #110932;
+  border-radius: 0;
+}
+
+.services-control {
+  padding-top: 15px;
+}
