@@ -1,15 +1,19 @@
+import getNoun from '../Helpers/stringHelper'
 
-const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare }) => {
+const InfoProvisionBlockItem = ({ count, types, square, kinds, population, sumSquare }) => {
+    const hasData = count && types && square && kinds && population && sumSquare;
     return (
-        <>
-        <div className='InfoBlockItem'>
-            <div className={'InfoBlockItem__title'}>Количество спортивных зон:</div>
-            <div className={'InfoBlockItem__items'}>
-                <ul>
-                    <li className={'InfoBlockItem__item'}>{count.toLocaleString()} зон на 100 000 человек</li>
-                </ul>
+        <>        
+        {!hasData && <div className='InfoBlockItem__empty'>Данные отсутствуют</div>}
+        {hasData && <>
+            <div className='InfoBlockItem'>
+                <div className={'InfoBlockItem__title'}>Количество спортивных зон:</div>
+                <div className={'InfoBlockItem__items'}>
+                    <ul>
+                        <li className={'InfoBlockItem__item'}>{count.toLocaleString()} {getNoun(Number(count), 'зона', 'зоны', 'зон')} на 100 000 человек</li>
+                    </ul>
+                </div>
             </div>
-        </div>
             <div className='InfoBlockItem'>
                 <div className={'InfoBlockItem__title'}>Площадь спортивных зон:</div>
                 <div className={'InfoBlockItem__items'}>
@@ -22,7 +26,7 @@ const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare 
                 <div className={'InfoBlockItem__title'}>Видов спортивных услуг:</div>
                 <div className={'InfoBlockItem__items'}>
                     <ul>
-                        <li className={'InfoBlockItem__item'}>{kinds.toLocaleString()} услуг на 100 000 человек</li>
+                        <li className={'InfoBlockItem__item'}>{kinds.toLocaleString()} {getNoun(Number(kinds), 'услуга', 'услуги', 'услуг')} на 100 000 человек</li>
                     </ul>
                 </div>
             </div>
@@ -30,7 +34,7 @@ const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare 
                 <div className={'InfoBlockItem__title'}>Население:</div>
                 <div className={'InfoBlockItem__items'}>
                     <ul>
-                        <li className={'InfoBlockItem__item'}>{population.toLocaleString()} человек</li>
+                        <li className={'InfoBlockItem__item'}>{population.toLocaleString()} {getNoun(Number(kinds), 'человек', 'человека', 'человек')}</li>
                     </ul>
                 </div>
             </div>
@@ -50,8 +54,8 @@ const InfoAreaBlockItem = ({ count, types, square, kinds, population, sumSquare 
                     </ul>
                 </div>
             </div>
-        </>
-    );
+        </> }
+    </>);
 }
 
-export default InfoAreaBlockItem;
+export default InfoProvisionBlockItem;

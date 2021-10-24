@@ -9,7 +9,7 @@ import Loader from './Components/Loader';
 
 const App = () => {
     const [data, setData] = useState({type: infoTypes.default, items: []})
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
 
     const initialStateModel = {
         obj_name: [],
@@ -21,9 +21,7 @@ const App = () => {
     }
 
     const [model, setModel] = useState(initialStateModel)
-
-    console.log(isLoading)
-
+    
     return (
         <div className='App'>
             {isLoading && <Loader color={'shadow'}/>}

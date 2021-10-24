@@ -1,5 +1,6 @@
 import InfoBlockItem from "./InfoBlockItem";
 import InfoProvisionBlockItem from "./InfoProvisionBlockItem";
+import InfoSportBlockItem from "./InfoSportBlockItem";
 import {ReactComponent as CrossIcon} from '../images/icons/cross-dark.svg'
 import {RemoveSelected} from './Map'
 
@@ -69,6 +70,13 @@ const InfoBlock = ({ data, setData }) => {
                            types={JSON.parse(item.z_types)}
                            zones={JSON.parse(item.s_zones)}
                            organization={item.organization}
+                       />
+                   })}
+                   {data.type === infoTypes.sports && data.items.map(item => {
+                       return <InfoSportBlockItem
+                           square={item.sport_square_sum}
+                           types={JSON.parse(item.sport_zones_amount)}
+                           kinds={JSON.parse(item.sport_kinds_amount)}
                        />
                    })}
                    {data.type === infoTypes.provision && data.items.map(item => {

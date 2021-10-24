@@ -115,8 +115,14 @@
   font-size: 11px;
   padding-left: 36px;
   margin-bottom: 10px;
+  margin-right: 15px;
   color: gray;
   h3 {    
     font-weight: lighter;
   }
+}
+
+.InfoBlock__empty {  
+  text-align: center;
+  font-weight: 700;
 }

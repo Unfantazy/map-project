@@ -64,7 +64,7 @@ const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
     return (
         <>
             <div className={`Menu`}>
-                <Tabs defaultIndex={0} onSelect={index => console.log(index)} forceRenderTabPanel>
+                <Tabs defaultIndex={0} forceRenderTabPanel>
                     <TabList>
                         <Tab>
                         <span className={'tabs-img'}>

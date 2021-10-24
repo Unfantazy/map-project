@@ -113,8 +113,9 @@ class Livemap extends React.Component {
         this.map.on('click', this.onMapClick);
 
         // добавление контрола переключения слоев
-        Promise.resolve(AddLayersWithControl(this.map, this.markers));
-
+        Promise.resolve(AddLayersWithControl(this.map, this.markers))
+            .finally(() => this.props.setIsLoading(false));
+        
         // добавление контрола geoman
         this.map.pm.setLang('ru');
         this.map.pm.addControls({
@@ -169,15 +170,26 @@ class Livemap extends React.Component {
             var shape = drawingLayers.pm.getShape() === 'Circle' 
                 ? L.PM.Utils.circleToPolygon(drawingLayers, 20) 
                 : drawingLayers;
-            var type = Object.values(this.map._layers).filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0
+            
+            const hasHeatmapSports = Object.values(this.map._layers).filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
+            const hasHeatmapProvision = Object.values(this.map._layers).filter(x => x.options.styles === 'leaders:heatmap_provision_style').length > 0;
+
+            var type = hasHeatmapSports
             ? 'info_sports'
-            : Object.values(this.map._layers).filter(x => x.options.styles === 'leaders:heatmap_provision_style').length > 0
+            : hasHeatmapProvision
                 ? 'info_provision'
                 : '';
+
+            var infoType = hasHeatmapSports
+            ? infoTypes.sports
+            : hasHeatmapProvision
+                ? infoTypes.provision
+                : infoTypes.default;
+
             mapAPI.getShape(type, 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,"))
                 .then(res => {
                     this.props.setData({
-                        type: infoTypes.provision,
+                        type: infoType,
                         items: res.data.features.map(item => item.properties)
                     });
 
