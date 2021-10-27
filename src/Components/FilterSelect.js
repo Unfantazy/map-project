@@ -121,7 +121,7 @@ const FilterSelect = (
     }, [selectedItems])
 
     const onSelectItem = (item) => {
-        if (!includes(selectedItems.map(item => item.idString), item.idString) && selectedItems.length < MAX_SELECTED_COUNT) {
+        if (!includes(selectedItems.map(item => item.idString), item.idString) && (checkbox || selectedItems.length < MAX_SELECTED_COUNT)) {
             setSelectedItems([...selectedItems, item])
         } else {
             setSelectedItems(selectedItems.filter(focusedItem => focusedItem.idString !== item.idString))

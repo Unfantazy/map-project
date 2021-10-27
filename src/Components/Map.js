@@ -87,7 +87,7 @@ class Livemap extends React.Component {
 
             e.layer.setIcon(selectedIcon);
 
-            L?.tileLayer.wms('http://localhost:8090/geoserver/leaders/wms', {
+            L?.tileLayer.wms('https://asa.sports.keenetic.pro/geoserver/leaders/wms', {
                 layers: 'leaders:object_buffer',
                 styles: 'leaders:buffer_selected',
                 format: 'image/png',
@@ -225,7 +225,7 @@ class Livemap extends React.Component {
 
 export const AddLayersWithControl = async (mapElement, markersElement, filterParams) => {
     RemoveOldLayers(mapElement);
-    const apiUrl = 'http://localhost:8090/geoserver/leaders/wms';
+    const apiUrl = 'https://asa.sports.keenetic.pro/geoserver/leaders/wms';
     const getParamsAsString = (params) => {
         let paramsString = '';
         for (let i in params) {
@@ -340,7 +340,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
             content += `<i>${layer_legend_descr}</i><br>`
         }
 
-        content += `<img class="img-legend" src="http://localhost:8090/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${layer_style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c;"></div>`;
+        content += `<img class="img-legend" src="https://asa.sports.keenetic.pro/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${layer_style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c;"></div>`;
         div.innerHTML += content
         return div;
     };
@@ -376,7 +376,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
                     document.querySelector('.info-legend > div > b').innerHTML = legend_params.legend_name;
                     // $('.info-legend').children('div').children('i').text(legend_params.);
 
-                    var src = `http://localhost:8090/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c; `
+                    var src = `https://asa.sports.keenetic.pro/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c; `
                     document.querySelector('.info-legend > div > img').setAttribute("src", src);
                 }
 

@@ -7,9 +7,9 @@ const instance = axios.create({
     ...settings
 })
 
-const apiUrl = 'http://localhost:8090/geoserver';
-const wfsApiUrl = apiUrl + '/wfs?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3A';
-const owsApiUrl = apiUrl + '/leaders/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=';
+const apiUrl = 'https://asa.sports.keenetic.pro/geoserver';
+const wfsApiUrl = apiUrl + '/wfs/?SERVICE=wfs&VERSION=1.1.0&REQUEST=GetFeature&TYPENAME=leaders%3A';
+const owsApiUrl = apiUrl + '/leaders/ows/?service=WFS&version=1.0.0&request=GetFeature&typeName=';
 const outputFormatApplJson = '&OUTPUTFORMAT=application%2Fjson';
 const outputFormatJson = '&outputFormat=json';
 const formatOptions = '&format_options=callback:getJson';
