@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import L from 'leaflet';
-import '../Leaflet.VectorGrid/src/bundle';
+// import '../Leaflet.VectorGrid/src/bundle';
 import '../Leaflet.markercluster/src/index';
 import '@geoman-io/leaflet-geoman-free'
 import svg_red from '../images/icons/map-marker_red.svg'

@@ -160,13 +160,15 @@ const FilterSelect = (
                          e.preventDefault()
                          setIsFocused(true)
                      }}>
-                    <ArrowIcon
-                        className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}
-                        onClick={(e) => {
-                            e.stopPropagation()
-                            setIsFocused(!isFocused)
-                        }}
-                    />
+                    <button className={'select__btn-arrow--btn'}
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                setIsFocused(!isFocused)
+                            }}>
+                        <ArrowIcon
+                            className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}
+                        />
+                    </button>
                     <div className={`tags-container scroller`}>
                         {!checkbox && selectedItems.map(item => {
                             return <Tag
@@ -194,7 +196,7 @@ const FilterSelect = (
                             onChange={(e) => setFilter(e.currentTarget.value)}
                         />
                         {filter &&
-                        <CrossIcon style={{cursor: 'pointer', right: 12, flexShrink: 0}}
+                        <CrossIcon style={{cursor: 'pointer', right: 25, flexShrink: 0}}
                                    onClick={() => setFilter('')}
                         />
                         }
