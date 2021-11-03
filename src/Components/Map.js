@@ -244,7 +244,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         tileSize: 512,
         pane: 'heatPane',
         detectRetina: true,
-        opacity: 0.5,
+        opacity: 0.6,
         viewparams: filterParams,
         env: getParamsAsString(params)
     });
@@ -257,7 +257,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         tileSize: 512,
         pane: 'heatPane',
         detectRetina: true,
-        opacity: 0.5
+        opacity: 0.6
     });
 
     // heatmap square init
@@ -270,10 +270,27 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         tileSize: 512,
         pane: 'heatPane',
         detectRetina: true,
-        opacity: 0.5,
+        opacity: 0.6,
         viewparams: filterParams,
         env: getParamsAsString(provParams)
     });
+
+    var heat_need = L?.tileLayer.wms(apiUrl, {
+        layers: 'leaders:heatmap_need',
+        styles: 'leaders:heatmap_need_style',
+        format: 'image/png',
+        transparent: 'true',
+        tileSize: 512,
+        pane: 'heatPane',
+        detectRetina: true,
+        opacity: 0.6,
+        viewparams: filterParams,
+    });
+
+    // loader on layer load
+    // вместо heat_need - все слои тепловых карт, в function - добавление/удаление лоадера
+    heat_need.on("loading",function() { console.log("started") });
+    heat_need.on("load",function() { console.log("ended") });
 
     var buffers = L?.tileLayer.wms(apiUrl, {
         layers: 'leaders:filter_apply_buffers',
@@ -292,7 +309,8 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         'Базовая карта': emptyLayer,
         'Тепловая карта спортивных зон': heat_square,
         'Тепловая карта населения': heat_population,
-        'Тепловая карта обеспеченности спортивными зонами': heat_provision
+        'Тепловая карта обеспеченности спортивными зонами': heat_provision,
+        'Тепловая карта потребности в спортивных зонах':heat_need
     };
 
     var overlayMaps = {
@@ -317,6 +335,11 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
             name: 'heatmap_provision',
             style: 'heatmap_provision_style',
             legend_name: 'Обеспеченность населения <br>спортивной инфраструктурой',
+        },
+        {
+            name: 'heatmap_need',
+            style: 'heatmap_need_style',
+            legend_name: 'Потребность населения <br>в спортивной инфраструктуре',
         }
     ]
 
@@ -464,7 +487,8 @@ export const RemoveOldLayers = (mapElement) => {
     const layers = [
         'leaders:heatmap_square_style', 
         'leaders:heat_population', 
-        'leaders:heatmap_provision_style', 
+        'leaders:heatmap_provision_style',
+        'leaders:heatmap_need_style',
         'leaders:buffers'];
 
     layers.forEach((layer) => {
