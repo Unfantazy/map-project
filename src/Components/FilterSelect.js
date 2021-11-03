@@ -158,7 +158,7 @@ const FilterSelect = (
                      onClick={(e) => {
                          e.stopPropagation()
                          e.preventDefault()
-                         setIsFocused(!isFocused)
+                         setIsFocused(true)
                      }}>
                     <ArrowIcon
                         className={`select__btn-arrow ${isFocused ? 'isFocused' : ''}`}
