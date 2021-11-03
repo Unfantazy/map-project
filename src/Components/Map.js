@@ -171,7 +171,7 @@ class Livemap extends React.Component {
             
             const mapLayers = Object.values(this.map._layers);
             const hasHeatmapSports = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
-            const hasHeatmapProvision = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_provision_style').length > 0;
+            const hasHeatmapProvision = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_provision_style' || x.options.styles === 'leaders:heatmap_need_style').length > 0;
 
             const type = hasHeatmapSports
             ? 'info_sports'

@@ -57,7 +57,7 @@ const InfoBlock = ({ data, setData }) => {
                </div>
                
                <div className={'InfoBlock__subtitle'}>
-                   <h3>{getSubTitle()}</h3>
+                   <h3>({getSubTitle()})</h3>
                </div>
 
                <div className="InfoBlock__inner scroller">
@@ -81,12 +81,14 @@ const InfoBlock = ({ data, setData }) => {
                    })}
                    {data.type === infoTypes.provision && data.items.map(item => {
                        return <InfoProvisionBlockItem
-                           count={item.sport_zones_provision}
+                           zones={item.sport_zones_sum}
+                           zonesProv={item.sport_zones_provision}
                            types={JSON.parse(item.sport_zones_types)}
-                           square={item.sport_square_provision}
-                           kinds={item.sport_kinds_provision}
+                           square={item.sport_square_sum}
+                           squareProv={item.sport_square_provision}
+                           kinds={item.sport_kinds_sum}
+                           kindsProv={item.sport_kinds_provision}
                            population={item.population}
-                           sumSquare={item.sport_square_sum}
                        />
                    })}
                </div>
