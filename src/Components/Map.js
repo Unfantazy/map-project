@@ -49,14 +49,15 @@ class Livemap extends React.Component {
 
         this.map.getPane('markerPane').style.zIndex = 400;
 
+        const attributionStr = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
         L?.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_nolabels/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            attribution: attributionStr,
             subdomains: 'abcd',
             maxZoom: 20,
             pane: 'basePane',
         }).addTo(this.map);
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png', {
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            attribution: attributionStr,
             subdomains: 'abcd',
             maxZoom: 20,
             pane: 'overlayPane',
@@ -70,17 +71,7 @@ class Livemap extends React.Component {
             spiderfyOnMaxZoom: false,
         }).addTo(this.map);
 
-        mapAPI.getLayerJSON('objects_centroids').then(res => {
-            for (var i = 0; i < res.data.features.length; i++) {
-                var a = res.data.features[i];
-                var id = a.properties.id;
-                new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), {id: id, icon: objIcon})
-                    .addTo(this.markers);
-            }
-        })
-        .catch(err => {
-            console.log(err)
-        })
+        LoadMarkers(this.markers, FilterModelToParams(this.props.model));
 
         this.markers.on('click', (e) => {
             RemoveSelected(this.map);
@@ -113,7 +104,7 @@ class Livemap extends React.Component {
         this.map.on('click', this.onMapClick);
 
         // добавление контрола переключения слоев
-        Promise.resolve(AddLayersWithControl(this.map, this.markers))
+        Promise.resolve(AddLayersWithControl(this.map, this.markers, FilterModelToParams(this.props.model)))
             .finally(() => this.props.setIsLoading(false));
         
         // добавление контрола geoman
@@ -171,28 +162,30 @@ class Livemap extends React.Component {
 
         document.getElementById('layerBtn')?.addEventListener('click', () => {
             this.props.setIsLoading(true);
+            const params = FilterModelToParams(this.props.model);
 
-            var drawingLayers = this.map.pm.getGeomanDrawLayers(true).getLayers()[0];
-            var shape = drawingLayers.pm.getShape() === 'Circle' 
+            const drawingLayers = this.map.pm.getGeomanDrawLayers(true).getLayers()[0];
+            const shape = drawingLayers.pm.getShape() === 'Circle' 
                 ? L.PM.Utils.circleToPolygon(drawingLayers, 20) 
                 : drawingLayers;
             
-            const hasHeatmapSports = Object.values(this.map._layers).filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
-            const hasHeatmapProvision = Object.values(this.map._layers).filter(x => x.options.styles === 'leaders:heatmap_provision_style').length > 0;
+            const mapLayers = Object.values(this.map._layers);
+            const hasHeatmapSports = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
+            const hasHeatmapProvision = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_provision_style').length > 0;
 
-            var type = hasHeatmapSports
+            const type = hasHeatmapSports
             ? 'info_sports'
             : hasHeatmapProvision
                 ? 'info_provision'
                 : '';
 
-            var infoType = hasHeatmapSports
+            const infoType = hasHeatmapSports
             ? infoTypes.sports
             : hasHeatmapProvision
                 ? infoTypes.provision
                 : infoTypes.default;
 
-            mapAPI.getShape(type, 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,"))
+            mapAPI.getShape(type, params + 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,"))
                 .then(res => {
                     this.props.setData({
                         type: infoType,
@@ -212,9 +205,7 @@ class Livemap extends React.Component {
         this.map = null;
     }
 
-    onMapClick = () => {
-        // this.props.setData([])
-    }
+    onMapClick = () => { }
 
     render() {
         return (
@@ -496,6 +487,33 @@ export const RemoveOldLayers = (mapElement) => {
         .filter(x => x.options.styles === layer)
         .forEach(y => y.remove(mapElement))
     })
+}
+
+export const FilterModelToParams = (filterModel) =>
+{
+    var params = '';
+    if (filterModel) {
+        if (filterModel.obj_name?.length > 0) {
+            params += 'obj_name:' + filterModel.obj_name.join('\\;') + ';';
+        }
+        if (filterModel.org_id?.length > 0) {
+            params += 'org_id:' + filterModel.org_id.join('\\;') + ';';
+        }
+        if (filterModel.sz_name?.length > 0) {
+            params += 'sz_name:' + filterModel.sz_name.join('\\;') + ';';
+        }
+        if (filterModel.sz_type?.length > 0) {
+            params += 'sz_type:' + filterModel.sz_type.join('\\;') + ';';
+        }
+        if (filterModel.s_kind?.length > 0) {
+            params += 's_kind:' + filterModel.s_kind.join('\\;') + ';';
+        }
+        if (filterModel.buf?.length > 0) {
+            params += 'buf:' + filterModel.buf.join('\\;') + ';';
+        }
+    }
+    
+    return params;
 }
 
 export default Livemap

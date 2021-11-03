@@ -5,7 +5,7 @@ import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {ReactComponent as LayersIcon} from '../images/icons/layers.svg'
 import {ReactComponent as ServicesIcon} from '../images/icons/services.svg'
 import {ReactComponent as FiltersIcon} from '../images/icons/filters.svg'
-import {LoadMarkers, AddLayersWithControl} from './Map'
+import {LoadMarkers, AddLayersWithControl, FilterModelToParams} from './Map'
 
 const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
     const fetchSportsTypes = useCallback((filter) => {
@@ -33,26 +33,7 @@ const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
     }
 
     const updateMapLayers = async (filterModel) => {
-        var params = '';
-        if (filterModel.obj_name?.length > 0) {
-            params += 'obj_name:' + filterModel.obj_name.join('\\;') + ';';
-        }
-        if (filterModel.org_id?.length > 0) {
-            params += 'org_id:' + filterModel.org_id.join('\\;') + ';';
-        }
-        if (filterModel.sz_name?.length > 0) {
-            params += 'sz_name:' + filterModel.sz_name.join('\\;') + ';';
-        }
-        if (filterModel.sz_type?.length > 0) {
-            params += 'sz_type:' + filterModel.sz_type.join('\\;') + ';';
-        }
-        if (filterModel.s_kind?.length > 0) {
-            params += 's_kind:' + filterModel.s_kind.join('\\;') + ';';
-        }
-        if (filterModel.buf?.length > 0) {
-            params += 'buf:' + filterModel.buf.join('\\;') + ';';
-        }
-
+        const params = FilterModelToParams(filterModel);
         setIsLoading(true);
 
         await LoadMarkers(window.Markers, params);

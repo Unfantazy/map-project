@@ -17,7 +17,7 @@ const App = () => {
         sz_name: [],
         sz_type: [],
         s_kind: [],
-        buf: [],
+        buf: [500, 1000, 3000, 5000],
     }
 
     const [model, setModel] = useState(initialStateModel)
@@ -27,7 +27,7 @@ const App = () => {
             {isLoading && <Loader color={'shadow'}/>}
             <FiltersMenu model={model} setModel={setModel} isLoading={isLoading} setIsLoading={setIsLoading}/>
             <div className={'Map'}>
-                <Map setData={setData} data={data} isLoading={isLoading} setIsLoading={setIsLoading}/>
+                <Map model={model} setData={setData} data={data} isLoading={isLoading} setIsLoading={setIsLoading}/>
             </div>
             {data?.items?.length > 0
             && <InfoBlock data={data} setData={setData}/>
