@@ -40,8 +40,7 @@ const FilterSelect = (
 
     useEffect(() => {
         if (!!items?.length && type === 's_kind') {
-            const initiallySelectedSportKind = items?.filter(item => item.id === 100)
-            console.log(initiallySelectedSportKind)
+            const initiallySelectedSportKind = items?.filter(item => includes(model.s_kind, item.id))
             setSelectedItems(initiallySelectedSportKind)
         }
     }, [items])
