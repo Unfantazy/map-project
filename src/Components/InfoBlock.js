@@ -30,9 +30,9 @@ const InfoBlock = ({ data, setData }) => {
             case infoTypes.object:
                 return ''
             case infoTypes.sports:
-                return 'Суммарные показатели спортивных зон, входящих в область'; 
+                return '(Суммарные показатели спортивных зон, входящих в область)'; 
             case infoTypes.provision:
-                return 'Средняя обеспеченность спортивной инфраструктурой по жилым домам, входящих в область';    
+                return '(Средняя обеспеченность спортивной инфраструктурой по жилым домам, входящих в область)';    
             default:
                 return '';
         }
@@ -57,7 +57,7 @@ const InfoBlock = ({ data, setData }) => {
                </div>
                
                <div className={'InfoBlock__subtitle'}>
-                   <h3>({getSubTitle()})</h3>
+                   <h3>{getSubTitle()}</h3>
                </div>
 
                <div className="InfoBlock__inner scroller">
