@@ -12,7 +12,6 @@ const CheckBox = ({
 );
 
 CheckBox.defaultProps = {
-//    className: 'mb-10'
     className: '',
 }
 

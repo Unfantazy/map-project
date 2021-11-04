@@ -39,6 +39,14 @@ const FilterSelect = (
     }
 
     useEffect(() => {
+        if (!!items?.length && type === 's_kind') {
+            const initiallySelectedSportKind = items?.filter(item => item.id === 100)
+            console.log(initiallySelectedSportKind)
+            setSelectedItems(initiallySelectedSportKind)
+        }
+    }, [items])
+
+    useEffect(() => {
         if (model === null) {
             setSelectedItems([])
             setSelectedBuf([])
@@ -121,6 +129,7 @@ const FilterSelect = (
     }, [selectedItems])
 
     const onSelectItem = (item) => {
+        debugger
         if (!includes(selectedItems.map(item => item.idString), item.idString) && (checkbox || selectedItems.length < MAX_SELECTED_COUNT)) {
             setSelectedItems([...selectedItems, item])
         } else {
@@ -236,7 +245,8 @@ const FilterSelect = (
                                 {checkbox
                                 && <CheckBox
                                     checked={includes(selectedItemsIds, listItem.idString)}
-                                    onChange={() => {
+                                    onChange={(e) => {
+                                        e.stopPropagation()
                                         onSelectItem(listItem)
                                     }}
                                 />}

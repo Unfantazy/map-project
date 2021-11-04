@@ -16,7 +16,7 @@ const App = () => {
         org_id: [],
         sz_name: [],
         sz_type: [],
-        s_kind: [],
+        s_kind: [100],
         buf: [500, 1000, 3000, 5000],
     }
 

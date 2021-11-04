@@ -1,5 +1,5 @@
 import FilterSelect from "./FilterSelect";
-import {useCallback} from "react";
+import {useCallback, useEffect} from "react";
 import {mapAPI} from "../API/methods";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {ReactComponent as LayersIcon} from '../images/icons/layers.svg'
@@ -41,6 +41,11 @@ const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
 
         setIsLoading(false);
     }
+
+
+    useEffect(() => {
+        updateMapLayers(model)
+    }, [])
 
     return (
         <>
