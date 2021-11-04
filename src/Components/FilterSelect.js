@@ -10,7 +10,6 @@ import FilterItem from "./FilterItem";
 import Loader from "./Loader";
 import CheckBox from "./CheckBox";
 
-
 const FilterSelect = (
     {
         title = 'Фильтр',
@@ -23,7 +22,8 @@ const FilterSelect = (
     }
 ) => {
     const [items, setItems] = useState([])
-    const [filter, setFilter] = useState('')
+    const [allFilterItems, setAllFilterItems] = useState([])
+    const [filter, setFilter] = useState(type === 's_kind' ? 'Волейбол' : '')
     const [isLoading, setIsLoading] = useState(false)
     const [onlySelected, setOnlySelected] = useState(false)
 
@@ -39,11 +39,11 @@ const FilterSelect = (
     }
 
     useEffect(() => {
-        if (!!items?.length && type === 's_kind') {
-            const initiallySelectedSportKind = items?.filter(item => includes(model.s_kind, item.id))
+        if (!!allFilterItems?.length && type === 's_kind') {
+            const initiallySelectedSportKind = allFilterItems?.filter(item => includes(model.s_kind, item.id))
             setSelectedItems(initiallySelectedSportKind)
         }
-    }, [items])
+    }, [allFilterItems])
 
     useEffect(() => {
         if (model === null) {
@@ -96,6 +96,18 @@ const FilterSelect = (
     }
 
     useEffect(() => {
+        if (fetchItems) {
+            fetchItems('').then(res => {
+                const data = res?.data?.features?.map(item => ({
+                    title: item.properties.name,
+                    id: item.properties.id
+                }))
+                setAllFilterItems(data)
+            })
+        }
+    }, [])
+
+    useEffect(() => {
         getModelFunc()
     }, [selectedItems, selectedBuf])
 
@@ -105,7 +117,6 @@ const FilterSelect = (
             fetchItems(filter)
                 .then(res => {
                     const data = res?.data?.features?.map(item => ({
-                        idString: item.id,
                         title: item.properties.name,
                         id: item.properties.id
                     }))
@@ -120,26 +131,28 @@ const FilterSelect = (
     const filterRef = useRef(null)
 
     const selectedItemsIds = useMemo(() => {
-        return selectedItems.map(item => item.idString)
+        return selectedItems.map(item => item.id)
     }, [selectedItems])
 
+    // console.log(selectedItemsIds)
+    // console.log(allFilterItems[0])
+
     const onDeleteItem = useCallback((id) => {
-        setSelectedItems(selectedItems.filter(item => item.idString !== id))
+        setSelectedItems(selectedItems.filter(item => item.id !== id))
     }, [selectedItems])
 
     const onSelectItem = (item) => {
         debugger
-        if (!includes(selectedItems.map(item => item.idString), item.idString) && (checkbox || selectedItems.length < MAX_SELECTED_COUNT)) {
+        if (!includes(selectedItems.map(item => item.id), item.id) && (checkbox || selectedItems.length < MAX_SELECTED_COUNT)) {
             setSelectedItems([...selectedItems, item])
         } else {
-            setSelectedItems(selectedItems.filter(focusedItem => focusedItem.idString !== item.idString))
+            setSelectedItems(selectedItems.filter(focusedItem => focusedItem.id !== item.id))
         }
     }
 
     useOnClickOutside(filterRef, () => {
         setIsFocused(false)
     })
-
 
     if (onlyItems) {
         return <div className={'Filter-select'}>
@@ -183,7 +196,7 @@ const FilterSelect = (
                                 title={item.title}
                                 onDelete={(e) => {
                                     e.stopPropagation()
-                                    onDeleteItem(item.idString)
+                                    onDeleteItem(item.id)
                                 }}
                             />
                         })}
@@ -218,32 +231,33 @@ const FilterSelect = (
             && <div className={`Filter-select__dropdown scroller ${isFocused && 'isFocused'}`}>
                 <ul className={'scroller select-dropdown__list'}>
                     {isLoading ? <Loader/>
-                        : onlySelected ? items?.map(listItem => {
-                            if ((includes(selectedItemsIds, listItem.idString))) {
+                        : onlySelected ? allFilterItems?.map(listItem => {
+                            debugger
+                            if ((includes(selectedItemsIds, listItem.id))) {
                                 return <li
-                                    className={`filter-select__item ${(includes(selectedItemsIds, listItem.idString) && !checkbox)
+                                    className={`filter-select__item ${(includes(selectedItemsIds, listItem.id) && !checkbox)
                                         ? 'selected' : ''}`}
-                                    key={listItem.idString}
+                                    key={listItem.id}
                                     onClick={() => {
                                         onSelectItem(listItem)
                                     }}
                                 >
-                                    {checkbox && <CheckBox checked={includes(selectedItemsIds, listItem.idString)}/>}
+                                    {checkbox && <CheckBox checked={includes(selectedItemsIds, listItem.id)}/>}
                                     {listItem.title}
                                 </li>
                             }
                         }) : !!items?.length ? items.map(listItem => {
                             return <li
-                                className={`filter-select__item ${(includes(selectedItemsIds, listItem.idString) && !checkbox)
+                                className={`filter-select__item ${(includes(selectedItemsIds, listItem.id) && !checkbox)
                                     ? 'selected' : ''}`}
-                                key={listItem.idString}
+                                key={listItem.id}
                                 onClick={() => {
                                     onSelectItem(listItem)
                                 }}
                             >
                                 {checkbox
                                 && <CheckBox
-                                    checked={includes(selectedItemsIds, listItem.idString)}
+                                    checked={includes(selectedItemsIds, listItem.id)}
                                     onChange={(e) => {
                                         e.stopPropagation()
                                         onSelectItem(listItem)
