@@ -470,7 +470,7 @@ export const LoadMarkers = (markersGroup, params) => {
         for (var i = 0; i < res.data.features.length; i++) {
             var a = res.data.features[i];
             var id = a.properties.id;
-            new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), {id: id, icon: objIcon})
+            new L.marker(L.latLng(a.geometry.coordinates[1], a.geometry.coordinates[0]), {id: id, icon: objIcon, pmIgnore: true})
                 .addTo(markersGroup);
         }
     })
