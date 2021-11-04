@@ -120,6 +120,7 @@ const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
                             </div>
                             <div className={'filter-btns'}>
                                 <button className={'filter-apply filter-btn'} id='layerBtn'>Рассчитать</button>
+                                <button className={'filter-apply filter-btn'} id='saveLayerBtn'>Сохранить</button>
                             </div>
                         </TabPanel>
                     </div>

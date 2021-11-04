@@ -2,7 +2,6 @@ import getNoun from '../Helpers/stringHelper'
 
 const InfoProvisionBlockItem = ({ zones, zonesProv, types, kinds, kindsProv, population, square, squareProv }) => {
     const hasData = zones || zonesProv || types || kinds || kindsProv || population || square || squareProv;
-    console.log(zones, zonesProv, types, kinds, kindsProv, population, square, squareProv)
     return (
         <>        
         {!hasData && <div className='InfoBlockItem__empty'>Данные отсутствуют</div>}

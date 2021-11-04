@@ -49,6 +49,7 @@ const FilterSelect = (
         if (model === null) {
             setSelectedItems([])
             setSelectedBuf([])
+            setFilter('')
         }
     }, [model])
 
@@ -133,9 +134,6 @@ const FilterSelect = (
     const selectedItemsIds = useMemo(() => {
         return selectedItems.map(item => item.id)
     }, [selectedItems])
-
-    // console.log(selectedItemsIds)
-    // console.log(allFilterItems[0])
 
     const onDeleteItem = useCallback((id) => {
         setSelectedItems(selectedItems.filter(item => item.id !== id))

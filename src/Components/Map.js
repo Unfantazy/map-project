@@ -10,6 +10,7 @@ import {infoTypes} from './InfoBlock'
 
 import {mapAPI} from "../API/methods";
 
+const geoServerUrl = 'https://asa.sports.keenetic.pro/geoserver';
 const objIcon = new L.Icon({
     iconUrl: svg_red,
     iconSize: [24, 35],
@@ -78,7 +79,7 @@ class Livemap extends React.Component {
 
             e.layer.setIcon(selectedIcon);
 
-            L?.tileLayer.wms('https://asa.sports.keenetic.pro/geoserver/leaders/wms', {
+            L?.tileLayer.wms(`${geoServerUrl}/leaders/wms`, {
                 layers: 'leaders:object_buffer',
                 styles: 'leaders:buffer_selected',
                 format: 'image/png',
@@ -108,96 +109,7 @@ class Livemap extends React.Component {
             .finally(() => this.props.setIsLoading(false));
         
         // добавление контрола geoman
-        this.map.pm.setLang('ru');
-        this.map.pm.addControls({
-            position: 'topright',
-            drawCircleMarker: false,
-            drawMarker: false,
-            drawPolyline: false,
-            optionsControls: false,
-            rotateMode: false,
-            cutPolygon: false
-        });
-
-        const controlItems = [
-            'Rectangle',
-            'Polygon',
-            'Circle',
-            'Edit',
-            'Removal',
-            'Drag',
-        ]
-
-        controlItems.forEach((item) => this.map.pm.Toolbar.changeActionsOfControl(item, []));
-
-        var drawControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-draw');
-        var editControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-edit');
-        var serviceTab = document.querySelector('div.services-control');
-        if (drawControl && editControl && serviceTab) {
-            serviceTab.appendChild(drawControl);
-            serviceTab.appendChild(editControl);
-            document.querySelectorAll('.button-container').forEach((btn) => {
-                let p = document.createElement("p");
-                let innerAnchor = btn.querySelector('a.leaflet-buttons-control-button');
-                p.innerText = innerAnchor.querySelector('div').title;
-                innerAnchor.after(p);
-            })
-        };
-
-        this.map.on("pm:create", () => {
-            // disable buttons
-            document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'none';
-            document.querySelectorAll('.leaflet-pm-draw a').forEach(a => a.classList.add('leaflet-disabled'));
-        });
-
-        this.map.on("pm:remove", () => {
-            if (this.map.pm.getGeomanDrawLayers(true).getLayers().length === 0) {
-                //enable buttons
-                document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'auto';
-                document.querySelectorAll('.leaflet-pm-draw a')
-                    .forEach(a => a.classList.remove('leaflet-disabled'));
-            }
-            ;
-        });
-
-        document.getElementById('layerBtn')?.addEventListener('click', () => {
-            this.props.setIsLoading(true);
-            const params = FilterModelToParams(this.props.model);
-
-            const drawingLayers = this.map.pm.getGeomanDrawLayers(true).getLayers()[0];
-            const shape = drawingLayers.pm.getShape() === 'Circle' 
-                ? L.PM.Utils.circleToPolygon(drawingLayers, 20) 
-                : drawingLayers;
-            
-            const mapLayers = Object.values(this.map._layers);
-            const hasHeatmapSports = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
-            const hasHeatmapProvision = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_provision_style' || x.options.styles === 'leaders:heatmap_need_style').length > 0;
-
-            const type = hasHeatmapSports
-            ? 'info_sports'
-            : hasHeatmapProvision
-                ? 'info_provision'
-                : '';
-
-            const infoType = hasHeatmapSports
-            ? infoTypes.sports
-            : hasHeatmapProvision
-                ? infoTypes.provision
-                : infoTypes.default;
-
-            mapAPI.getShape(type, params + 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,"))
-                .then(res => {
-                    this.props.setData({
-                        type: infoType,
-                        items: res.data.features.map(item => item.properties)
-                    });
-
-                })
-                .catch(err => {
-                    console.log(err)
-                })
-                .finally(() =>  this.props.setIsLoading(false))
-        });
+        AddGeoManControl(this);
     }
 
     componentWillUnmount() {
@@ -214,9 +126,146 @@ class Livemap extends React.Component {
     }
 }
 
+const AddGeoManControl = (mapComponent) => {
+    mapComponent.map.pm.setLang('ru');
+    mapComponent.map.pm.addControls({
+        position: 'topright',
+        drawCircleMarker: false,
+        drawMarker: false,
+        drawPolyline: false,
+        optionsControls: false,
+        rotateMode: false,
+        cutPolygon: false
+    });
+
+    const controlItems = [
+        'Rectangle',
+        'Polygon',
+        'Circle',
+        'Edit',
+        'Removal',
+        'Drag',
+    ]
+
+    controlItems.forEach((item) => mapComponent.map.pm.Toolbar.changeActionsOfControl(item, []));
+
+    var drawControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-draw');
+    var editControl = document.querySelector('div.leaflet-pm-toolbar.leaflet-pm-edit');
+    var serviceTab = document.querySelector('div.services-control');
+    if (drawControl && editControl && serviceTab) {
+        serviceTab.appendChild(drawControl);
+        serviceTab.appendChild(editControl);
+        document.querySelectorAll('.button-container').forEach((btn) => {
+            let p = document.createElement("p");
+            let innerAnchor = btn.querySelector('a.leaflet-buttons-control-button');
+            p.innerText = innerAnchor.querySelector('div').title;
+            innerAnchor.after(p);
+        })
+    };
+
+    mapComponent.map.on("pm:create", () => {
+        // disable buttons
+        document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'none';
+        document.querySelectorAll('.leaflet-pm-draw a').forEach(a => a.classList.add('leaflet-disabled'));
+    });
+
+    mapComponent.map.on("pm:remove", () => {
+        if (mapComponent.map.pm.getGeomanDrawLayers(true).getLayers().length === 0) {
+            //enable buttons
+            document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'auto';
+            document.querySelectorAll('.leaflet-pm-draw a')
+                .forEach(a => a.classList.remove('leaflet-disabled'));
+        }
+        ;
+    });
+    
+    document.getElementById('layerBtn')?.addEventListener('click', () => {
+        mapComponent.props.setIsLoading(true);
+
+        const mapLayers = Object.values(mapComponent.map._layers);
+        const hasHeatmapSports = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
+        const hasHeatmapProvision = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_provision_style' || x.options.styles === 'leaders:heatmap_need_style').length > 0;
+
+        const type = hasHeatmapSports
+        ? 'info_sports'
+        : hasHeatmapProvision
+            ? 'info_provision'
+            : '';
+
+        const infoType = hasHeatmapSports
+        ? infoTypes.sports
+        : hasHeatmapProvision
+            ? infoTypes.provision
+            : infoTypes.default;
+
+        const drawingLayer = mapComponent.map.pm.getGeomanDrawLayers(true).getLayers()[0];
+        const shape = drawingLayer.pm.getShape() === 'Circle' 
+            ? L.PM.Utils.circleToPolygon(drawingLayer, 20) 
+            : drawingLayer;
+        const params = FilterModelToParams(mapComponent.props.model) + 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,");
+        
+        mapAPI.getShape(type, params)
+            .then(res => {
+                const infoItems = res.data.features.map(item => item.properties);
+                mapComponent.props.setData({
+                    type: infoType,
+                    items: infoItems 
+                });
+
+                localStorage.setItem('current_drawing_layer', JSON.stringify({
+                    filterParams: params,
+                    layer: shape.toGeoJSON(),
+                    infoType,
+                    infoItems
+                }));
+            })
+            .catch(err => {
+                console.log(err)
+            })
+            .finally(() =>  mapComponent.props.setIsLoading(false))       
+    });
+
+    document.getElementById('saveLayerBtn')?.addEventListener('click', () => {
+        var currentLayer = localStorage.getItem('current_drawing_layer');
+        let savingLayersObj = null;
+
+        if (localStorage.getItem('saving_layers')) {
+            savingLayersObj = Array.from(JSON.parse(localStorage.getItem('saving_layers')));
+            savingLayersObj.push(currentLayer);
+        } 
+        else {
+            savingLayersObj = new Array(currentLayer);
+        }
+        localStorage.setItem('saving_layers', JSON.stringify(savingLayersObj));
+        
+        var currentLayerObj = JSON.parse(currentLayer)
+
+        mapComponent.props.setIsLoading(true)
+        // добавление маркеров на карту
+        LoadMarkers(mapComponent.markers, currentLayerObj.filterParams);
+        // добавление контрола переключения слоев
+        Promise.resolve(AddLayersWithControl(mapComponent.map, mapComponent.markers, currentLayerObj.filterParams))
+        .then(() => {
+            var layerName = currentLayerObj.infoType === infoTypes.sports
+                ? 'Тепловая карта спортивных зон'
+                : 'Тепловая карта потребности в спортивных зонах' ;
+    
+            window.baseMaps[layerName].addTo(mapComponent.map)
+            ReClassControl();
+
+            L.geoJSON(currentLayerObj.layer).addTo(mapComponent.map);
+            mapComponent.props.setData({
+                type: currentLayerObj.infoType,
+                items: currentLayerObj.infoItems 
+            });
+        })
+        .finally(() => mapComponent.props.setIsLoading(false));
+    });
+}
+
 export const AddLayersWithControl = async (mapElement, markersElement, filterParams) => {
     RemoveOldLayers(mapElement);
-    const apiUrl = 'https://asa.sports.keenetic.pro/geoserver/leaders/wms';
+    const apiUrl = `${geoServerUrl}/leaders/wms`;
     const getParamsAsString = (params) => {
         let paramsString = '';
         for (let i in params) {
@@ -296,7 +345,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
 
     var emptyLayer = L.tileLayer('', {pane: 'heatPane'}).addTo(mapElement);
 
-    var baseMaps = {
+    var baseMaps = window.baseMaps = {
         'Базовая карта': emptyLayer,
         'Тепловая карта спортивных зон': heat_square,
         'Тепловая карта населения': heat_population,
@@ -311,7 +360,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
 
     var stylesControl = L.control.layers(baseMaps, overlayMaps, {position: 'topright', collapsed: false});
 
-    var layers_legends = [
+    const layers_legends = [
         {
             name: 'heatmap_square',
             style: 'heat_square_style',
@@ -354,7 +403,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
             content += `<i>${layer_legend_descr}</i><br>`
         }
 
-        content += `<img class="img-legend" src="https://asa.sports.keenetic.pro/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${layer_style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c;"></div>`;
+        content += `<img class="img-legend" src="${geoServerUrl}/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${layer_style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c;"></div>`;
         div.innerHTML += content
         return div;
     };
@@ -390,7 +439,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
                     document.querySelector('.info-legend > div > b').innerHTML = legend_params.legend_name;
                     // $('.info-legend').children('div').children('i').text(legend_params.);
 
-                    var src = `https://asa.sports.keenetic.pro/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c; `
+                    var src = `${geoServerUrl}/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c; `
                     document.querySelector('.info-legend > div > img').setAttribute("src", src);
                 }
 
@@ -429,25 +478,27 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         var baseLayers = layerControl.querySelector('.leaflet-control-layers-base');
         var overlaysLayers = layerControl.querySelector('.leaflet-control-layers-overlays');
 
-        const radioLabel = layerControl.querySelectorAll('.leaflet-control-layers-base label');
-        const radioSpan = layerControl.querySelectorAll('.leaflet-control-layers-base span');
-
-        radioLabel.forEach(el => el.classList.add('form-radio-custom'))
-        radioSpan.forEach(el => el.classList.add('checkmark'))
-
-        const label = layerControl.querySelectorAll('.leaflet-control-layers-overlays label');
-        const span = layerControl.querySelectorAll('.leaflet-control-layers-overlays span');
-
-        label.forEach(el => el.classList.add('form-checkbox-custom'))
-        span.forEach(el => el.classList.add('form-label', 'form-label--lib'))
-
         if (baseLayers && overlaysLayers) {
+            ReClassControl();
             layerControl.insertBefore(overlaysLayers, layerControl.firstChild);
             layerControl.appendChild(baseLayers);
         }
-    }
-    ;
+    };
 };
+
+const ReClassControl = () => {   
+    const radioLabel = document.querySelectorAll('.leaflet-control-layers-base label');
+    const radioSpan = document.querySelectorAll('.leaflet-control-layers-base span');
+
+    radioLabel.forEach(el => el.classList.add('form-radio-custom'))
+    radioSpan.forEach(el => el.classList.add('checkmark'))
+
+    const label = document.querySelectorAll('.leaflet-control-layers-overlays label');
+    const span = document.querySelectorAll('.leaflet-control-layers-overlays span');
+
+    label.forEach(el => el.classList.add('form-checkbox-custom'))
+    span.forEach(el => el.classList.add('form-label', 'form-label--lib'))
+}
 
 export const LoadMarkers = (markersGroup, params) => {
     mapAPI.getMapObjects('filter_apply_objects', params).then(res => {
