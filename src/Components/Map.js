@@ -383,7 +383,9 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
                 if (layer.options.pane === 'heatPane' && layer._url === '') {
                     document.querySelector('.info-legend').style = 'display: none'
                 } else if (layer.options.pane === 'heatPane' && layer._url !== '') {
+                    const imgElem = document.getElementsByClassName('img-legend')[0]
                     document.querySelector('.info-legend').style = 'display: block'
+                    imgElem.style.width='0'
                     const layer_name = layer.options.layers.split(':')[1]
                     const style = layer.options.styles.split(':')[1]
                     const legend_params = layers_legends.find(item => item.name === layer_name)
@@ -392,6 +394,19 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
 
                     var src = `https://asa.sports.keenetic.pro/geoserver/wms?REQUEST=GetLegendGraphic&VERSION=1.0.0&WIDTH=30&FORMAT=image/png&LAYER=leaders:${layer_name}&STYLE=leaders:${style}&legend_options=fontName:Roboto;fontAntiAliasing:true;fontSize:12;dpi:200;bgColor:0xffffff;fontColor:0x4c4c4c; `
                     document.querySelector('.info-legend > div > img').setAttribute("src", src);
+
+                    imgElem.onload = function(e){
+                        if (layer_name==='heatmap_need') {
+                            imgElem.style.width = '150px'
+                        }
+                        else if (layer_name==='grid_hex_wgs_population') {
+                            imgElem.style.width = '210px'
+                        }
+                        else {
+                            imgElem.style.width = '240px'
+                        }
+                    }
+                    
                 }
 
             } else if (!input.checked) {
