@@ -37,5 +37,9 @@
     ">0.2%",
     "not dead",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "file-saver": "^2.0.5",
+    "xlsx": "^0.17.3"
+  }
 }

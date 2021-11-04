@@ -3,6 +3,10 @@ import InfoProvisionBlockItem from "./InfoProvisionBlockItem";
 import InfoSportBlockItem from "./InfoSportBlockItem";
 import {ReactComponent as CrossIcon} from '../images/icons/cross-dark.svg'
 import {RemoveSelected} from './Map'
+import {ExportToExcel} from './ExportToExcel'
+import axios from 'axios'
+import {useState, useEffect} from "react";
+
 
 export const infoTypes = {
     default: 0,
@@ -10,6 +14,19 @@ export const infoTypes = {
     sports: 2,
     provision: 3,
 } 
+
+export const excelHeaders = {
+    population: 'Население', 
+    sport_zones_sum: 'Кол-во спортивных зон',
+    sport_square_sum: 'Площадь спортивных зон',
+    sport_kinds_sum: 'Видов спортивных зон',
+    sport_zones_provision: 'Средняя обeспеченность спортивными зонами по жилым домам',
+    sport_square_provision: 'Средняя обeспеченность площадью спортивных зон по жилым домам',
+    sport_kinds_provision: 'Средняя обeспеченность видами услуг по жилым домам',
+    sport_zones_types: 'Типы спортивных зон',
+    sport_zones_amount: 'Типы спортивных зон, кол-во',
+    sport_kinds_amount: 'Виды спортивных услуг, кол-во',
+}
 
 const InfoBlock = ({ data, setData }) => {
     const getTitle = () => {
@@ -37,6 +54,29 @@ const InfoBlock = ({ data, setData }) => {
                 return '';
         }
     }
+
+    // excel
+    const [excelData, setExcelData] = useState([])
+    const fileName = "territory_analysis"; // here enter filename for your excel file
+
+    window.test_data = data
+    excelData[0] = {}
+    for (let key in data.items[0]) {
+        if (excelHeaders[key]) {
+            var header = excelHeaders[key]
+            excelData[0][header] = data.items[0][key]
+        }
+    }
+
+    // setExcelData(data)
+
+    // useEffect(() => {
+    //     const fetchData = () =>{
+    //     axios.get('https://jsonplaceholder.typicode.com/posts').then(r => setExcelData(r.data) )
+    //     }
+    //     fetchData()
+    // }, [])
+    // excel
 
     return (
         <div className='InfoBlock'>
@@ -92,6 +132,11 @@ const InfoBlock = ({ data, setData }) => {
                        />
                    })}
                </div>
+            {/* excel */}
+            <div className={'filter-btns'} >
+                <ExportToExcel apiData={excelData} fileName={fileName} />
+            </div>
+            {/* excel */}
            </div>
         </div>
     );
