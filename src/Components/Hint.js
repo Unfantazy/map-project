@@ -30,7 +30,7 @@ const Hint = ({isHintShown, setIsHintShown}) => {
                             спортивных объектов
                         </li>
                         <li className={'HintBlock__item'}>2. На вкладке "Слои" выберите необходимую тепловую карту</li>
-                        <li className={'HintBlock__item'}>3. На вкладке "Инструменты" с помощью инструментов выделите
+                        <li className={'HintBlock__item'}>3. На вкладке "Аналитика" с помощью инструментов выделите
                             необходимую область
                         </li>
                     </ul>
