@@ -70,19 +70,22 @@ const FilterSelect = (
             case 'org_id':
                 setModel({
                     ...model,
-                    org_id: selectedItems.map(item => item.id)
+                    org_id: selectedItems.map(item => item.id),
+                    org_name: selectedItems.map(item => item.title)
                 })
                 return
             case 'sz_type':
                 setModel({
                     ...model,
-                    sz_type: selectedItems.map(item => item.id)
+                    sz_type: selectedItems.map(item => item.id),
+                    sz_type_name: selectedItems.map(item => item.title)
                 })
                 return
             case 's_kind':
                 setModel({
                     ...model,
-                    s_kind: selectedItems.map(item => item.id)
+                    s_kind: selectedItems.map(item => item.id),
+                    s_kind_name: selectedItems.map(item => item.title)
                 })
                 return
             case 'buf':
@@ -140,7 +143,6 @@ const FilterSelect = (
     }, [selectedItems])
 
     const onSelectItem = (item) => {
-        debugger
         if (!includes(selectedItems.map(item => item.id), item.id) && (checkbox || selectedItems.length < MAX_SELECTED_COUNT)) {
             setSelectedItems([...selectedItems, item])
         } else {

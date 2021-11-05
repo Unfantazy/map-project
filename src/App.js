@@ -30,7 +30,7 @@ const App = () => {
                 <Map model={model} setData={setData} data={data} isLoading={isLoading} setIsLoading={setIsLoading}/>
             </div>
             {data?.items?.length > 0
-            && <InfoBlock data={data} setData={setData}/>
+            && <InfoBlock data={data} setData={setData} model={model}/>
             }
             <Hint/>
         </div>
