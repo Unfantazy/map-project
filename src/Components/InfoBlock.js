@@ -175,7 +175,7 @@ const InfoBlock = ({ data, setData, model }) => {
                        />
                    })}
                    {data.type === infoTypes.baseOrPopulation && 
-                        <div className='InfoBlockItem__empty'>Для аналитики выберете тепловую карту спортивных зон или потребности в спортивных зонах </div>}
+                        <div className='InfoBlockItem__empty'>Для аналитики выберите тепловую карту спортивных зон или потребности в спортивных зонах </div>}
                </div>
             {/* excel */}
             <div className={'filter-btns'} >

@@ -5,6 +5,7 @@ import '../Leaflet.markercluster/src/index';
 import '@geoman-io/leaflet-geoman-free'
 import svg_red from '../images/icons/map-marker_red.svg'
 import svg_blue from '../images/icons/map-marker_blue.svg'
+import loader from '../images/icons/loader.gif'
 import {infoTypes} from './InfoBlock'
 
 import {mapAPI} from "../API/methods";
@@ -189,7 +190,7 @@ const AddGeoManControl = (mapComponent) => {
         
         if (infoType !== infoTypes.baseOrPopulation) {
             mapComponent.props.setIsLoading(true);
-            const drawingLayer = mapComponent.map.pm.getGeomanDrawLayers(true).getLayers()[0];
+            const drawingLayer = mapComponent.map.pm.getGeomanDrawLayers(true).getLayers()[0] || window.currentSelectedSavedLayer.pm.getLayers()[0];
             const shape = drawingLayer.pm.getShape() === 'Circle' 
                 ? L.PM.Utils.circleToPolygon(drawingLayer, 20) 
                 : drawingLayer;
@@ -396,11 +397,6 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         viewparams: filterParams,
     });
 
-    // loader on layer load
-    // вместо heat_need - все слои тепловых карт, в function - добавление/удаление лоадера
-    heat_need.on("loading",function() { console.log("started") });
-    heat_need.on("load",function() { console.log("ended") });
-
     var buffers = L?.tileLayer.wms(apiUrl, {
         layers: 'leaders:filter_apply_buffers',
         styles: 'leaders:buffers',
@@ -428,6 +424,35 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
     };
 
     var stylesControl = L.control.layers(baseMaps, overlayMaps, {position: 'topright', collapsed: false});
+
+    // loader on layer load    
+    if (document.getElementsByClassName("Loader-layer").length === 0) {
+        var load = document.createElement('div');
+        load.classList.add('Loader-layer');
+        load.innerHTML = `
+            <div class='Loader-layer-wrapper'>
+                <div class='Loader-layer__inner'}>
+                    Прогрузка слоя...
+                    <img src=${loader} alt=''/>
+                </div>
+            </div>`
+        load.style='display:none'
+        document.getElementsByClassName('map')[0].appendChild(load); 
+    }
+
+    Object.keys(baseMaps).forEach(key => {
+        if (key !=='Базовая карта') {
+            baseMaps[key].on("loading",function() {
+                load = document.getElementsByClassName("Loader-layer")[0]
+                load.style='display:block'
+            });
+            baseMaps[key].on("load",function() {
+                load = document.getElementsByClassName("Loader-layer")[0]
+                load.style='display:none'
+            });
+        }
+    })
+    
 
     const layers_legends = [
         {
