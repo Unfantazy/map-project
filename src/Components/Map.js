@@ -162,21 +162,13 @@ const AddGeoManControl = (mapComponent) => {
         })
     };
 
-    mapComponent.map.on("pm:create", () => {
-        // disable buttons
-        document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'none';
-        document.querySelectorAll('.leaflet-pm-draw a').forEach(a => a.classList.add('leaflet-disabled'));
+    // delete old custom territory before new one
+    document.querySelectorAll('.leaflet-pm-draw a').forEach(function (item) {
+        item.addEventListener('click', function () {
+            mapComponent.map.pm.getGeomanDrawLayers(true)?.getLayers()[0]?.removeFrom(mapComponent.map);
+        });
     });
 
-    mapComponent.map.on("pm:remove", () => {
-        if (mapComponent.map.pm.getGeomanDrawLayers(true).getLayers().length === 0) {
-            //enable buttons
-            document.getElementsByClassName('leaflet-pm-draw')[0].style.pointerEvents = 'auto';
-            document.querySelectorAll('.leaflet-pm-draw a')
-                .forEach(a => a.classList.remove('leaflet-disabled'));
-        }
-        ;
-    });
     
     document.getElementById('layerBtn')?.addEventListener('click', () => {
         

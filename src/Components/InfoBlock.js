@@ -112,13 +112,11 @@ const InfoBlock = ({ data, setData, model }) => {
                     excelData[0][header] = JSON.parse(value).join('; ')
                 }
                 else if (key === 'sport_zones_amount' || key === 'sport_kinds_amount') {
-                    console.log(JSON.parse(value))
                     excelData[0][header] = JSON.parse(value).map(type => type.zone_type + ' ' + type.amount + ' шт.').join('; ')
                 }
                 else {
                     excelData[0][header] = value
                 }
-                console.log (excelData[0])
             }
         }
     }
