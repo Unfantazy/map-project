@@ -323,6 +323,7 @@ const AddGeoManControl = (mapComponent) => {
                             type: currentLayer.infoType,
                             items: currentLayer.infoItems 
                         });
+                        mapComponent.props.setFlag(b => b + 1)
                     })
                     .finally(() => mapComponent.props.setIsLoading(false));
                 }

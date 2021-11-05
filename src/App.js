@@ -11,6 +11,8 @@ const App = () => {
     const [data, setData] = useState({type: infoTypes.default, items: []})
     const [isLoading, setIsLoading] = useState(true)
 
+    const [flag, setFlag] = useState(0)
+
     const [isHintShown, setIsHintShown] = useState(true)
 
     const legend = document.querySelector('.info-legend')
@@ -48,6 +50,7 @@ const App = () => {
                 setModel={setModel} 
                 setIsLoading={setIsLoading}
                 savedLayers={savedLayers}
+                flag={flag}
                 />                
             <div className={'Map'}>
                 <Map
@@ -59,6 +62,7 @@ const App = () => {
                     setIsLoading={setIsLoading}
                     isHintShown={isHintShown}
                     setSavedLayers={setSavedLayers}
+                    setFlag={setFlag}
                 />
             </div>
             {data?.items

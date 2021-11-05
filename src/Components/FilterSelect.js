@@ -18,7 +18,8 @@ const FilterSelect = (
         checkbox = true,
         type,
         setModel,
-        model
+        model,
+        flag,
     }
 ) => {
     const [items, setItems] = useState([])
@@ -39,11 +40,10 @@ const FilterSelect = (
     }
 
     useEffect(() => {
-        if (!!allFilterItems?.length && type === 's_kind') {
-            const initiallySelectedSportKind = allFilterItems?.filter(item => includes(model.s_kind, item.id))
-            setSelectedItems(initiallySelectedSportKind)
+        if (!!allFilterItems?.length ) {
+            setModelToFilter(type)
         }
-    }, [allFilterItems])
+    }, [allFilterItems, flag])
 
     useEffect(() => {
         if (model === null) {
@@ -52,6 +52,26 @@ const FilterSelect = (
             setFilter('')
         }
     }, [model])
+
+    const setModelToFilter = (type) => {
+        debugger
+        switch (type) {
+            case 's_kind':
+            case 'org_id':
+            case 'sz_type': {
+                const initiallySelectedSportKind = allFilterItems?.filter(item => includes(model[type], item.id))
+                setSelectedItems(initiallySelectedSportKind)
+                return
+            }
+            case 'obj_name':
+            case 'org_name':
+            case 'sz_name': {
+                const initiallySelectedSportKind = allFilterItems?.filter(item => includes(model[type], item.title))
+                setSelectedItems(initiallySelectedSportKind)
+                return;
+            }
+        }
+    }
 
     const getModelFunc = () => {
         switch (type) {
