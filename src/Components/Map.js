@@ -166,6 +166,10 @@ const AddGeoManControl = (mapComponent) => {
     document.querySelectorAll('.leaflet-pm-draw a').forEach(function (item) {
         item.addEventListener('click', function () {
             mapComponent.map.pm.getGeomanDrawLayers(true)?.getLayers()[0]?.removeFrom(mapComponent.map);
+            if (window.currentSelectedSavedLayer)
+            {
+                window.currentSelectedSavedLayer.removeFrom(mapComponent.map)
+            }
         });
     });
 

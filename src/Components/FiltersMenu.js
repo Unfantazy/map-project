@@ -1,5 +1,5 @@
 import FilterSelect from "./FilterSelect";
-import {useCallback, useEffect} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {mapAPI} from "../API/methods";
 import {Tab, Tabs, TabList, TabPanel} from 'react-tabs';
 import {ReactComponent as LayersIcon} from '../images/icons/layers.svg'
@@ -33,6 +33,8 @@ const FiltersMenu = ({setModel, model, setIsLoading, savedLayers, flag}) => {
         setModel(null)
     }
 
+    const [selectedInput, setSelectedInput] = useState(0);
+
     const updateMapLayers = async (filterModel) => {
         const params = FilterModelToParams(filterModel);
         setIsLoading(true);
@@ -41,6 +43,7 @@ const FiltersMenu = ({setModel, model, setIsLoading, savedLayers, flag}) => {
         await Promise.resolve(AddLayersWithControl(window.LeafletMap, window.Markers, params));
 
         setIsLoading(false);
+        setSelectedInput(0);
     }
 
 
@@ -135,8 +138,11 @@ const FiltersMenu = ({setModel, model, setIsLoading, savedLayers, flag}) => {
                                 <h1>Сохраненные территории</h1>
                                 <div className={'scroller menu-inner saveLayer__inner'}>
                                     <div className={'services-control'} style={{paddingTop: 0}}>
-                                        {!!savedLayers.length &&
-                                        <SavedLayers savedLayers={savedLayers}/>}
+                                        {!!savedLayers.length && 
+                                            <SavedLayers 
+                                                savedLayers={savedLayers} 
+                                                selectedInput={selectedInput} 
+                                                setSelectedInput={setSelectedInput}/>}
                                         {savedLayers.length === 0 && <span>Сохраненных территорий пока нет. <br/>
                                             Для сохранения - выберите тепловую карту, нарисуйте область и нажмите "Рассчитать".</span>}
                                     </div>

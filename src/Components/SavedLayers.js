@@ -1,10 +1,6 @@
 import SavedLayerItem from "./SavedLayerItem";
-import {useState} from "react";
 
-
-const SavedLayers = ({ savedLayers }) => {
-    const [selectedInput, setSelectedInput] = useState(0);
-
+const SavedLayers = ({ savedLayers, selectedInput, setSelectedInput }) => {
     const handleChange = inputValue => {
         setSelectedInput(inputValue);
     };

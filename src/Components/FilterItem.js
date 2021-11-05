@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {includes} from "lodash";
 
 
-const FilterItem = ({title, selectedBuf, setSelectedBuf, type}) => {
+const FilterItem = ({title, selectedBuf, setSelectedBuf, type, model, flag}) => {
     const [isActive, setIsActive] = useState(true)
 
     useEffect(() => {
@@ -10,6 +10,11 @@ const FilterItem = ({title, selectedBuf, setSelectedBuf, type}) => {
             setIsActive(false)
         }
     }, [selectedBuf])
+
+    useEffect(() => {
+        debugger
+        setSelectedBuf(model['buf'])
+    }, flag)
 
     const onFilterItemClick = () => {
         setIsActive(!isActive)

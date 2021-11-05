@@ -178,13 +178,13 @@ const FilterSelect = (
             <h3 className={'Filter-select__title'}>{title}</h3>
             <div className={'layers'}>
                 <FilterItem title={'Шаговая (радиус - 500 м)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf}
-                            type={500}/>
+                            type={500} model={model} flag={flag}/>
                 <FilterItem title={'Окружная (радиус - 3 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf}
-                            type={3000}/>
+                            type={3000} model={model} flag={flag}/>
                 <FilterItem title={'Районная (радиус - 1 км)'} setSelectedBuf={setSelectedBuf} selectedBuf={selectedBuf}
-                            type={1000}/>
+                            type={1000} model={model} flag={flag}/>
                 <FilterItem title={'Городская (радиус - 5 км)'} setSelectedBuf={setSelectedBuf}
-                            selectedBuf={selectedBuf} type={5000}/>
+                            selectedBuf={selectedBuf} type={5000} model={model} flag={flag}/>
             </div>
         </div>
     }
