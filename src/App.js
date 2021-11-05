@@ -48,7 +48,7 @@ const App = () => {
                     isHintShown={isHintShown}
                 />
             </div>
-            {data?.items?.length > 0
+            {data?.items
             && <InfoBlock data={data} setData={setData} model={model}/>
             }
             <Hint isHintShown={isHintShown} setIsHintShown={setIsHintShown}/>

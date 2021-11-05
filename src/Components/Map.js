@@ -179,7 +179,7 @@ const AddGeoManControl = (mapComponent) => {
     });
     
     document.getElementById('layerBtn')?.addEventListener('click', () => {
-        mapComponent.props.setIsLoading(true);
+        
 
         const mapLayers = Object.values(mapComponent.map._layers);
         const hasHeatmapSports = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
@@ -195,33 +195,43 @@ const AddGeoManControl = (mapComponent) => {
         ? infoTypes.sports
         : hasHeatmapProvision
             ? infoTypes.provision
-            : infoTypes.default;
-
-        const drawingLayer = mapComponent.map.pm.getGeomanDrawLayers(true).getLayers()[0];
-        const shape = drawingLayer.pm.getShape() === 'Circle' 
-            ? L.PM.Utils.circleToPolygon(drawingLayer, 20) 
-            : drawingLayer;
-        const params = FilterModelToParams(mapComponent.props.model) + 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,");
+            : infoTypes.baseOrPopulation;
         
-        mapAPI.getShape(type, params)
-            .then(res => {
-                const infoItems = res.data.features.map(item => item.properties);
-                mapComponent.props.setData({
-                    type: infoType,
-                    items: infoItems 
-                });
+        if (infoType !== infoTypes.baseOrPopulation) {
+            mapComponent.props.setIsLoading(true);
+            const drawingLayer = mapComponent.map.pm.getGeomanDrawLayers(true).getLayers()[0];
+            const shape = drawingLayer.pm.getShape() === 'Circle' 
+                ? L.PM.Utils.circleToPolygon(drawingLayer, 20) 
+                : drawingLayer;
+            const params = FilterModelToParams(mapComponent.props.model) + 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,");
+            
+            mapAPI.getShape(type, params)
+                .then(res => {
+                    const infoItems = res.data.features.map(item => item.properties);
+                    mapComponent.props.setData({
+                        type: infoType,
+                        items: infoItems 
+                    });
 
-                localStorage.setItem('current_drawing_layer', JSON.stringify({
-                    filterParams: params,
-                    layer: shape.toGeoJSON(),
-                    infoType,
-                    infoItems
-                }));
-            })
-            .catch(err => {
-                console.log(err)
-            })
-            .finally(() =>  mapComponent.props.setIsLoading(false))       
+                    localStorage.setItem('current_drawing_layer', JSON.stringify({
+                        filterParams: params,
+                        layer: shape.toGeoJSON(),
+                        infoType,
+                        infoItems
+                    }));
+                })
+                .catch(err => {
+                    console.log(err)
+                })
+                .finally(() =>  mapComponent.props.setIsLoading(false))
+        }
+        else {
+            mapComponent.props.setData({
+                type: infoType,
+                items: [] 
+            });
+        }
+               
     });
 
     document.getElementById('saveLayerBtn')?.addEventListener('click', () => {
