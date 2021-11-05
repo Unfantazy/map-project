@@ -134,7 +134,9 @@ const FiltersMenu = ({setModel, model, setIsLoading, savedLayers}) => {
                                 <h1>Сохраненные территории</h1> 
                                 <div className={'scroller menu-inner'}>
                                     <div className={'services-control'}>
-                                        <SavedLayers savedLayers={savedLayers}/>
+                                        {!!savedLayers.length && <SavedLayers savedLayers={savedLayers}/>}
+                                        {savedLayers.length === 0 && <span>Сохраненных территорий пока нет. <br/>
+                                            Для сохранения - выберите тепловую карту, нарисуйте область и нажмите "Рассчитать".</span>}
                                     </div>
                                 </div>
                             </>}
