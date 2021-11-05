@@ -84,12 +84,16 @@
 }
 
 .saveLayer {
-  margin: 10px 0;
+  margin-bottom: 10px;
   width: 100%;
   padding-right: 10px;
   .filter-apply {
     margin: 0 auto;
   }
+}
+
+.filter-btns--calc {
+  margin-bottom: 10px;
 }
 
 .select__btn.saveLayer__input {

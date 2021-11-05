@@ -119,7 +119,7 @@ const FiltersMenu = ({setModel, model, setIsLoading, savedLayers}) => {
                                 <div className={'services-control'}>
                                 </div>
                             </div>
-                            <div className={'filter-btns'}>
+                            <div className={'filter-btns filter-btns--calc'}>
                                 <button className={'filter-apply filter-btn'} id='layerBtn'>Рассчитать</button>
                             </div>
                             <div className={'saveLayer'} style={{display: 'none'}}>
