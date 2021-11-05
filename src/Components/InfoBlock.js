@@ -101,10 +101,8 @@ const InfoBlock = ({ data, setData, model }) => {
         var wkt = new Wkt.Wkt();
 
         excelData[0] = FilterModelToExcel(model)
-        console.log (excelData[0])
         
         excelData[0]['geometry'] = wkt.read(JSON.stringify(shape.toGeoJSON())).write()
-        console.log (excelData[0])
 
         for (let key in excelHeaders) {
             var header = excelHeaders[key]
@@ -113,9 +111,14 @@ const InfoBlock = ({ data, setData, model }) => {
                 if (key === 'sport_zones_types') {
                     excelData[0][header] = JSON.parse(value).join('; ')
                 }
+                else if (key === 'sport_zones_amount' || key === 'sport_kinds_amount') {
+                    console.log(JSON.parse(value))
+                    excelData[0][header] = JSON.parse(value).map(type => type.zone_type + ' ' + type.amount + ' шт.').join('; ')
+                }
                 else {
                     excelData[0][header] = value
                 }
+                console.log (excelData[0])
             }
         }
     }
