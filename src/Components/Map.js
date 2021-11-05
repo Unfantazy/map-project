@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import L from 'leaflet';
-// import '../Leaflet.VectorGrid/src/bundle';
 import '../Leaflet.markercluster/src/index';
 import '@geoman-io/leaflet-geoman-free'
 import svg_red from '../images/icons/map-marker_red.svg'
@@ -246,26 +245,28 @@ const AddGeoManControl = (mapComponent) => {
         }
         localStorage.setItem('saved_layers', JSON.stringify(savingLayersObj));
         
-        mapComponent.props.setIsLoading(true)
-        // добавление маркеров на карту
-        LoadMarkers(mapComponent.markers, currentLayer.filterParams);
-        // добавление контрола переключения слоев
-        Promise.resolve(AddLayersWithControl(mapComponent.map, mapComponent.markers, currentLayer.filterParams))
-        .then(() => {
-            var layerName = currentLayer.infoType === infoTypes.sports
-                ? 'Тепловая карта спортивных зон'
-                : 'Тепловая карта потребности в спортивных зонах' ;
-    
-            window.baseMaps[layerName].addTo(mapComponent.map)
-            ReClassControl();
+        //Отображение выбранного слоя 
 
-            L.geoJSON(currentLayer.layer).addTo(mapComponent.map);
-            mapComponent.props.setData({
-                type: currentLayer.infoType,
-                items: currentLayer.infoItems 
-            });
-        })
-        .finally(() => mapComponent.props.setIsLoading(false));
+        // mapComponent.props.setIsLoading(true)
+        // // добавление маркеров на карту
+        // LoadMarkers(mapComponent.markers, currentLayer.filterParams);
+        // // добавление контрола переключения слоев
+        // Promise.resolve(AddLayersWithControl(mapComponent.map, mapComponent.markers, currentLayer.filterParams))
+        // .then(() => {
+        //     var layerName = currentLayer.infoType === infoTypes.sports
+        //         ? 'Тепловая карта спортивных зон'
+        //         : 'Тепловая карта потребности в спортивных зонах' ;
+    
+        //     window.baseMaps[layerName].addTo(mapComponent.map)
+        //     ReClassControl();
+
+        //     L.geoJSON(currentLayer.layer).addTo(mapComponent.map);
+        //     mapComponent.props.setData({
+        //         type: currentLayer.infoType,
+        //         items: currentLayer.infoItems 
+        //     });
+        // })
+        // .finally(() => mapComponent.props.setIsLoading(false));
     });
 }
 
