@@ -226,37 +226,43 @@ const AddGeoManControl = (mapComponent) => {
     });
 
     document.getElementById('saveLayerBtn')?.addEventListener('click', () => {
-        var currentLayer = localStorage.getItem('current_drawing_layer');
+        var currentLayer = JSON.parse(localStorage.getItem('current_drawing_layer'));
         let savingLayersObj = null;
 
-        if (localStorage.getItem('saving_layers')) {
-            savingLayersObj = Array.from(JSON.parse(localStorage.getItem('saving_layers')));
+        if (localStorage.getItem('saved_layers')) {
+            savingLayersObj = Array.from(JSON.parse(localStorage.getItem('saved_layers')));
+            currentLayer = {
+                ...currentLayer,
+                id: savingLayersObj.length + 1
+            }
             savingLayersObj.push(currentLayer);
         } 
         else {
+            currentLayer = {
+                ...currentLayer,
+                id: 1
+            }
             savingLayersObj = new Array(currentLayer);
         }
-        localStorage.setItem('saving_layers', JSON.stringify(savingLayersObj));
+        localStorage.setItem('saved_layers', JSON.stringify(savingLayersObj));
         
-        var currentLayerObj = JSON.parse(currentLayer)
-
         mapComponent.props.setIsLoading(true)
         // добавление маркеров на карту
-        LoadMarkers(mapComponent.markers, currentLayerObj.filterParams);
+        LoadMarkers(mapComponent.markers, currentLayer.filterParams);
         // добавление контрола переключения слоев
-        Promise.resolve(AddLayersWithControl(mapComponent.map, mapComponent.markers, currentLayerObj.filterParams))
+        Promise.resolve(AddLayersWithControl(mapComponent.map, mapComponent.markers, currentLayer.filterParams))
         .then(() => {
-            var layerName = currentLayerObj.infoType === infoTypes.sports
+            var layerName = currentLayer.infoType === infoTypes.sports
                 ? 'Тепловая карта спортивных зон'
                 : 'Тепловая карта потребности в спортивных зонах' ;
     
             window.baseMaps[layerName].addTo(mapComponent.map)
             ReClassControl();
 
-            L.geoJSON(currentLayerObj.layer).addTo(mapComponent.map);
+            L.geoJSON(currentLayer.layer).addTo(mapComponent.map);
             mapComponent.props.setData({
-                type: currentLayerObj.infoType,
-                items: currentLayerObj.infoItems 
+                type: currentLayer.infoType,
+                items: currentLayer.infoItems 
             });
         })
         .finally(() => mapComponent.props.setIsLoading(false));

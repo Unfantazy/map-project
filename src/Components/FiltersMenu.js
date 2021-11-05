@@ -6,6 +6,7 @@ import {ReactComponent as LayersIcon} from '../images/icons/layers.svg'
 import {ReactComponent as ServicesIcon} from '../images/icons/services.svg'
 import {ReactComponent as FiltersIcon} from '../images/icons/filters.svg'
 import {LoadMarkers, AddLayersWithControl, FilterModelToParams} from './Map'
+import SavedLayers from './SavedLayers'
 
 const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
     const fetchSportsTypes = useCallback((filter) => {
@@ -121,6 +122,12 @@ const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
                             <div className={'filter-btns'}>
                                 <button className={'filter-apply filter-btn'} id='layerBtn'>Рассчитать</button>
                                 <button className={'filter-apply filter-btn'} id='saveLayerBtn'>Сохранить</button>
+                            </div>
+                            <div className={'scroller menu-inner'}>
+                                <div className={'services-control'}>
+                                    Сохраненные слои:
+                                    <SavedLayers />
+                                </div>
                             </div>
                         </TabPanel>
                     </div>
