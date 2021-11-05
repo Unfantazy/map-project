@@ -54,7 +54,6 @@ const FilterSelect = (
     }, [model])
 
     const setModelToFilter = (type) => {
-        debugger
         switch (type) {
             case 's_kind':
             case 'org_id':
@@ -68,7 +67,7 @@ const FilterSelect = (
             case 'sz_name': {
                 const initiallySelectedSportKind = allFilterItems?.filter(item => includes(model[type], item.title))
                 setSelectedItems(initiallySelectedSportKind)
-                return;
+                return
             }
         }
     }
