@@ -296,7 +296,7 @@ const AddGeoManControl = (mapComponent) => {
                     .then(() => {
                         var layerName = currentLayer.infoType === infoTypes.sports
                             ? 'Тепловая карта спортивных зон'
-                            : 'Тепловая карта потребности в спортивных зонах' ;
+                            : 'Тепловая карта обеспеченности (потребности) спортивными зонами' ;
                 
                         window.baseMaps[layerName].addTo(mapComponent.map)
                         ReClassControl();
@@ -419,7 +419,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         'Тепловая карта спортивных зон': heat_square,
         'Тепловая карта населения': heat_population,
         'Тепловая карта обеспеченности спортивными зонами': heat_provision,
-        'Тепловая карта потребности в спортивных зонах':heat_need
+        'Тепловая карта обеспеченности (потребности) спортивными зонами':heat_need
     };
 
     var overlayMaps = {
@@ -477,7 +477,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         {
             name: 'heatmap_need',
             style: 'heatmap_need_style',
-            legend_name: 'Потребность населения <br>в спортивной инфраструктуре',
+            legend_name: 'Обеспеченность или потребность населения в спортивной инфраструктуре',
         }
     ]
 
@@ -544,10 +544,10 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
 
                     imgElem.onload = function(e){
                         if (layer_name==='heatmap_need') {
-                            imgElem.style.width = '150px'
+                            imgElem.style.width = '200px'
                         }
                         else if (layer_name==='grid_hex_wgs_population') {
-                            imgElem.style.width = '210px'
+                            imgElem.style.width = '150px'
                         }
                         else {
                             imgElem.style.width = '240px'
