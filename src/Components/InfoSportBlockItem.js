@@ -3,7 +3,7 @@ const InfoSportBlockItem = ({ square, types, kinds }) => {
     const hasData = types && square && kinds;
     return (
         <>
-            {!hasData && <div className='InfoBlockItem'>Данные отсутствуют</div>}
+            {!hasData && <div className='InfoBlockItem__empty'>Данные отсутствуют</div>}
             {hasData && <>
                 <div className='InfoBlockItem'>
                     <div className={'InfoBlockItem__title'}>Суммарная площадь спортивных зон:</div>

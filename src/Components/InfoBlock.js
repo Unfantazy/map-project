@@ -14,6 +14,7 @@ export const infoTypes = {
     object: 1,
     sports: 2,
     provision: 3,
+    baseOrPopulation: 4,
 } 
 
 export const excelHeaders = {
@@ -120,7 +121,7 @@ const InfoBlock = ({ data, setData, model }) => {
     }
     // excel
 
-    return (
+    return ((data.items.length > 0 || data.type === infoTypes.baseOrPopulation) &&
         <div className='InfoBlock'>
            <div className={'InfoBlock__wrapper'}>
                <div className={'InfoBlock__top'}>
@@ -173,11 +174,13 @@ const InfoBlock = ({ data, setData, model }) => {
                            population={item.population}
                        />
                    })}
+                   {data.type === infoTypes.baseOrPopulation && 
+                        <div className='InfoBlockItem__empty'>Для аналитики выберете тепловую карту спортивных зон или потребности в спортивных зонах </div>}
                </div>
             {/* excel */}
             <div className={'filter-btns'} >
                 {(data.type === infoTypes.sports ||
-                  data.type === infoTypes.provision) && <ExportToExcel 
+                  data.type === infoTypes.provision) && Object.values(data.items[0]).find(x => x !== null && x !== 0) && <ExportToExcel 
                         apiData={excelData} 
                         fileName={fileName} />
                 }
