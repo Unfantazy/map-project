@@ -2,7 +2,7 @@ import './App.scss';
 import FiltersMenu from "./Components/FiltersMenu";
 import Map from "./Components/Map";
 import InfoBlock, {infoTypes} from "./Components/InfoBlock";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import Hint from "./Components/Hint";
 import Loader from './Components/Loader';
 
@@ -10,6 +10,18 @@ import Loader from './Components/Loader';
 const App = () => {
     const [data, setData] = useState({type: infoTypes.default, items: []})
     const [isLoading, setIsLoading] = useState(true)
+
+    const [isHintShown, setIsHintShown] = useState(true)
+
+    const legend = document.querySelector('.info-legend')
+
+    useEffect(() => {
+        if (isHintShown) {
+            legend?.classList.add('hint-is-shown')
+        } else {
+            legend?.classList.remove('hint-is-shown')
+        }
+    }, [isHintShown, legend])
 
     const initialStateModel = {
         obj_name: [],
@@ -21,18 +33,25 @@ const App = () => {
     }
 
     const [model, setModel] = useState(initialStateModel)
-    
+
     return (
         <div className='App'>
             {isLoading && <Loader color={'shadow'}/>}
             <FiltersMenu model={model} setModel={setModel} isLoading={isLoading} setIsLoading={setIsLoading}/>
             <div className={'Map'}>
-                <Map model={model} setData={setData} data={data} isLoading={isLoading} setIsLoading={setIsLoading}/>
+                <Map
+                    model={model}
+                    setData={setData}
+                    data={data}
+                    isLoading={isLoading}
+                    setIsLoading={setIsLoading}
+                    isHintShown={isHintShown}
+                />
             </div>
             {data?.items?.length > 0
             && <InfoBlock data={data} setData={setData} model={model}/>
             }
-            <Hint/>
+            <Hint isHintShown={isHintShown} setIsHintShown={setIsHintShown}/>
         </div>
     );
 }

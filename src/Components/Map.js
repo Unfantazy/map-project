@@ -392,7 +392,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
     // legend
     var legend = L.control({style: 'background:white'});
     legend.onAdd = function (map) {
-        var div = L.DomUtil.create('div', 'info-legend')
+        var div = L.DomUtil.create('div', 'info-legend hint-is-shown')
         div.style = 'display: none'
         div.innerHTML +=
             '<strong style="margin-bottom: -20px; display: block;"> Условные обозначения </strong><br>'
