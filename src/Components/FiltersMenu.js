@@ -8,7 +8,7 @@ import {ReactComponent as FiltersIcon} from '../images/icons/filters.svg'
 import {LoadMarkers, AddLayersWithControl, FilterModelToParams} from './Map'
 import SavedLayers from './SavedLayers'
 
-const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
+const FiltersMenu = ({setModel, model, setIsLoading, savedLayers}) => {
     const fetchSportsTypes = useCallback((filter) => {
         return mapAPI.getFilterValues('kind_sport', filter)
     }, [])
@@ -74,7 +74,7 @@ const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
                             <ServicesIcon style={{width: 12, height: 12}}/>
                         </span>
                             <span className={'d-flex align-items-center events-header__item--span'}>
-                            Инструменты
+                            Аналитика
                         </span>
                         </Tab>
                     </TabList>
@@ -121,14 +121,23 @@ const FiltersMenu = ({setModel, model, setIsLoading, isLoading}) => {
                             </div>
                             <div className={'filter-btns'}>
                                 <button className={'filter-apply filter-btn'} id='layerBtn'>Рассчитать</button>
+                            </div>
+                            <div className={'filter-btns saveLayer'} style={{display: 'none'}}>
+                                <div className={'select__btn'}>
+                                    <label className={'select-label'}>
+                                        <input placeholder={'Название территории'} type="text" className={'select-input saveLayerName'}/>
+                                    </label>
+                                </div>
                                 <button className={'filter-apply filter-btn'} id='saveLayerBtn'>Сохранить</button>
                             </div>
-                            <div className={'scroller menu-inner'}>
-                                <div className={'services-control'}>
-                                    Сохраненные слои:
-                                    <SavedLayers />
+                            {savedLayers && <>
+                                <h1>Сохраненные территории</h1> 
+                                <div className={'scroller menu-inner'}>
+                                    <div className={'services-control'}>
+                                        <SavedLayers savedLayers={savedLayers}/>
+                                    </div>
                                 </div>
-                            </div>
+                            </>}
                         </TabPanel>
                     </div>
                 </Tabs>

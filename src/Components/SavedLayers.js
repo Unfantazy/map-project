@@ -2,8 +2,7 @@ import SavedLayerItem from "./SavedLayerItem";
 import {useState} from "react";
 
 
-const SavedLayers = () => {
-    const savedLayers = localStorage.getItem('saved_layers');
+const SavedLayers = ({ savedLayers }) => {
     const [selectedInput, setSelectedInput] = useState(0);
 
     const handleChange = inputValue => {
@@ -11,9 +10,7 @@ const SavedLayers = () => {
     };
 
     if (savedLayers) {
-        const layers = Array.from(JSON.parse(savedLayers))
-
-        return layers.map((layer) => <SavedLayerItem id={layer.id} handleChange={handleChange} selectedInput={selectedInput}/>)
+        return savedLayers.map((layer) => <SavedLayerItem id={layer.id} title={layer.name} handleChange={handleChange} selectedInput={selectedInput}/>)
     }
 
     return <></>

@@ -87,35 +87,34 @@ const InfoBlock = ({ data, setData, model }) => {
         }
     }
 
-
     // excel 
     let excelData = [];
     const fileName = "territory_analysis"; // here enter filename for your excel file
 
     if (data.type === infoTypes.sports || data.type === infoTypes.provision) {
-        const drawingLayer = window.LeafletMap.pm.getGeomanDrawLayers(true).getLayers()[0];
+        const drawingLayer = window.LeafletMap.pm.getGeomanDrawLayers(true).getLayers()[0] || window.currentSelectedSavedLayer.pm.getLayers()[0];
         const shape = drawingLayer?.pm.getShape() === 'Circle' 
             ? L.PM.Utils.circleToPolygon(drawingLayer, 20) 
             : drawingLayer;
+        if (shape) {
+            var wkt = new Wkt.Wkt();
 
-        var wkt = new Wkt.Wkt();
+            excelData[0] = FilterModelToExcel(model)
+            excelData[0]['geometry'] = wkt.read(JSON.stringify(shape.toGeoJSON())).write()
 
-        excelData[0] = FilterModelToExcel(model)
-        
-        excelData[0]['geometry'] = wkt.read(JSON.stringify(shape.toGeoJSON())).write()
-
-        for (let key in excelHeaders) {
-            var header = excelHeaders[key]
-            var value = data.items[0][key]
-            if (value) {
-                if (key === 'sport_zones_types') {
-                    excelData[0][header] = JSON.parse(value).join('; ')
-                }
-                else if (key === 'sport_zones_amount' || key === 'sport_kinds_amount') {
-                    excelData[0][header] = JSON.parse(value).map(type => type.zone_type + ' ' + type.amount + ' шт.').join('; ')
-                }
-                else {
-                    excelData[0][header] = value
+            for (let key in excelHeaders) {
+                var header = excelHeaders[key]
+                var value = data.items[0][key]
+                if (value) {
+                    if (key === 'sport_zones_types') {
+                        excelData[0][header] = JSON.parse(value).join('; ')
+                    }
+                    else if (key === 'sport_zones_amount' || key === 'sport_kinds_amount') {
+                        excelData[0][header] = JSON.parse(value).map(type => type.zone_type + ' ' + type.amount + ' шт.').join('; ')
+                    }
+                    else {
+                        excelData[0][header] = value
+                    }
                 }
             }
         }

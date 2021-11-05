@@ -34,18 +34,31 @@ const App = () => {
 
     const [model, setModel] = useState(initialStateModel)
 
+    const initSavedLayers = localStorage.getItem('saved_layers')
+        ? Array.from(JSON.parse(localStorage.getItem('saved_layers')))
+        : [];
+
+    const [savedLayers, setSavedLayers] = useState(initSavedLayers)
+
     return (
         <div className='App'>
             {isLoading && <Loader color={'shadow'}/>}
-            <FiltersMenu model={model} setModel={setModel} isLoading={isLoading} setIsLoading={setIsLoading}/>
+            <FiltersMenu 
+                model={model} 
+                setModel={setModel} 
+                setIsLoading={setIsLoading}
+                savedLayers={savedLayers}
+                />                
             <div className={'Map'}>
                 <Map
                     model={model}
+                    setModel={setModel} 
                     setData={setData}
                     data={data}
                     isLoading={isLoading}
                     setIsLoading={setIsLoading}
                     isHintShown={isHintShown}
+                    setSavedLayers={setSavedLayers}
                 />
             </div>
             {data?.items

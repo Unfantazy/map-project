@@ -170,9 +170,7 @@ const AddGeoManControl = (mapComponent) => {
     });
 
     
-    document.getElementById('layerBtn')?.addEventListener('click', () => {
-        
-
+    document.getElementById('layerBtn')?.addEventListener('click', () => { 
         const mapLayers = Object.values(mapComponent.map._layers);
         const hasHeatmapSports = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
         const hasHeatmapProvision = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_provision_style' || x.options.styles === 'leaders:heatmap_need_style').length > 0;
@@ -206,6 +204,7 @@ const AddGeoManControl = (mapComponent) => {
                     });
 
                     localStorage.setItem('current_drawing_layer', JSON.stringify({
+                        model: mapComponent.props.model,
                         filterParams: params,
                         layer: shape.toGeoJSON(),
                         infoType,
@@ -215,7 +214,14 @@ const AddGeoManControl = (mapComponent) => {
                 .catch(err => {
                     console.log(err)
                 })
-                .finally(() =>  mapComponent.props.setIsLoading(false))
+                .finally(() =>  mapComponent.props.setIsLoading(false));
+
+            var saveElms = document.querySelector('.saveLayer');
+            if (saveElms)
+            {
+                saveElms.style = 'display: inline-block';
+            }
+
         }
         else {
             mapComponent.props.setData({
@@ -226,50 +232,103 @@ const AddGeoManControl = (mapComponent) => {
                
     });
 
+    // Сохранение слоя
     document.getElementById('saveLayerBtn')?.addEventListener('click', () => {
-        var currentLayer = JSON.parse(localStorage.getItem('current_drawing_layer'));
-        let savingLayersObj = null;
+        var nameElm = document.querySelector('.saveLayerName');
+        var name = nameElm.value
+        if (name)
+        {
+            nameElm.parentElement.parentElement.classList.remove('isFocused');
+            nameElm.value = '';
+            var saveElms = document.querySelector('.saveLayer');
+            if (saveElms)
+            {
+                saveElms.style = 'display: none';
+            }
 
-        if (localStorage.getItem('saved_layers')) {
-            savingLayersObj = Array.from(JSON.parse(localStorage.getItem('saved_layers')));
-            currentLayer = {
-                ...currentLayer,
-                id: savingLayersObj.length + 1
+            var currentLayer = JSON.parse(localStorage.getItem('current_drawing_layer'));
+            let savingLayersObj = null;
+
+            if (localStorage.getItem('saved_layers')) {
+                savingLayersObj = Array.from(JSON.parse(localStorage.getItem('saved_layers')));
+                currentLayer = {
+                    ...currentLayer,
+                    id: savingLayersObj.length + 1,
+                    name
+                }
+                savingLayersObj.push(currentLayer);
+            } 
+            else {
+                currentLayer = {
+                    ...currentLayer,
+                    id: 1,
+                    name
+                }
+                savingLayersObj = new Array(currentLayer);
             }
-            savingLayersObj.push(currentLayer);
-        } 
-        else {
-            currentLayer = {
-                ...currentLayer,
-                id: 1
-            }
-            savingLayersObj = new Array(currentLayer);
+            localStorage.setItem('saved_layers', JSON.stringify(savingLayersObj));
+            mapComponent.props.setSavedLayers(savingLayersObj);
         }
-        localStorage.setItem('saved_layers', JSON.stringify(savingLayersObj));
-        
-        //Отображение выбранного слоя 
-
-        // mapComponent.props.setIsLoading(true)
-        // // добавление маркеров на карту
-        // LoadMarkers(mapComponent.markers, currentLayer.filterParams);
-        // // добавление контрола переключения слоев
-        // Promise.resolve(AddLayersWithControl(mapComponent.map, mapComponent.markers, currentLayer.filterParams))
-        // .then(() => {
-        //     var layerName = currentLayer.infoType === infoTypes.sports
-        //         ? 'Тепловая карта спортивных зон'
-        //         : 'Тепловая карта потребности в спортивных зонах' ;
-    
-        //     window.baseMaps[layerName].addTo(mapComponent.map)
-        //     ReClassControl();
-
-        //     L.geoJSON(currentLayer.layer).addTo(mapComponent.map);
-        //     mapComponent.props.setData({
-        //         type: currentLayer.infoType,
-        //         items: currentLayer.infoItems 
-        //     });
-        // })
-        // .finally(() => mapComponent.props.setIsLoading(false));
+        else {
+            nameElm.parentElement.parentElement.classList.add('isFocused');
+        }
     });
+
+    //Отображение выбранного слоя 
+    document.querySelectorAll('.savedLayer')?.forEach((savedLayer) => 
+        savedLayer.addEventListener('click', (e) => {
+            if (localStorage.getItem('saved_layers') && 
+                !e.currentTarget.classList.contains('isActive')) 
+            {
+                var savingLayers = Array.from(JSON.parse(localStorage.getItem('saved_layers')));
+                var currentLayer = savingLayers.find(x => x.id === Number(e.currentTarget.id));
+                if (currentLayer) {                            
+                    mapComponent.props.setIsLoading(true)
+                    // добавление маркеров на карту
+                    LoadMarkers(mapComponent.markers, currentLayer.filterParams);
+                    // добавление контрола переключения слоев
+                    Promise.resolve(AddLayersWithControl(mapComponent.map, mapComponent.markers, currentLayer.filterParams))
+                    .then(() => {
+                        var layerName = currentLayer.infoType === infoTypes.sports
+                            ? 'Тепловая карта спортивных зон'
+                            : 'Тепловая карта потребности в спортивных зонах' ;
+                
+                        window.baseMaps[layerName].addTo(mapComponent.map)
+                        ReClassControl();
+                        
+                        if (window.currentSelectedSavedLayer)
+                        {
+                            window.currentSelectedSavedLayer.removeFrom(mapComponent.map)
+                        }
+                        
+                        window.currentSelectedSavedLayer = L.geoJSON(currentLayer.layer).addTo(mapComponent.map);
+                        mapComponent.map.setView(window.currentSelectedSavedLayer.getBounds().getCenter(), 
+                            mapComponent.map.getZoom(), 
+                            {
+                                "animate": true,
+                            });
+                        mapComponent.props.setModel({
+                            obj_name: currentLayer.model.obj_name,
+                            org_id: currentLayer.model.org_id,
+                            org_name: currentLayer.model.org_name,
+                            sz_name: currentLayer.model.sz_name,
+                            sz_type: currentLayer.model.sz_type,
+                            sz_type_name: currentLayer.model.sz_type_name,
+                            s_kind: currentLayer.model.s_kind,
+                            s_kind_name: currentLayer.model.s_kind_name,
+                            buf: currentLayer.model.buf
+                        });
+
+                        mapComponent.props.setData({
+                            type: currentLayer.infoType,
+                            items: currentLayer.infoItems 
+                        });
+                    })
+                    .finally(() => mapComponent.props.setIsLoading(false));
+                }
+            } 
+        })
+    );
 }
 
 export const AddLayersWithControl = async (mapElement, markersElement, filterParams) => {

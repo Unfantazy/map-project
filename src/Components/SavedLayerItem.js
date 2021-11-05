@@ -1,6 +1,6 @@
-const SavedLayerItem = ({id, handleChange, selectedInput}) => {
-    return <button className={`FilterItem ${selectedInput === id ? 'isActive' : ''}`} onClick={() => handleChange(id)}>
-        <span>{id}. Тестовый слой</span>
+const SavedLayerItem = ({id, title, handleChange, selectedInput}) => {
+    return <button id={id} className={`FilterItem savedLayer ${selectedInput === id ? 'isActive' : ''}`} onClick={() => handleChange(id)}>
+        <span>{id}. {title || 'Территория'}</span>
     </button>
 }
 

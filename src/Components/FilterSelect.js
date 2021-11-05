@@ -232,7 +232,6 @@ const FilterSelect = (
                 <ul className={'scroller select-dropdown__list'}>
                     {isLoading ? <Loader/>
                         : onlySelected ? allFilterItems?.map(listItem => {
-                            debugger
                             if ((includes(selectedItemsIds, listItem.id))) {
                                 return <li
                                     className={`filter-select__item ${(includes(selectedItemsIds, listItem.id) && !checkbox)
