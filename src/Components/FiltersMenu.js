@@ -132,10 +132,12 @@ const FiltersMenu = ({setModel, model, setIsLoading, savedLayers}) => {
                                 <button className={'filter-apply filter-btn'} id='saveLayerBtn'>Сохранить</button>
                             </div>
                             {savedLayers && <>
-                                <h1>Сохраненные территории</h1>
+                                <h1>Сохраненные территории</h1> 
                                 <div className={'scroller menu-inner saveLayer__inner'}>
                                     <div className={'services-control'} style={{paddingTop: 0}}>
-                                        <SavedLayers savedLayers={savedLayers}/>
+                                        {!!savedLayers.length && <SavedLayers savedLayers={savedLayers}/>}
+                                        {savedLayers.length === 0 && <span>Сохраненных территорий пока нет. <br/>
+                                            Для сохранения - выберите тепловую карту, нарисуйте область и нажмите "Рассчитать".</span>}
                                     </div>
                                 </div>
                             </>}
