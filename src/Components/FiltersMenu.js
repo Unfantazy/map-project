@@ -122,18 +122,19 @@ const FiltersMenu = ({setModel, model, setIsLoading, savedLayers}) => {
                             <div className={'filter-btns'}>
                                 <button className={'filter-apply filter-btn'} id='layerBtn'>Рассчитать</button>
                             </div>
-                            <div className={'filter-btns saveLayer'} style={{display: 'none'}}>
-                                <div className={'select__btn'}>
+                            <div className={'saveLayer'} style={{display: 'none'}}>
+                                <div className={'select__btn saveLayer__input'} style={{marginBottom: 10}}>
                                     <label className={'select-label'}>
-                                        <input placeholder={'Название территории'} type="text" className={'select-input saveLayerName'}/>
+                                        <input placeholder={'Название территории'} type="text"
+                                               className={'select-input saveLayerName'}/>
                                     </label>
                                 </div>
                                 <button className={'filter-apply filter-btn'} id='saveLayerBtn'>Сохранить</button>
                             </div>
                             {savedLayers && <>
-                                <h1>Сохраненные территории</h1> 
-                                <div className={'scroller menu-inner'}>
-                                    <div className={'services-control'}>
+                                <h1>Сохраненные территории</h1>
+                                <div className={'scroller menu-inner saveLayer__inner'}>
+                                    <div className={'services-control'} style={{paddingTop: 0}}>
                                         <SavedLayers savedLayers={savedLayers}/>
                                     </div>
                                 </div>

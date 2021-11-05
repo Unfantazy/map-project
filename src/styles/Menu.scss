@@ -79,6 +79,23 @@
   padding-right: 10px;
 }
 
+.saveLayer__inner {
+  max-height: 155px;
+}
+
+.saveLayer {
+  margin: 10px 0;
+  width: 100%;
+  padding-right: 10px;
+  .filter-apply {
+    margin: 0 auto;
+  }
+}
+
+.select__btn.saveLayer__input {
+  max-width: 100%;
+}
+
 .filter-btn {
   height: 25px;
   border-radius: 10px;
