@@ -61,7 +61,7 @@ export const FilterModelToExcel = (filterModel) =>
     return params;
 }
 
-const InfoBlock = ({ data, setData, model }) => {
+const InfoBlock = ({ data, setData, model, isInfoBlockShown, setIsInfoBlockShown }) => {
     const getTitle = () => {
         switch (data.type) 
         {
@@ -87,6 +87,21 @@ const InfoBlock = ({ data, setData, model }) => {
                 return '';
         }
     }
+
+    const closeInfoBlock = () => {
+        setData({type: infoTypes.default, items: []});
+        if (data.type === infoTypes.object) {
+            RemoveSelected(window.LeafletMap);
+        }
+    }
+
+    useEffect(() => {
+        if(!isInfoBlockShown)
+        {
+            closeInfoBlock();
+            setIsInfoBlockShown(true)
+        }
+    }, [isInfoBlockShown])
 
     // excel 
     let excelData = [];
@@ -126,15 +141,7 @@ const InfoBlock = ({ data, setData, model }) => {
         <div className='InfoBlock'>
            <div className={'InfoBlock__wrapper'}>
                <div className={'InfoBlock__top'}>
-                   <button className={'InfoBlock__close'}
-                           id={'close-info'}
-                   onClick={(e) => {
-                       setData({type: infoTypes.default, items: []});
-                       if (data.type === infoTypes.object) {
-                            RemoveSelected(window.LeafletMap);
-                        }
-                   }}
-                   >
+                   <button className={'InfoBlock__close'} id={'close-info'} onClick={(e) => closeInfoBlock()}>
                        <CrossIcon />
                    </button>
                    <h1 className={'InfoBlock__title'}>{getTitle()}</h1>

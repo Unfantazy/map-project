@@ -41,6 +41,8 @@ const App = () => {
         : [];
 
     const [savedLayers, setSavedLayers] = useState(initSavedLayers)
+    const [selectedInput, setSelectedInput] = useState(0);
+    const [isInfoBlockShown, setIsInfoBlockShown] = useState(false)
 
     return (
         <div className='App'>
@@ -51,6 +53,8 @@ const App = () => {
                 setIsLoading={setIsLoading}
                 savedLayers={savedLayers}
                 flag={flag}
+                selectedInput={selectedInput}
+                setSelectedInput={setSelectedInput}
                 />                
             <div className={'Map'}>
                 <Map
@@ -63,10 +67,17 @@ const App = () => {
                     isHintShown={isHintShown}
                     setSavedLayers={setSavedLayers}
                     setFlag={setFlag}
+                    setSelectedInput={setSelectedInput}
+                    setIsInfoBlockShown={setIsInfoBlockShown}
                 />
             </div>
             {data?.items
-            && <InfoBlock data={data} setData={setData} model={model}/>
+            && <InfoBlock 
+                data={data} 
+                setData={setData} 
+                model={model}
+                isInfoBlockShown={isInfoBlockShown}
+                setIsInfoBlockShown={setIsInfoBlockShown}/>
             }
             <Hint isHintShown={isHintShown} setIsHintShown={setIsHintShown}/>
         </div>
