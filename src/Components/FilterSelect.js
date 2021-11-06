@@ -34,6 +34,7 @@ const FilterSelect = (
     const MAX_SELECTED_COUNT = 5;
 
     const resetFilters = () => {
+        setFilter('')
         if (!!selectedItems.length) {
             setSelectedItems([])
         }
