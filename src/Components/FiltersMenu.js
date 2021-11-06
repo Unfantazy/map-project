@@ -8,7 +8,7 @@ import {ReactComponent as FiltersIcon} from '../images/icons/filters.svg'
 import {LoadMarkers, AddLayersWithControl, FilterModelToParams} from './Map'
 import SavedLayers from './SavedLayers'
 
-const FiltersMenu = ({setModel, model, setIsLoading, savedLayers, flag}) => {
+const FiltersMenu = ({setModel, model, setIsLoading, savedLayers, flag, selectedInput, setSelectedInput}) => {
     const fetchSportsTypes = useCallback((filter) => {
         return mapAPI.getFilterValues('kind_sport', filter)
     }, [])
@@ -32,8 +32,6 @@ const FiltersMenu = ({setModel, model, setIsLoading, savedLayers, flag}) => {
     const onResetFilters = () => {
         setModel(null)
     }
-
-    const [selectedInput, setSelectedInput] = useState(0);
 
     const updateMapLayers = async (filterModel) => {
         const params = FilterModelToParams(filterModel);
@@ -137,7 +135,7 @@ const FiltersMenu = ({setModel, model, setIsLoading, savedLayers, flag}) => {
                             {savedLayers && <>
                                 <h1>Сохраненные территории</h1>
                                 <div className={'scroller menu-inner saveLayer__inner'}>
-                                    <div className={'services-control'} style={{paddingTop: 0}}>
+                                    <div className={'services-control savedLayersBtns'} style={{paddingTop: 0}}>
                                         {!!savedLayers.length && 
                                             <SavedLayers 
                                                 savedLayers={savedLayers} 

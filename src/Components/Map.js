@@ -11,6 +11,7 @@ import {infoTypes} from './InfoBlock'
 import {mapAPI} from "../API/methods";
 
 const geoServerUrl = 'https://asa.sports.keenetic.pro/geoserver';
+const savedLayersName = 'saved_layers'
 const objIcon = new L.Icon({
     iconUrl: svg_red,
     iconSize: [24, 35],
@@ -163,7 +164,7 @@ const AddGeoManControl = (mapComponent) => {
         })
     };
 
-    // delete old custom territory before new one
+    // delete old custom territory before new one    
     document.querySelectorAll('.leaflet-pm-draw a').forEach(function (item) {
         item.addEventListener('click', function () {
             mapComponent.map.pm.getGeomanDrawLayers(true)?.getLayers()[0]?.removeFrom(mapComponent.map);
@@ -171,20 +172,16 @@ const AddGeoManControl = (mapComponent) => {
             {
                 window.currentSelectedSavedLayer.removeFrom(mapComponent.map)
             }
+            mapComponent.props.setSelectedInput(0);
+            mapComponent.props.setIsInfoBlockShown(0);
         });
     });
 
-    
+    //Рассчет по выбранной территории
     document.getElementById('layerBtn')?.addEventListener('click', () => { 
         const mapLayers = Object.values(mapComponent.map._layers);
         const hasHeatmapSports = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_square_style').length > 0;
         const hasHeatmapProvision = mapLayers.filter(x => x.options.styles === 'leaders:heatmap_provision_style' || x.options.styles === 'leaders:heatmap_need_style').length > 0;
-
-        const type = hasHeatmapSports
-        ? 'info_sports'
-        : hasHeatmapProvision
-            ? 'info_provision'
-            : '';
 
         const infoType = hasHeatmapSports
         ? infoTypes.sports
@@ -194,13 +191,18 @@ const AddGeoManControl = (mapComponent) => {
         
         if (infoType !== infoTypes.baseOrPopulation) {
             mapComponent.props.setIsLoading(true);
+            
+            const shapeType = infoType === infoTypes.sports
+            ? 'info_sports'
+            : 'info_provision';
+        
             const drawingLayer = mapComponent.map.pm.getGeomanDrawLayers(true).getLayers()[0] || window.currentSelectedSavedLayer.pm.getLayers()[0];
             const shape = drawingLayer.pm.getShape() === 'Circle' 
                 ? L.PM.Utils.circleToPolygon(drawingLayer, 20) 
                 : drawingLayer;
             const params = FilterModelToParams(mapComponent.props.model) + 'geojson:' + JSON.stringify(shape.toGeoJSON()['geometry']).replaceAll(",", "\\,");
             
-            mapAPI.getShape(type, params)
+            mapAPI.getShapeInfo(shapeType, params)
                 .then(res => {
                     const infoItems = res.data.features.map(item => item.properties);
                     mapComponent.props.setData({
@@ -221,7 +223,7 @@ const AddGeoManControl = (mapComponent) => {
                 })
                 .finally(() =>  mapComponent.props.setIsLoading(false));
 
-            var saveElms = document.querySelector('.saveLayer');
+            const saveElms = document.querySelector('.saveLayer');
             if (saveElms)
             {
                 saveElms.style = 'display: inline-block';
@@ -237,25 +239,25 @@ const AddGeoManControl = (mapComponent) => {
                
     });
 
-    // Сохранение слоя
+    //Сохранение территории
     document.getElementById('saveLayerBtn')?.addEventListener('click', () => {
-        var nameElm = document.querySelector('.saveLayerName');
-        var name = nameElm.value
+        const nameElm = document.querySelector('.saveLayerName');
+        const name = nameElm.value
         if (name)
         {
             nameElm.parentElement.parentElement.classList.remove('isFocused');
             nameElm.value = '';
-            var saveElms = document.querySelector('.saveLayer');
+            const saveElms = document.querySelector('.saveLayer');
             if (saveElms)
             {
                 saveElms.style = 'display: none';
             }
 
-            var currentLayer = JSON.parse(localStorage.getItem('current_drawing_layer'));
+            let currentLayer = JSON.parse(localStorage.getItem('current_drawing_layer'));
             let savingLayersObj = null;
 
-            if (localStorage.getItem('saved_layers')) {
-                savingLayersObj = Array.from(JSON.parse(localStorage.getItem('saved_layers')));
+            if (localStorage.getItem(savedLayersName)) {
+                savingLayersObj = Array.from(JSON.parse(localStorage.getItem(savedLayersName)));
                 currentLayer = {
                     ...currentLayer,
                     id: savingLayersObj.length + 1,
@@ -271,7 +273,7 @@ const AddGeoManControl = (mapComponent) => {
                 }
                 savingLayersObj = new Array(currentLayer);
             }
-            localStorage.setItem('saved_layers', JSON.stringify(savingLayersObj));
+            localStorage.setItem(savedLayersName, JSON.stringify(savingLayersObj));
             mapComponent.props.setSavedLayers(savingLayersObj);
         }
         else {
@@ -279,14 +281,24 @@ const AddGeoManControl = (mapComponent) => {
         }
     });
 
-    //Отображение выбранного слоя 
-    document.querySelectorAll('.savedLayer')?.forEach((savedLayer) => 
-        savedLayer.addEventListener('click', (e) => {
-            if (localStorage.getItem('saved_layers') && 
-                !e.currentTarget.classList.contains('isActive')) 
+    //Отображение выбранной территории 
+    document.querySelector('.savedLayersBtns').addEventListener('click', (e) => {
+        if (e.target)
+        {
+            let elm = e.target.classList.contains('savedLayer')
+            ? e.target
+            : e.target.parentElement.classList.contains('savedLayer')
+                ? e.target.parentElement
+                : null;
+            if (!elm || elm.classList.contains('isActive'))
             {
-                var savingLayers = Array.from(JSON.parse(localStorage.getItem('saved_layers')));
-                var currentLayer = savingLayers.find(x => x.id === Number(e.currentTarget.id));
+                return;
+            }
+
+            if (localStorage.getItem(savedLayersName)) 
+            {
+                const savingLayers = Array.from(JSON.parse(localStorage.getItem(savedLayersName)));
+                const currentLayer = savingLayers.find(x => x.id === Number(elm.id));
                 if (currentLayer) {                            
                     mapComponent.props.setIsLoading(true)
                     // добавление маркеров на карту
@@ -294,24 +306,26 @@ const AddGeoManControl = (mapComponent) => {
                     // добавление контрола переключения слоев
                     Promise.resolve(AddLayersWithControl(mapComponent.map, mapComponent.markers, currentLayer.filterParams))
                     .then(() => {
-                        var layerName = currentLayer.infoType === infoTypes.sports
+                        const layerName = currentLayer.infoType === infoTypes.sports
                             ? 'Тепловая карта спортивных зон'
                             : 'Тепловая карта обеспеченности (потребности) спортивными зонами' ;
                 
                         window.baseMaps[layerName].addTo(mapComponent.map)
                         ReClassControl();
                         
+                        mapComponent.map.pm.getGeomanDrawLayers(true)?.getLayers()[0]?.removeFrom(mapComponent.map);
                         if (window.currentSelectedSavedLayer)
                         {
                             window.currentSelectedSavedLayer.removeFrom(mapComponent.map)
-                        }
-                        
+                        }                        
                         window.currentSelectedSavedLayer = L.geoJSON(currentLayer.layer).addTo(mapComponent.map);
+
                         mapComponent.map.setView(window.currentSelectedSavedLayer.getBounds().getCenter(), 
                             mapComponent.map.getZoom(), 
                             {
                                 "animate": true,
                             });
+                        
                         mapComponent.props.setModel({
                             obj_name: currentLayer.model.obj_name,
                             org_id: currentLayer.model.org_id,
@@ -333,8 +347,8 @@ const AddGeoManControl = (mapComponent) => {
                     .finally(() => mapComponent.props.setIsLoading(false));
                 }
             } 
-        })
-    );
+        }
+    });
 }
 
 export const AddLayersWithControl = async (mapElement, markersElement, filterParams) => {

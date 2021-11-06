@@ -25,7 +25,7 @@ export const mapAPI = {
     getInfoAboutObject(id) {
         return instance.get(getWfsRequestUrl('info_objects', `id:${id}`, outputFormatApplJson))
     },
-    getShape(type, params) {
+    getShapeInfo(type, params) {
         return instance.get(getWfsRequestUrl(type, params, outputFormatApplJson))
     },
     getLayerJSON(layer, params) {

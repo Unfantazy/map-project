@@ -6,7 +6,11 @@ const SavedLayers = ({ savedLayers, selectedInput, setSelectedInput }) => {
     };
 
     if (savedLayers) {
-        return savedLayers.map((layer) => <SavedLayerItem id={layer.id} title={layer.name} handleChange={handleChange} selectedInput={selectedInput}/>)
+        return savedLayers.map((layer) => <SavedLayerItem 
+            id={layer.id} 
+            title={layer.name} 
+            handleChange={handleChange} 
+            selectedInput={selectedInput}/>)
     }
 
     return <></>
