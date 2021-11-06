@@ -1,7 +1,7 @@
 import getNoun from '../Helpers/stringHelper'
 
-const InfoProvisionBlockItem = ({ zones, zonesProv, types, kinds, kindsProv, population, square, squareProv }) => {
-    const hasData = zones || zonesProv || types || kinds || kindsProv || population || square || squareProv;
+const InfoProvisionBlockItem = ({ zones, zonesProv, types, kinds, kindsProv, population, square, squareProv, objects }) => {
+    const hasData = zones || zonesProv || types || kinds || kindsProv || population || square || squareProv || objects;
     return (
         <>        
         {!hasData && <div className='InfoBlockItem__empty'>Данные отсутствуют</div>}
@@ -51,6 +51,15 @@ const InfoProvisionBlockItem = ({ zones, zonesProv, types, kinds, kindsProv, pop
                 <div className={'InfoBlockItem__items'}>
                     <ul>
                         {types.map(type => <li className={'InfoBlockItem__item'}>{type}</li>) }
+                    </ul>
+                </div>
+            </div>
+            }
+            {objects && <div className='InfoBlockItem'>
+                <div className={'InfoBlockItem__title'}>Спортивные объекты:</div>
+                <div className={'InfoBlockItem__items'}>
+                    <ul>
+                        {objects.map(object => <li className={'InfoBlockItem__item'}>{object}</li>) }
                     </ul>
                 </div>
             </div>

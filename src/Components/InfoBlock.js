@@ -26,6 +26,7 @@ export const excelHeaders = {
     sport_square_provision: 'Средняя обeспеченность площадью спортивных зон по жилым домам, кв. м на 100 000 человек',
     sport_kinds_provision: 'Средняя обeспеченность видами услуг по жилым домам. услуг на 100 000 человек',
     sport_zones_types: 'Типы спортивных зон',
+    sport_objects_name: 'Спортивные объекты',
     sport_zones_amount: 'Типы спортивных зон, кол-во',
     sport_kinds_amount: 'Виды спортивных услуг, кол-во',
 }
@@ -106,7 +107,7 @@ const InfoBlock = ({ data, setData, model }) => {
                 var header = excelHeaders[key]
                 var value = data.items[0][key]
                 if (value) {
-                    if (key === 'sport_zones_types') {
+                    if (key === 'sport_zones_types' || key === 'sport_objects_name') {
                         excelData[0][header] = JSON.parse(value).join('; ')
                     }
                     else if (key === 'sport_zones_amount' || key === 'sport_kinds_amount') {
@@ -172,13 +173,14 @@ const InfoBlock = ({ data, setData, model }) => {
                            kinds={item.sport_kinds_sum}
                            kindsProv={item.sport_kinds_provision}
                            population={item.population}
+                           objects={JSON.parse(item.sport_objects_name)}
                        />
                    })}
                    {data.type === infoTypes.baseOrPopulation && 
                         <div className='InfoBlockItem__empty'>Для аналитики выберите тепловую карту спортивных зон или потребности в спортивных зонах </div>}
                </div>
             {/* excel */}
-            <div className={'filter-btns'} >
+            <div className={'export-btns'} >
                 {(data.type === infoTypes.sports ||
                   data.type === infoTypes.provision) && Object.values(data.items[0]).find(x => x !== null && x !== 0) && <ExportToExcel 
                         apiData={excelData} 

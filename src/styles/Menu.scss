@@ -130,6 +130,13 @@
   margin: 40px;
 }
 
+.export-btns {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding-right: 10px;
+}
+
 .export-btn {
   height: 25px;
   border-radius: 10px;
