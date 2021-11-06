@@ -374,20 +374,20 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         opacity: 0.6
     });
 
-    // heatmap square init
-    var provParams = (await mapAPI.getMapObjects('thresholds_heatmap_provision', filterParams)).data.features[0].properties;
-    var heat_provision = L?.tileLayer.wms(apiUrl, {
-        layers: 'leaders:heatmap_provision',
-        styles: 'leaders:heatmap_provision_style',
-        format: 'image/png',
-        transparent: 'true',
-        tileSize: 512,
-        pane: 'heatPane',
-        detectRetina: true,
-        opacity: 0.6,
-        viewparams: filterParams,
-        env: getParamsAsString(provParams)
-    });
+    // heatmap provision
+    // var provParams = (await mapAPI.getMapObjects('thresholds_heatmap_provision', filterParams)).data.features[0].properties;
+    // var heat_provision = L?.tileLayer.wms(apiUrl, {
+    //     layers: 'leaders:heatmap_provision',
+    //     styles: 'leaders:heatmap_provision_style',
+    //     format: 'image/png',
+    //     transparent: 'true',
+    //     tileSize: 512,
+    //     pane: 'heatPane',
+    //     detectRetina: true,
+    //     opacity: 0.6,
+    //     viewparams: filterParams,
+    //     env: getParamsAsString(provParams)
+    // });
 
     var heat_need = L?.tileLayer.wms(apiUrl, {
         layers: 'leaders:heatmap_need',
@@ -418,7 +418,7 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
         'Базовая карта': emptyLayer,
         'Тепловая карта спортивных зон': heat_square,
         'Тепловая карта населения': heat_population,
-        'Тепловая карта обеспеченности спортивными зонами': heat_provision,
+        // 'Тепловая карта обеспеченности спортивными зонами': heat_provision,
         'Тепловая карта обеспеченности (потребности) спортивными зонами':heat_need
     };
 
@@ -469,11 +469,11 @@ export const AddLayersWithControl = async (mapElement, markersElement, filterPar
             style: 'heat_population',
             legend_name: 'Средняя численность населения',
         },
-        {
-            name: 'heatmap_provision',
-            style: 'heatmap_provision_style',
-            legend_name: 'Обеспеченность населения <br>спортивной инфраструктурой',
-        },
+        // {
+        //     name: 'heatmap_provision',
+        //     style: 'heatmap_provision_style',
+        //     legend_name: 'Обеспеченность населения <br>спортивной инфраструктурой',
+        // },
         {
             name: 'heatmap_need',
             style: 'heatmap_need_style',
